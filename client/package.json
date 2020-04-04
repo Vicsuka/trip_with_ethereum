@@ -33,6 +33,7 @@
     "build-package": "npm run build-package-css && babel src --out-dir dist",
     "heroku-postbuild": "cd client && react-scripts build"
   },
+  "proxy": "http://localhost:5000",
   "keywords": [],
   "author": "Horváth Márk",
   "license": "MIT",
