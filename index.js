@@ -8,13 +8,15 @@ const app = express();
 const root = require('path').join(__dirname, 'client', 'build')
 app.use(express.static(root));
 
+
+
+//Routes
+app.use(require('./routes'));
+
 // Handle other requests
 app.get("*", (req, res) => {
     res.sendFile('index.html', { root });
 })
-
-//Routes
-app.use(require('./routes'));
 
 
 const port = process.env.PORT || 5000;
