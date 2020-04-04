@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const fs = require('fs');
+var util = require('./util.js');
 
-var users;
+var users = util.invokeJsonData();
 
 //Middle ware that is specific to this router
 router.use(function timeLog(req, res, next) {
@@ -40,23 +40,3 @@ module.exports = router;
 
 
 
-readJSONFile("data/users.json", function (err, json) {
-  if (err) {
-    throw err;
-  }
-  users = json;
-});
-
-function readJSONFile(filename, callback) {
-  fs.readFile(filename, function (err, data) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    try {
-      callback(null, JSON.parse(data));
-    } catch (exception) {
-      callback(exception);
-    }
-  });
-}
