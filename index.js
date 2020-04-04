@@ -1,5 +1,6 @@
 const express = require('express');
-var fs = require('fs')
+const fs = require('fs');
+const mongoose = require('mongoose');
 
 const app = express();
 
