@@ -8,6 +8,10 @@ const app = express();
 const root = require('path').join(__dirname, 'client', 'build')
 app.use(express.static(root));
 
+// Handle other requests
+router.get("*", (req, res) => {
+    res.sendFile('index.html', { root });
+})
 
 //Routes
 app.use(require('./routes'));

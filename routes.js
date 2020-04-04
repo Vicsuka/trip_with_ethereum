@@ -30,10 +30,7 @@ router.get('/api/user/:id', (req, res) => {
 });
 
 
-// Handle other requests
-router.get("*", (req, res) => {
-    res.sendFile('index.html', { root });
-})
+
 
 
 module.exports = router;
