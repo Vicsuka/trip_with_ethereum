@@ -22,7 +22,6 @@ app.get('/api/users', (req, res) => {
 // Get specific user
 app.get('/api/user/:id', (req, res) => {
     if (req.params.id >= users.length) res.send('User not found!');
-
     res.json(users[req.params.id]);
 });
 
