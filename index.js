@@ -1,14 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
+const morgan = require("morgan");
 
 const app = express();
 
-app.use(function timeLog(req, res, next) {
-    // add timestamps in front of log messages
-    require('console-stamp')(console, '[HH:MM:ss.l]');
-    next();
-  });
+app.use(morgan("dev"));
 
 // Static serve
 const root = require('path').join(__dirname, 'client', 'build')
