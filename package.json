@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "console-stamp": "^0.2.9",
     "express": "^4.17.1",
     "firebase": "^7.13.1",
     "mongoose": "^5.9.7"

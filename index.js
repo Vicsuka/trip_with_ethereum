@@ -2,14 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
 
-
-
 const app = express();
+
+app.use(function timeLog(req, res, next) {
+    // add timestamps in front of log messages
+    require('console-stamp')(console, '[HH:MM:ss.l]');
+    next();
+  });
 
 // Static serve
 const root = require('path').join(__dirname, 'client', 'build')
 app.use(express.static(root));
 
+////////////////////////////////////////////
 // Use demo data
 const fs = require("fs");
 var users;
@@ -44,9 +49,10 @@ function readJSONFile(filename, callback) {
         }
     });
 }
+////////////////////////////////////////////
 
 //Routes
-app.use(require('./routes'));
+app.use('/api/test', require('./routes/test'));
 
 // Handle other requests
 app.get("*", (req, res) => {
