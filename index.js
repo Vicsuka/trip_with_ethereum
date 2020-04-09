@@ -2,10 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
 const morgan = require("morgan");
+const helmet = require("helmet");
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(morgan("dev"));
+app.use(helmet());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Static serve
 const root = require('path').join(__dirname, 'client', 'build')
