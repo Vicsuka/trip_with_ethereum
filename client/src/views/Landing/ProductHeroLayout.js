@@ -48,6 +48,10 @@ const styles = (theme) => ({
   arrowDown: {
     position: 'absolute',
     bottom: theme.spacing(4),
+    transition: 'width 2s, height 2s, transform 1s;',
+    '&:hover': {
+      transform: "rotate(360deg);",
+    },
   },
   logo: {
     marginTop: theme.spacing(1),
@@ -55,7 +59,12 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    transition: 'width 2s, height 2s, transform 2s;',
+    '&:hover': {
+      transform: "rotate(360deg);",
+    },
   },
+  
 });
 
 function ProductHeroLayout(props) {

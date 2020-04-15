@@ -10,8 +10,14 @@ export default withStyles((theme) => ({
     padding: theme.spacing(2, 4),
     fontSize: theme.typography.pxToRem(14),
     boxShadow: 'none',
+    transition: "transform 0.33s",
     '&:active, &:focus': {
       boxShadow: 'none',
+    },
+    '&:hover': {
+      color: "white",
+      backgroundColor: "#b36b00",
+      transform: "scale(1.2, 1.2);",
     },
     backgroundColor: "#ff9800",
   },
