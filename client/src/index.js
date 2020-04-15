@@ -22,6 +22,7 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 // core components
 import Admin from "layouts/Admin.js";
+import Landing from "layouts/Landing.js";
 
 import "assets/css/material-dashboard-react.css?v=1.8.0";
 
@@ -31,6 +32,7 @@ ReactDOM.render(
   <Router history={hist}>
     <Switch>
       <Route path="/admin" component={Admin} />
+      <Route path="/landing" component={Landing} />
       <Redirect from="/" to="/admin/dev" />
     </Switch>
   </Router>,
