@@ -95,7 +95,6 @@ passport.deserializeUser((user, done) => {
  */
 
 const secured = (req, res, next) => {
-    console.log(req.user);
     if (req.user) {
         return next();
     }
@@ -106,53 +105,8 @@ const secured = (req, res, next) => {
 // Router mounting
 app.use("/", authRouter);
 
-app.get("/user", secured, (req, res, next) => {
-    const { _raw, _json, ...userProfile } = req.user;
-    res.render("user", {
-      title: "Profile",
-      userProfile: userProfile
-    });
-  });
-
-////////////////////////////////////////////
-// Use demo data
-const fs = require("fs");
-var users;
-
-// Get user list
-app.get('/api/users', (req, res) => {
-    res.json(users);
-});
-
-// Get specific user
-app.get('/api/user/:id', (req, res) => {
-    if (req.params.id >= users.length) res.send('User not found!');
-    res.json(users[req.params.id]);
-});
-
-readJSONFile('data/users.json', function (err, json) {
-    if (err) { throw err; }
-    users = json;
-});
-
-function readJSONFile(filename, callback) {
-    fs.readFile(filename, function (err, data) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        try {
-            console.log("data loaded!");
-            callback(null, JSON.parse(data));
-        } catch (exception) {
-            callback(exception);
-        }
-    });
-}
-////////////////////////////////////////////
-
 //Routes
-app.use('/api/test', require('./routes/test'));
+app.use('/admin', secured, require('./routes/test'));
 
 // Handle other requests
 app.get("*", (req, res) => {

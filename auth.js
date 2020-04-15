@@ -41,7 +41,7 @@ router.get("/callback", (req, res, next) => {
             }
             const returnTo = req.session.returnTo;
             delete req.session.returnTo;
-            res.redirect(returnTo || "/");
+            res.redirect(returnTo || "/admin/dashboard");
         });
     })(req, res, next);
 });
@@ -70,7 +70,6 @@ router.get("/logout", (req, res) => {
 
     res.redirect(logoutURL);
 });
-
 
 /**
  * Module Exports

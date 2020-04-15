@@ -8,4 +8,8 @@ router.get('', (req,res) => {
     res.json(list);
 });
 
+router.get("/myapicall", (req, res) => {
+    res.status(200).send('Your api is protected');
+});
+
 module.exports = router;
