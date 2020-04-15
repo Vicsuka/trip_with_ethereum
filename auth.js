@@ -30,9 +30,11 @@ router.get(
 router.get("/callback", (req, res, next) => {
     passport.authenticate("auth0", (err, user, info) => {
         if (err) {
+            console.log(err);
             return next(err);
         }
         if (!user) {
+            console.log(user);
             console.log("User login error");
             return res.redirect("/login");
         }
