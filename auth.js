@@ -28,7 +28,12 @@ router.get(
 );
 
 router.get("/callback", (req, res, next) => {
-    console.log(req);
+    console.log(req.complete);
+    console.log(req.headers);
+    console.log(req.url);
+    console.log(req._parsedUrl);
+    console.log(req._peername);
+    console.log(req.route);
     passport.authenticate("auth0", (err, user, info) => {
         if (err) {
             console.log(err);
