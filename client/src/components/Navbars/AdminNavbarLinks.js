@@ -210,7 +210,9 @@ export default function AdminNavbarLinks() {
                     <MenuItem
                       className={classes.dropdownItem}
                     >
-                      <Link to="/logout">Logout</Link>
+                      <a href="/logout">
+                        Logout
+                      </a>
                     </MenuItem>
                   </MenuList>
                 </ClickAwayListener>
