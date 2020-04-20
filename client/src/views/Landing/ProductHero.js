@@ -6,9 +6,7 @@ import Typography from '../../components/Landing/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
 import logo from "assets/img/logo_transparent.png";
-
-const backgroundImage =
-  'https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80';
+import backgroundImage from "assets/img/landing.jpg";
 
 const styles = (theme) => ({
   background: {
