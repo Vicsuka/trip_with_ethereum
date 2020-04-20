@@ -66,44 +66,46 @@ export default function UserProfile() {
             <CardAvatar profile>
               <img src={profile.picture} alt="" />
             </CardAvatar>
-            <CardBody profile className={classes.aboutInfo}>
+            <CardBody profile >
               <CardHeader color="primary">
                 <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{profile.name}</h3>
                 <p className={classes.cardCategoryWhite + ' ' + classes.description}>YOUR DATA</p>
               </CardHeader>
-              <GridContainer >
-                <GridItem xs={12} sm={12} md={3}>
-                  <h4>Username:</h4>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={9}>
-                  <h4>{profile.nickname}</h4>
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={3}>
-                  <h4>Email:</h4>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={9}>
-                  <h4>{profile.email}</h4>
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={3}>
-                  <h4>ID:</h4>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={9}>
-                  <h4>{profile.sub}</h4>
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={3}>
-                  <h4>About:</h4>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={9}>
-                  <h4>{profile.about}</h4>
-                </GridItem>
+              <div className={classes.aboutInfo}>
+                <GridContainer >
+                  <GridItem xs={12} sm={12} md={3}>
+                    <h4>Username:</h4>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={9}>
+                    <h4>{profile.nickname}</h4>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={3}>
+                    <h4>Email:</h4>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={9}>
+                    <h4>{profile.email}</h4>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={3}>
+                    <h4>ID:</h4>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={9}>
+                    <h4>{profile.sub}</h4>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={3}>
+                    <h4>About:</h4>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={9}>
+                    <h4>{profile.about}</h4>
+                  </GridItem>
 
-              </GridContainer>
+                </GridContainer>
+              </div>
             </CardBody>
           </Card>
         </GridItem>
