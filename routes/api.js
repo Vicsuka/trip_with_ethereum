@@ -15,7 +15,7 @@ router.get("/myapicall", (req, res) => {
 router.get("/userprofile", (req, res) => {
     const user = req.user;
     console.log('User profile sent: ', user._json.email);
-    res.status(200).json(user._json);
+    res.status(200).send(user._json);
 });
 
 module.exports = router;
