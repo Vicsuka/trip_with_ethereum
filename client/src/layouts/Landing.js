@@ -1,10 +1,9 @@
 import React from "react";
-// creates a beautiful scrollbar
+// Landingpage component
 import ProductHero from '../views/Landing/ProductHero';
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-// import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 

@@ -24,7 +24,7 @@ import DeveloperBoard from "@material-ui/icons/DeveloperBoard";
 import Notifications from "@material-ui/icons/Notifications";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import UserProfile from "views/UserProfile/UserProfile.js";
+import MyProfile from "views/MyProfile/MyProfile.js";
 import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
@@ -48,9 +48,9 @@ const dashboardRoutes = [
   },
   {
     path: "/user",
-    name: "User Profile",
+    name: "My Profile",
     icon: Person,
-    component: UserProfile,
+    component: MyProfile,
     layout: "/admin"
   },
   {
