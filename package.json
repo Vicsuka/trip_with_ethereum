@@ -21,7 +21,6 @@
     "firebase": "^7.13.1",
     "helmet": "^3.22.0",
     "mongoose": "^5.9.7",
-    "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-auth0": "^1.3.2",

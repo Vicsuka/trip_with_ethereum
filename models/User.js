@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
 var validator = require('validator')
 
 var UserSchema = new mongoose.Schema({
@@ -48,8 +47,6 @@ var UserSchema = new mongoose.Schema({
         }
     }
 }, { timestamps: true });
-
-UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
 UserSchema.methods.toProfileJSONFor = function (user) {
     return {
