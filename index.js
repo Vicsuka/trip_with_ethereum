@@ -1,3 +1,11 @@
+
+/**
+ * Required Models
+ */
+
+require('./models/Email/Email');
+require('./models/User/User');
+
 /**
  * Required External Modules
  */
@@ -15,6 +23,7 @@ const authRouter = require("./routes/auth");
 
 const mongoose = require("mongoose");
 const autoIncrement = require('mongoose-auto-increment');
+
 
 
 require("dotenv").config();
@@ -108,9 +117,6 @@ mongoose.set('useCreateIndex', true);
 if(!isProduction){
   mongoose.set('debug', true);
 }
-
-require('./models/Email/Email');
-require('./models/User/User');
 
 /**
  * Routes Definitions

@@ -8,8 +8,8 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const util = require("util");
-const url = require("url");
 const querystring = require("querystring");
+const axios = require('axios')
 
 require("dotenv").config();
 
@@ -39,6 +39,35 @@ router.get("/callback", (req, res, next) => {
             if (err) {
                 return next(err);
             }
+            // Save user to our own db if doesn't exist
+            axios
+                .get(process.env.BASEURL + '/api/user/users/' + user.id)
+                .then(res => {
+                    if (!res.data) {
+                        let userData = {
+                            auth0id: user.id,
+                            firstname: user.name.givenName,
+                            lastname: user.name.familyName,
+                            username: user.nickname,
+                            email: user._json.email,
+                            picture: user.picture,
+                            locale: user.locale
+                        };
+                        
+                        axios
+                            .post(process.env.BASEURL + '/api/user/createuser', userData)
+                            .then(res => {
+                                console.log('New user added successfully!');
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            })
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+
             const returnTo = req.session.returnTo;
             delete req.session.returnTo;
             res.redirect(returnTo || "/admin/dashboard");

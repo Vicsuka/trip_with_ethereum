@@ -35,6 +35,13 @@ var UserSchema = new mongoose.Schema({
         validate: (value) => {
             return validator.isURL(value)
         }
+    },
+    locale: {
+        type: String,
+        lowercase: true,
+        validate: (value) => {
+            return validator.isAlpha(value)
+        }
     }
 }, { timestamps: true });
 
@@ -46,6 +53,7 @@ UserSchema.methods.toJSON = function (user) {
         username: this.username,
         email: this.email,
         picture: this.picture,
+        locale: this.locale
     };
 };
 

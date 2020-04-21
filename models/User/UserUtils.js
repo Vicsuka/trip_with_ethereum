@@ -43,11 +43,11 @@ var getAllUsers = function (req, res, next) {
     });
 };
 
-var getOneUser = function (req, res) {
+var getUserById = function (req, res) {
     res.status(200).json(req.user);
 };
 
-var getByIdUser = function (req, res, next, id) {
+var getUserId = function (req, res, next, id) {
     User.findOne({ auth0id: id }, function (err, user) {
         if (err) {
             next(err);
@@ -64,6 +64,6 @@ module.exports = {
     updateUser,
     deleteUser,
     getAllUsers,
-    getOneUser,
-    getByIdUser
+    getUserById,
+    getUserId
 };

@@ -14,12 +14,12 @@ router.get('/allusers', userUtils.getAllUsers);
 router.post('/createuser', userUtils.createUser);
 
 router.route('/users/:userId')
-  .get(userUtils.getOneUser)
+  .get(userUtils.getUserById)
   .put(userUtils.updateUser)
   .delete(userUtils.deleteUser);
 
 
-router.param('userId', userUtils.getByIdUser);
+router.param('userId', userUtils.getUserId);
 
 
 module.exports = router;
