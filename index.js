@@ -26,6 +26,7 @@ require("dotenv").config();
 
 const app = express();
 const db = mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true });
+const isProduction = app.get("env") === "production";
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -45,7 +46,7 @@ const session = {
 
 app.use(expressSession(session));
 
-// if (app.get("env") === "production") {
+// if (isProduction) {
 //     // Serve secure cookies, requires HTTPS
 //     session.cookie.secure = true;
 // }
@@ -95,6 +96,18 @@ passport.deserializeUser((user, done) => {
 const root = require('path').join(__dirname, 'client', 'build')
 app.use(express.static(root));
 
+/**
+ *  Mongoose Configuration
+ */
+
+mongoose.set('useCreateIndex', true);
+
+if(!isProduction){
+  mongoose.set('debug', true);
+}
+
+require('./models/Email');
+require('./models/User');
 
 /**
  * Routes Definitions
@@ -113,7 +126,7 @@ app.use("/", authRouter);
 
 // Secured routes
 // If in production mode, protect access
-if (app.get("env") === "production") {
+if (isProduction) {
   app.use('/admin', secured);
   app.use('/api', secured, require('./routes/api'));
 } else {

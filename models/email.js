@@ -1,7 +1,7 @@
-let mongoose = require('mongoose')
-let validator = require('validator')
+var mongoose = require('mongoose')
+var validator = require('validator')
 
-let emailSchema = new mongoose.Schema({
+var EmailSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -13,4 +13,4 @@ let emailSchema = new mongoose.Schema({
   }
 })
 
-module.exports = mongoose.model('Email', emailSchema)
+module.exports = mongoose.model('Email', EmailSchema)
