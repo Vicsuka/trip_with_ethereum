@@ -18,7 +18,7 @@ var createUser = function (req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.json(user);
+            res.status(200).send(user);
         }
     });
 };
@@ -28,7 +28,7 @@ var updateUser = function (req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.json(user);
+            res.status(200).json(user);
         }
     });
 };
@@ -38,7 +38,7 @@ var deleteUser = function (req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.json(req.user);
+            res.status(200).json(req.user);
         }
     });
 };
@@ -48,13 +48,13 @@ var getAllUsers = function (req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.json(users);
+            res.status(200).json(users);
         }
     });
 };
 
 var getOneUser = function (req, res) {
-    res.json(req.user);
+    res.status(200).json(req.user);
 };
 
 var getByIdUser = function (req, res, next, id) {
@@ -62,7 +62,7 @@ var getByIdUser = function (req, res, next, id) {
         if (err) {
             next(err);
         } else {
-            req.user = user;
+            req.status(200).user = user;
             next();
         }
     });
