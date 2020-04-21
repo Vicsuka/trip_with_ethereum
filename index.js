@@ -11,7 +11,7 @@ const expressSession = require("express-session");
 const passport = require("passport");
 const Auth0Strategy = require("passport-auth0");
 
-const authRouter = require("./auth");
+const authRouter = require("./routes/auth");
 
 const mongoose = require("mongoose");
 const autoIncrement = require('mongoose-auto-increment');
@@ -116,6 +116,7 @@ require('./models/User/User');
  * Routes Definitions
  */
 
+ //Secure route
 const secured = (req, res, next) => {
   if (req.user) {
     return next();
