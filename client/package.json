@@ -35,16 +35,12 @@
   "author": "Horváth Márk",
   "license": "MIT",
   "optionalDependencies": {
-    "@types/googlemaps": "3.37.3",
-    "@types/markerclustererplus": "2.1.33",
     "ajv": "6.10.2",
     "typescript": "3.5.3"
   },
   "devDependencies": {
     "eslint-config-prettier": "6.0.0",
     "eslint-plugin-prettier": "3.1.0",
-    "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.8",
     "prettier": "1.18.2"
   },
   "browserslist": {

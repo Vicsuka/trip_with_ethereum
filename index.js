@@ -96,7 +96,6 @@ passport.deserializeUser((user, done) => {
 
 const secured = (req, res, next) => {
     if (req.user) {
-        console.log(req.user);
         return next();
     }
     req.session.returnTo = req.originalUrl;
@@ -106,9 +105,15 @@ const secured = (req, res, next) => {
 // Router mounting
 app.use("/", authRouter);
 
-//Routes
-app.use('/admin', secured);
-app.use('/api', secured, require('./routes/api'));
+// Secured routes
+// If in production mode, protect access
+if (app.get("env") === "production") {
+  app.use('/admin', secured);
+  app.use('/api', secured, require('./routes/api'));
+} else {
+  app.use('/api', require('./routes/api'));
+}
+
 
 // Handle other requests
 app.get("*", (req, res) => {
