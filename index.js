@@ -14,6 +14,7 @@ const Auth0Strategy = require("passport-auth0");
 const authRouter = require("./auth");
 
 const mongoose = require("mongoose");
+const autoIncrement = require('mongoose-auto-increment');
 
 
 require("dotenv").config();
@@ -25,7 +26,7 @@ require("dotenv").config();
  */
 
 const app = express();
-const db = mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true });
 const isProduction = app.get("env") === "production";
 
 app.use(morgan("dev"));
@@ -101,6 +102,7 @@ app.use(express.static(root));
  *  Mongoose Configuration
  */
 
+autoIncrement.initialize(mongoose.connection);
 mongoose.set('useCreateIndex', true);
 
 if(!isProduction){

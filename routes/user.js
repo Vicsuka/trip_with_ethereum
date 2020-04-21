@@ -24,7 +24,7 @@ var createUser = function (req, res, next) {
 };
 
 var updateUser = function (req, res, next) {
-    User.findByIdAndUpdate(req.body._id, req.body, { new: true }, function (err, user) {
+    User.findByIdAndUpdate(req.user._id, req.body, { new: true }, function (err, user) {
         if (err) {
             next(err);
         } else {
@@ -58,11 +58,11 @@ var getOneUser = function (req, res) {
 };
 
 var getByIdUser = function (req, res, next, id) {
-    User.findOne({ _id: id }, function (err, user) {
+    User.findOne({ auth0id: id }, function (err, user) {
         if (err) {
             next(err);
         } else {
-            req.status(200).user = user;
+            req.user = user;
             next();
         }
     });
