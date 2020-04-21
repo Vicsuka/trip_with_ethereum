@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-var validator = require('validator')
+var mongoose = require('mongoose');
+var validator = require('validator');
 
 var EmailSchema = new mongoose.Schema({
   email: {

@@ -8,11 +8,13 @@ router.get('', (req,res) => {
     res.json(list);
 });
 
-router.get("/myapicall", (req, res) => {
+router.use('/user', require('./user'));
+
+router.get('/myapicall', (req, res) => {
     res.status(200).send('Your api is protected');
 });
 
-router.get("/userprofile", (req, res) => {
+router.get('/userprofile', (req, res) => {
     const user = req.user;
     console.log('User profile sent: ', user._json.email);
     res.status(200).send(user._json);

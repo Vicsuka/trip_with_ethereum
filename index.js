@@ -31,6 +31,7 @@ const isProduction = app.get("env") === "production";
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 
 /**
@@ -106,8 +107,8 @@ if(!isProduction){
   mongoose.set('debug', true);
 }
 
-require('./models/Email');
-require('./models/User');
+require('./models/Email/Email');
+require('./models/User/User');
 
 /**
  * Routes Definitions
