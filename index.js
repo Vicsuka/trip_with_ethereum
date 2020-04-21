@@ -3,8 +3,6 @@
  */
 
 const express = require('express');
-const mongoose = require('mongoose');
-const http = require('http');
 const morgan = require("morgan");
 const helmet = require("helmet");
 const bodyParser = require('body-parser');
