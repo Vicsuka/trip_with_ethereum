@@ -18,6 +18,7 @@ router.route('/users/:userId')
   .put(userUtils.updateUser)
   .delete(userUtils.deleteUser);
 
+router.get('/getUserProfile', userUtils.getUserProfile);
 
 router.param('userId', userUtils.findUserById);
 

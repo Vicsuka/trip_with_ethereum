@@ -86,6 +86,16 @@ var newUser = function (userData) {
     });
 };
 
+var getUserProfile = function (req, res, next) {
+    console.log(req);
+    User.findOne({ auth0id: req.user.id }, function (err, user) {
+        if (err) {
+            next(err);
+        } else {
+            res.status(200).json(user);
+        }
+    });
+};
 
 module.exports = {
     createUser,
@@ -95,5 +105,6 @@ module.exports = {
     getUser,
     findUserById,
     userExists,
-    newUser
+    newUser,
+    getUserProfile
 };

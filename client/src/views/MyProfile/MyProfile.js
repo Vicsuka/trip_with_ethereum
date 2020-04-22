@@ -45,7 +45,7 @@ export default function UserProfile() {
 
   useEffect(() => {
 
-    fetch("/api/userprofile")
+    fetch("/api/user/getUserProfile")
       .then(response => response.json())
       .then(
         (data) => {
@@ -70,7 +70,7 @@ export default function UserProfile() {
             </CardAvatar>
             <CardBody profile >
               <CardHeader color="primary">
-                <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{profile.name}</h3>
+                <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{profile.firstname} {profile.lastname}</h3>
                 <p className={classes.cardCategoryWhite + ' ' + classes.description}>YOUR DATA</p>
               </CardHeader>
               <div className={classes.aboutInfo}>
@@ -79,7 +79,7 @@ export default function UserProfile() {
                     <h4>Username:</h4>
                   </GridItem>
                   <GridItem xs={12} sm={12} md={9}>
-                    <h4>{profile.nickname}</h4>
+                    <h4>{profile.username}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
@@ -95,7 +95,7 @@ export default function UserProfile() {
                     <h4>ID:</h4>
                   </GridItem>
                   <GridItem xs={12} sm={12} md={9}>
-                    <h4>{profile.sub}</h4>
+                    <h4>{profile.auth0id}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
