@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 // @material-ui/core components
+import { Link } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
@@ -193,21 +194,21 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
-                  <MenuItem
-                      className={classes.dropdownItem}
-                    >
-                      <a href="/admin/user">
+                    <Link to="/admin/user">
+                      <MenuItem
+                        className={classes.dropdownItem}
+                      >
                         My Profile
-                      </a>
                     </MenuItem>
+                    </Link>
                     <Divider light />
-                    <MenuItem
-                      className={classes.dropdownItem}
-                    >
-                      <a href="/logout">
+                    <a href="/logout">
+                      <MenuItem
+                        className={classes.dropdownItem}
+                      >
                         Logout
-                      </a>
                     </MenuItem>
+                    </a>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
