@@ -43,11 +43,11 @@ var getAllUsers = function (req, res, next) {
     });
 };
 
-var getUserById = function (req, res) {
+var getUser = function (req, res) {
     res.status(200).json(req.user);
 };
 
-var getUserId = function (req, res, next, id) {
+var findUserById = function (req, res, next, id) {
     User.findOne({ auth0id: id }, function (err, user) {
         if (err) {
             next(err);
@@ -58,12 +58,42 @@ var getUserId = function (req, res, next, id) {
     });
 };
 
+var userExists = function (id, userData) {
+    User.findOne({ auth0id: id }, function (err, user) {
+        if (err) {
+            console.log(err);
+        } else {
+            if (!user) {
+                newUser(userData);
+                console.log("New user created!");
+            } else {
+                console.log("User exists");
+            }
+            
+        }
+    });
+};
+
+var newUser = function (userData) {
+    var user = new User(userData);
+
+    user.save(function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            return true;
+        }
+    });
+};
+
 
 module.exports = {
     createUser,
     updateUser,
     deleteUser,
     getAllUsers,
-    getUserById,
-    getUserId
+    getUser,
+    findUserById,
+    userExists,
+    newUser
 };

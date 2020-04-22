@@ -11,6 +11,8 @@ const util = require("util");
 const querystring = require("querystring");
 const axios = require('axios')
 
+var userUtils = require('../models/User/UserUtils');
+
 require("dotenv").config();
 
 /**
@@ -39,34 +41,20 @@ router.get("/callback", (req, res, next) => {
             if (err) {
                 return next(err);
             }
+
             // Save user to our own db if doesn't exist
-            axios
-                .get(process.env.BASEURL + '/api/user/users/' + user.id)
-                .then(res => {
-                    if (!res.data) {
-                        let userData = {
-                            auth0id: user.id,
-                            firstname: user.name.givenName,
-                            lastname: user.name.familyName,
-                            username: user.nickname,
-                            email: user._json.email,
-                            picture: user.picture,
-                            locale: user.locale
-                        };
-                        
-                        axios
-                            .post(process.env.BASEURL + '/api/user/createuser', userData)
-                            .then(res => {
-                                console.log('New user added successfully!');
-                            })
-                            .catch(error => {
-                                console.error(error);
-                            })
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                })
+            
+            let userData = {
+                auth0id: user.id,
+                firstname: user.name.givenName,
+                lastname: user.name.familyName,
+                username: user.nickname,
+                email: user._json.email,
+                picture: user.picture,
+                locale: user.locale
+            };
+            console.log("Checking if user exits: ");
+            userUtils.userExists(user.id, userData);
 
             const returnTo = req.session.returnTo;
             delete req.session.returnTo;

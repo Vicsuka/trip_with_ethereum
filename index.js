@@ -36,7 +36,8 @@ require("dotenv").config();
 
 const app = express();
 mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true });
-const isProduction = app.get("env") === "production";
+
+const isProduction = process.env.NODE_ENV === "production";
 
 app.use(morgan("dev"));
 app.use(helmet());
