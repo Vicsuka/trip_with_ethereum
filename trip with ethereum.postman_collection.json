@@ -1,0 +1,104 @@
+{
+	"variables": [],
+	"info": {
+		"name": "trip with ethereum",
+		"_postman_id": "574fcf4d-c4aa-de61-d04c-c81c68bb25ca",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add new user",
+			"request": {
+				"url": "http://localhost:5000/api/user/createuser",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"auth0id\": \"testID1\",\n   \"firstname\": \"Emma\",\n   \"lastname\": \"Example\",\n   \"username\": \"Emily\",\n   \"email\": \"emilylikecats@example.com\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add new test user 2",
+			"request": {
+				"url": "http://localhost:5000/api/user/createuser",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"auth0id\": \"testID2\",\r\n   \"firstname\": \"Test\",\r\n   \"lastname\": \"Tom\",\r\n   \"username\": \"tommy1234\",\r\n   \"email\": \"tommy@test.com\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users",
+			"request": {
+				"url": "http://localhost:5000/api/user/allusers",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by ID",
+			"request": {
+				"url": "http://localhost:5000/api/user/users/testID2",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update user by ID",
+			"request": {
+				"url": "http://localhost:5000/api/user/users/testID2",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"auth0id\": \"testID2\",\r\n   \"firstname\": \"Test\",\r\n   \"lastname\": \"Tom\",\r\n   \"username\": \"TOMMYKING\",\r\n   \"email\": \"tommy@test.com\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user by ID",
+			"request": {
+				"url": "http://localhost:5000/api/user/users/testID2",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
