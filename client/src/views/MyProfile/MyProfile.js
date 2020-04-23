@@ -47,6 +47,15 @@ export default function UserProfile() {
   var [lastname, setLastname] = useState("");
   var [username, setUsername] = useState("");
 
+  var [city, setCity] = useState("");
+  var [country, setCountry] = useState("");
+  var [streetAddress, setStreetAddress] = useState("");
+  var [postalCode, setPostalCode] = useState("");
+
+  var [aboutMe, setAboutMe] = useState("");
+
+  var [etherAddress, setEtherAddress] = useState("");
+
   useEffect(() => {
     loadProfile();
   }, []);
@@ -54,7 +63,7 @@ export default function UserProfile() {
   useEffect(() => {
     // console.log(firstname);
 
-  }, [firstname]);  
+  }, [firstname]);
 
   const loadProfile = () => {
     fetch("/api/user/getUserProfile")
@@ -62,10 +71,42 @@ export default function UserProfile() {
       .then(
         (data) => {
           console.log(data);
+          // Mock data
+          // data = {
+          //   "address": {
+          //     "city": "NEW YORK",
+          //     "country": "USA",
+          //     "streetAddress": "8354 Woodland Drive",
+          //     "postalCode": "11795"
+          //   },
+          //   "_id": "5ea197ef8b66f04600f11664",
+          //   "auth0id": "testID",
+          //   "firstname": "John",
+          //   "lastname": "Black",
+          //   "username": "XjOhnX",
+          //   "email": "xjohnx@john.com",
+          //   "about": "I like to travel with random people!!",
+          //   "ethereumAddress": "0x83d768fcef9DEAFe715420E54b7072bc23aD0892",
+          //   "createdAt": "2020-04-23T13:28:15.377Z",
+          //   "updatedAt": "2020-04-23T13:28:15.377Z",
+          //   "__v": 0
+          // };
           setProfile(data);
           setFirstname(data.firstname);
           setLastname(data.lastname);
           setUsername(data.username);
+
+          if (data.address !== undefined) {
+            setCity(data.address.city);
+            setCountry(data.address.country);
+            setStreetAddress(data.address.streetAddress);
+            setPostalCode(data.address.postalCode);
+          }
+          
+
+          setAboutMe(data.about);
+
+          setEtherAddress(data.ethereumAddress);
         },
         (error) => {
           console.log(error);
@@ -78,6 +119,13 @@ export default function UserProfile() {
     userData.firstname = firstname;
     userData.lastname = lastname;
     userData.username = username;
+    userData.ethereumAddress = etherAddress;
+    userData.address= {};
+    userData.address.city = city;
+    userData.address.country = country;
+    userData.address.streetAddress = streetAddress;
+    userData.address.postalCode = postalCode;
+    userData.about = aboutMe;
 
     const requestOptions = {
       method: 'POST',
@@ -86,18 +134,15 @@ export default function UserProfile() {
     };
 
     fetch('/api/user/updateUserProfile', requestOptions)
-        .then(response => {
-          console.log(response.json());
-          response.json();
-        })
-        .then(
-          (data) => {
-            console.log(data);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+      .then(response => response.json())
+      .then(
+        (data) => {
+          console.log(data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   const handleFirstnameChange = (event, value) => {
@@ -110,6 +155,30 @@ export default function UserProfile() {
 
   const handleUsernameChange = (event, value) => {
     setUsername(event.target.value);
+  };
+
+  const handleAboutChange = (event, value) => {
+    setAboutMe(event.target.value);
+  };
+
+  const handlePostalChange = (event, value) => {
+    setPostalCode(event.target.value);
+  };
+
+  const handleStreetChange = (event, value) => {
+    setStreetAddress(event.target.value);
+  };
+
+  const handleCountryChange = (event, value) => {
+    setCountry(event.target.value);
+  };
+
+  const handleCityChange = (event, value) => {
+    setCity(event.target.value);
+  };
+
+  const handleEthereumChange = (event, value) => {
+    setEtherAddress(event.target.value);
   };
 
 
@@ -128,37 +197,72 @@ export default function UserProfile() {
               </CardHeader>
               <div className={classes.aboutInfo}>
                 <GridContainer >
-                  <GridItem xs={12} sm={12} md={3}>
+                  <GridItem xs={6} sm={6} md={3}>
                     <h4>Username:</h4>
                   </GridItem>
-                  <GridItem xs={12} sm={12} md={9}>
+                  <GridItem xs={6} sm={6} md={9}>
                     <h4>{username}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
-                  <GridItem xs={12} sm={12} md={3}>
+                  <GridItem xs={6} sm={6} md={3}>
                     <h4>Email:</h4>
                   </GridItem>
-                  <GridItem xs={12} sm={12} md={9}>
+                  <GridItem xs={6} sm={6} md={9}>
                     <h4>{profile.email}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
-                  <GridItem xs={12} sm={12} md={3}>
+                  <GridItem xs={6} sm={6} md={3}>
                     <h4>ID:</h4>
                   </GridItem>
-                  <GridItem xs={12} sm={12} md={9}>
+                  <GridItem xs={6} sm={6} md={9}>
                     <h4>{profile.auth0id}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
-                  <GridItem xs={12} sm={12} md={3}>
+                  <GridItem xs={6} sm={6} md={3}>
+                    <h4>Ethereum Address:</h4>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={9}>
+                    <h4>{etherAddress}</h4>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={6} sm={6} md={3}>
+                    <h4>City:</h4>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={3}>
+                    <h4>{city}</h4>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={3}>
+                    <h4>Country:</h4>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={3}>
+                    <h4>{country}</h4>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={6} sm={6} md={2}>
+                    <h4>Street Address:</h4>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={5}>
+                    <h4>{streetAddress}</h4>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={3}>
+                    <h4>Postal Code:</h4>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={2}>
+                    <h4>{postalCode}</h4>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={6} sm={6} md={3}>
                     <h4>About:</h4>
                   </GridItem>
-                  <GridItem xs={12} sm={12} md={9}>
-                    <h4>{profile.about}</h4>
+                  <GridItem xs={6} sm={6} md={9}>
+                    <h4>{aboutMe}</h4>
                   </GridItem>
-
                 </GridContainer>
               </div>
             </CardBody>
@@ -179,11 +283,11 @@ export default function UserProfile() {
                     id="first-name"
                     formControlProps={{
                       fullWidth: true,
-                      onChange:handleFirstnameChange
+                      onChange: handleFirstnameChange
                     }}
-                    
-                    />
-                    
+
+                  />
+
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
@@ -191,50 +295,73 @@ export default function UserProfile() {
                     id="last-name"
                     formControlProps={{
                       fullWidth: true,
-                      onChange:handleLastnameChange
+                      onChange: handleLastnameChange
                     }}
-                    
+
                   />
                 </GridItem>
               </GridContainer>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
+                <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="Username"
                     id="username"
                     formControlProps={{
                       fullWidth: true,
-                      onChange:handleUsernameChange
+                      onChange: handleUsernameChange
                     }}
-                    
+
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Ethereum Address"
+                    id="ethereum-address"
+                    formControlProps={{
+                      fullWidth: true,
+                      onChange: handleEthereumChange
+                    }}
                   />
                 </GridItem>
               </GridContainer>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
+                <GridItem xs={12} sm={12} md={3}>
                   <CustomInput
                     labelText="City"
                     id="city"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
+                      onChange: handleCityChange
                     }}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
+                <GridItem xs={12} sm={12} md={3}>
                   <CustomInput
                     labelText="Country"
                     id="country"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
+                      onChange: handleCountryChange
                     }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
+                    labelText="Street Address"
+                    id="street-address"
+                    formControlProps={{
+                      fullWidth: true,
+                      onChange: handleStreetChange
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={2}>
+                  <CustomInput
                     labelText="Postal Code"
                     id="postal-code"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
+                      onChange: handlePostalChange
                     }}
                   />
                 </GridItem>
@@ -246,7 +373,8 @@ export default function UserProfile() {
                     labelText="Write something interesting about you!"
                     id="about-me"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
+                      onChange: handleAboutChange
                     }}
                     inputProps={{
                       multiline: true,

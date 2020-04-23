@@ -18,7 +18,7 @@ var updateUser = function (req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.status(200).json(user);
+            res.status(200).send(user);
         }
     });
 };
@@ -28,7 +28,7 @@ var deleteUser = function (req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.status(200).json(req.user);
+            res.status(200).send(req.user);
         }
     });
 };
@@ -38,7 +38,7 @@ var getAllUsers = function (req, res, next) {
         if (err) {
             next(err);
         } else {
-            res.status(200).json(users);
+            res.status(200).send(users);
         }
     });
 };
@@ -60,16 +60,13 @@ var findUserById = function (req, res, next, id) {
 
 var userExists = function (id, userData) {
     User.findOne({ auth0id: id }, function (err, user) {
-        if (err) {
-            console.log(err);
-        } else {
+        if (!err) {
             if (!user) {
                 newUser(userData);
                 console.log("New user created!");
             } else {
                 console.log("User exists");
             }
-            
         }
     });
 };
@@ -79,29 +76,29 @@ var newUser = function (userData) {
 
     user.save(function (err) {
         if (err) {
-            console.log(err);
+            return false;
         } else {
             return true;
         }
     });
 };
 
-var getUserProfile = function (req, res) {
+var getUserProfile = function (req, res, next) {
     User.findOne({ auth0id: req.user.id }, function (err, user) {
         if (err) {
-            console.log(err);
+            next(err);
         } else {
-            res.status(200).json(user);
+            res.status(200).send(user);
         }
     });
 };
 
-var updateUserProfile = function (req, res) {
-    User.findOneAndUpdate({ auth0id: req.body.auth0id }, req.body, { new: true }, function (err, usr) {
+var updateUserProfile = function (req, res, next) {
+    User.findOneAndUpdate({ auth0id: req.body.auth0id }, req.body, { new: true }, function (err, user) {
         if (err) {
-            console.log(err);
+            next(err);
         } else {
-            res.status(200).json(usr);
+            res.status(200).send(user);
         }
     });
 };

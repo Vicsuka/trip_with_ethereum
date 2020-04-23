@@ -18,7 +18,7 @@ var UserSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        required: true,
+        required: false,
         unique: true
     },
     email: {
@@ -42,19 +42,53 @@ var UserSchema = new mongoose.Schema({
         validate: (value) => {
             return validator.isAlpha(value)
         }
-    }
-}, { timestamps: true });
+    },
+    //Not provided through auth0
+    address: {
+        city: {
+            type: String,
+            validate: (value) => {
+                return validator.isAscii(value)
+            }
+        },
+        country: {
+            type: String,
+            validate: (value) => {
+                return validator.isAscii(value)
+            }
+        },
+        streetAddress: {
+            type: String,
+            required: false,
+            validate: (value) => {
+                return validator.isAscii(value)
+            }
 
-UserSchema.methods.toJSON = function (user) {
-    return {
-        auth0id: this.auth0id,
-        firstname: this.firstname,
-        lastname: this.lastname,
-        username: this.username,
-        email: this.email,
-        picture: this.picture,
-        locale: this.locale
-    };
-};
+        },
+        postalCode: {
+            type: String,
+            uppercase: false,
+            validate: (value) => {
+                return validator.isPostalCode(value,"any")
+            }
+
+        }
+    },
+    about: {
+        type: String,
+        required: false,
+        validate: (value) => {
+            return validator.isAscii(value)
+        }
+    },
+    ethereumAddress: {
+        type: String,
+        required: false,
+        validate: (value) => {
+            return validator.isEthereumAddress(value)
+        }
+    }
+
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
