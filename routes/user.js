@@ -24,5 +24,4 @@ router.post('/updateUserProfile', userUtils.updateUserProfile);
 
 router.param('userId', userUtils.findUserById);
 
-
 module.exports = router;

@@ -199,7 +199,7 @@ export default function Dashboard() {
         <GridItem xs={12} sm={12} md={6}>
           <CustomTabs
             title="Tasks:"
-            headerColor="primary"
+            headerColor="warning"
             tabs={[
               {
                 tabName: "Bugs",

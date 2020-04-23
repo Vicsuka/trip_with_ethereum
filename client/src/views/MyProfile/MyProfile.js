@@ -122,7 +122,7 @@ export default function UserProfile() {
               <img src={profile.picture || defaultIcon} alt="" />
             </CardAvatar>
             <CardBody profile >
-              <CardHeader color="primary">
+              <CardHeader color="warning">
                 <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{firstname} {lastname}</h3>
                 <p className={classes.cardCategoryWhite + ' ' + classes.description}>YOUR DATA</p>
               </CardHeader>
@@ -167,7 +167,7 @@ export default function UserProfile() {
 
         <GridItem xs={12} sm={12} md={7}>
           <Card>
-            <CardHeader color="primary">
+            <CardHeader color="warning">
               <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
               <p className={classes.cardCategoryWhite}>Complete your profile</p>
             </CardHeader>
@@ -257,7 +257,7 @@ export default function UserProfile() {
               </GridContainer>
             </CardBody>
             <CardFooter>
-              <Button color="primary" onClick={handleUpdateProfile}>Update Your Profile</Button>
+              <Button color="warning" onClick={handleUpdateProfile}>Update Your Profile</Button>
             </CardFooter>
           </Card>
         </GridItem>

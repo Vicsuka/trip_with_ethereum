@@ -97,24 +97,13 @@ var getUserProfile = function (req, res) {
 };
 
 var updateUserProfile = function (req, res) {
-    let objId;
-    User.findOne({ auth0id: req.body.auth0id }, function (err, user) {
+    User.findOneAndUpdate({ auth0id: req.body.auth0id }, req.body, { new: true }, function (err, usr) {
         if (err) {
             console.log(err);
         } else {
-            objId = user._id;
-
-            User.findByIdAndUpdate(objId, req.body, { new: true }, function (err, usr) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.status(200).json(usr);
-                }
-            });
+            res.status(200).json(usr);
         }
     });
-
-    
 };
 
 module.exports = {

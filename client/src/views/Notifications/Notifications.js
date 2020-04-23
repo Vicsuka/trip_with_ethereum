@@ -122,7 +122,7 @@ export default function Notifications() {
   };
   return (
     <Card>
-      <CardHeader color="primary">
+      <CardHeader color="warning">
         <h4 className={classes.cardTitleWhite}>Notifications</h4>
       </CardHeader>
       <CardBody>
@@ -184,7 +184,7 @@ export default function Notifications() {
                 'PRIMARY - This is a regular notification made with color="primary"'
               }
               close
-              color="primary"
+              color="warning"
             />
           </GridItem>
         </GridContainer>
@@ -205,7 +205,7 @@ export default function Notifications() {
               <GridItem xs={12} sm={12} md={4}>
                 <Button
                   fullWidth
-                  color="primary"
+                  color="warning"
                   onClick={() => showNotification("tl")}
                 >
                   Top Left
@@ -223,7 +223,7 @@ export default function Notifications() {
               <GridItem xs={12} sm={12} md={4}>
                 <Button
                   fullWidth
-                  color="primary"
+                  color="warning"
                   onClick={() => showNotification("tc")}
                 >
                   Top Center
@@ -241,7 +241,7 @@ export default function Notifications() {
               <GridItem xs={12} sm={12} md={4}>
                 <Button
                   fullWidth
-                  color="primary"
+                  color="warning"
                   onClick={() => showNotification("tr")}
                 >
                   Top Right
@@ -265,7 +265,7 @@ export default function Notifications() {
               <GridItem xs={12} sm={12} md={4}>
                 <Button
                   fullWidth
-                  color="primary"
+                  color="warning"
                   onClick={() => showNotification("bl")}
                 >
                   Bottom Left
@@ -283,7 +283,7 @@ export default function Notifications() {
               <GridItem xs={12} sm={12} md={4}>
                 <Button
                   fullWidth
-                  color="primary"
+                  color="warning"
                   onClick={() => showNotification("bc")}
                 >
                   Bottom Center
@@ -301,7 +301,7 @@ export default function Notifications() {
               <GridItem xs={12} sm={12} md={4}>
                 <Button
                   fullWidth
-                  color="primary"
+                  color="warning"
                   onClick={() => showNotification("br")}
                 >
                   Bottom Right
