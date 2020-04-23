@@ -51,7 +51,6 @@ app.use(bodyParser.json());
 
 const session = {
   secret: "nagyontitkos",
-  cookie: { maxAge: 60000 },
   resave: false,
   saveUninitialized: true
 };
