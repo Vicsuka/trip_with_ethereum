@@ -43,21 +43,74 @@ export default function UserProfile() {
   const classes = useStyles();
   const [profile, setProfile] = useState({});
 
-  useEffect(() => {
+  var [firstname, setFirstname] = useState("");
+  var [lastname, setLastname] = useState("");
+  var [username, setUsername] = useState("");
 
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  useEffect(() => {
+    // console.log(firstname);
+
+  }, [firstname]);  
+
+  const loadProfile = () => {
     fetch("/api/user/getUserProfile")
       .then(response => response.json())
       .then(
         (data) => {
           console.log(data);
           setProfile(data);
+          setFirstname(data.firstname);
+          setLastname(data.lastname);
+          setUsername(data.username);
         },
         (error) => {
           console.log(error);
         }
       )
+  }
 
-  }, []);
+  const handleUpdateProfile = () => {
+    var userData = { ...profile };
+    userData.firstname = firstname;
+    userData.lastname = lastname;
+    userData.username = username;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    };
+
+    fetch('/api/user/updateUserProfile', requestOptions)
+        .then(response => {
+          console.log(response.json());
+          response.json();
+        })
+        .then(
+          (data) => {
+            console.log(data);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+  }
+
+  const handleFirstnameChange = (event, value) => {
+    setFirstname(event.target.value);
+  };
+
+  const handleLastnameChange = (event, value) => {
+    setLastname(event.target.value);
+  };
+
+  const handleUsernameChange = (event, value) => {
+    setUsername(event.target.value);
+  };
 
 
   return (
@@ -70,7 +123,7 @@ export default function UserProfile() {
             </CardAvatar>
             <CardBody profile >
               <CardHeader color="primary">
-                <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{profile.firstname} {profile.lastname}</h3>
+                <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{firstname} {lastname}</h3>
                 <p className={classes.cardCategoryWhite + ' ' + classes.description}>YOUR DATA</p>
               </CardHeader>
               <div className={classes.aboutInfo}>
@@ -79,7 +132,7 @@ export default function UserProfile() {
                     <h4>Username:</h4>
                   </GridItem>
                   <GridItem xs={12} sm={12} md={9}>
-                    <h4>{profile.username}</h4>
+                    <h4>{username}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
@@ -125,17 +178,22 @@ export default function UserProfile() {
                     labelText="First Name"
                     id="first-name"
                     formControlProps={{
-                      fullWidth: true
-                    }}>
-                  </CustomInput>
+                      fullWidth: true,
+                      onChange:handleFirstnameChange
+                    }}
+                    
+                    />
+                    
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="Last Name"
                     id="last-name"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
+                      onChange:handleLastnameChange
                     }}
+                    
                   />
                 </GridItem>
               </GridContainer>
@@ -145,8 +203,10 @@ export default function UserProfile() {
                     labelText="Username"
                     id="username"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
+                      onChange:handleUsernameChange
                     }}
+                    
                   />
                 </GridItem>
               </GridContainer>
@@ -197,7 +257,7 @@ export default function UserProfile() {
               </GridContainer>
             </CardBody>
             <CardFooter>
-              <Button color="primary">Update Your Profile</Button>
+              <Button color="primary" onClick={handleUpdateProfile}>Update Your Profile</Button>
             </CardFooter>
           </Card>
         </GridItem>

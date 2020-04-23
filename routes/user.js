@@ -20,6 +20,8 @@ router.route('/users/:userId')
 
 router.get('/getUserProfile', userUtils.getUserProfile);
 
+router.post('/updateUserProfile', userUtils.updateUserProfile);
+
 router.param('userId', userUtils.findUserById);
 
 

@@ -86,15 +86,35 @@ var newUser = function (userData) {
     });
 };
 
-var getUserProfile = function (req, res, next) {
-    console.log(req);
+var getUserProfile = function (req, res) {
     User.findOne({ auth0id: req.user.id }, function (err, user) {
         if (err) {
-            next(err);
+            console.log(err);
         } else {
             res.status(200).json(user);
         }
     });
+};
+
+var updateUserProfile = function (req, res) {
+    let objId;
+    User.findOne({ auth0id: req.body.auth0id }, function (err, user) {
+        if (err) {
+            console.log(err);
+        } else {
+            objId = user._id;
+
+            User.findByIdAndUpdate(objId, req.body, { new: true }, function (err, usr) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.status(200).json(usr);
+                }
+            });
+        }
+    });
+
+    
 };
 
 module.exports = {
@@ -106,5 +126,6 @@ module.exports = {
     findUserById,
     userExists,
     newUser,
-    getUserProfile
+    getUserProfile,
+    updateUserProfile
 };
