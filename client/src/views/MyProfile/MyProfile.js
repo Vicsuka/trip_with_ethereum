@@ -285,7 +285,9 @@ export default function UserProfile() {
                       fullWidth: true,
                       onChange: handleFirstnameChange
                     }}
-
+                    inputProps={{
+                      value: firstname
+                    }}
                   />
 
                 </GridItem>
@@ -297,7 +299,9 @@ export default function UserProfile() {
                       fullWidth: true,
                       onChange: handleLastnameChange
                     }}
-
+                    inputProps={{
+                      value: lastname
+                    }}
                   />
                 </GridItem>
               </GridContainer>
@@ -310,7 +314,9 @@ export default function UserProfile() {
                       fullWidth: true,
                       onChange: handleUsernameChange
                     }}
-
+                    inputProps={{
+                      value: username
+                    }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
@@ -320,6 +326,9 @@ export default function UserProfile() {
                     formControlProps={{
                       fullWidth: true,
                       onChange: handleEthereumChange
+                    }}
+                    inputProps={{
+                      value: etherAddress
                     }}
                   />
                 </GridItem>
@@ -333,6 +342,9 @@ export default function UserProfile() {
                       fullWidth: true,
                       onChange: handleCityChange
                     }}
+                    inputProps={{
+                      value: city
+                    }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={3}>
@@ -342,6 +354,9 @@ export default function UserProfile() {
                     formControlProps={{
                       fullWidth: true,
                       onChange: handleCountryChange
+                    }}
+                    inputProps={{
+                      value: country
                     }}
                   />
                 </GridItem>
@@ -353,6 +368,9 @@ export default function UserProfile() {
                       fullWidth: true,
                       onChange: handleStreetChange
                     }}
+                    inputProps={{
+                      value: streetAddress
+                    }}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={2}>
@@ -362,6 +380,9 @@ export default function UserProfile() {
                     formControlProps={{
                       fullWidth: true,
                       onChange: handlePostalChange
+                    }}
+                    inputProps={{
+                      value: postalCode
                     }}
                   />
                 </GridItem>
@@ -378,7 +399,8 @@ export default function UserProfile() {
                     }}
                     inputProps={{
                       multiline: true,
-                      rows: 5
+                      rows: 5,
+                      value: aboutMe
                     }}
                   />
                 </GridItem>
