@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -389,7 +388,6 @@ export default function UserProfile() {
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
                   <CustomInput
                     labelText="Write something interesting about you!"
                     id="about-me"

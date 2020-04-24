@@ -5,6 +5,8 @@ import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import DeveloperBoard from "@material-ui/icons/DeveloperBoard";
 import Notifications from "@material-ui/icons/Notifications";
+import CardTravel from "@material-ui/icons/CardTravel";
+
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import MyProfile from "views/MyProfile/MyProfile.js";
@@ -13,6 +15,7 @@ import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import DevArea from "views/DevArea/DevArea.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
+import Trips from "views/Trips/Trips.js";
 
 const dashboardRoutes = [
   {
@@ -34,6 +37,13 @@ const dashboardRoutes = [
     name: "My Profile",
     icon: Person,
     component: MyProfile,
+    layout: "/admin"
+  },
+  {
+    path: "/trips",
+    name: "Trips",
+    icon: CardTravel,
+    component: Trips,
     layout: "/admin"
   },
   {

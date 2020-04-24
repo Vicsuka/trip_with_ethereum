@@ -25,10 +25,7 @@ const mongoose = require("mongoose");
 const autoIncrement = require('mongoose-auto-increment');
 
 
-
 require("dotenv").config();
-
-
 
 /**
  * App Variables
@@ -43,7 +40,6 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 
 /**
  * Session Configuration
@@ -147,12 +143,10 @@ if (isProduction) {
   app.use('/api', require('./routes/api'));
 }
 
-
 // Handle other requests
 app.get("*", (req, res) => {
   res.sendFile('index.html', { root });
 })
-
 
 /**
  * Error handlers
@@ -182,11 +176,6 @@ app.use(function(err, req, res, next) {
     error: {}
   }});
 });
-
-
-
-
-
 
 const port = process.env.PORT || 5000;
 app.listen(port, function () {
