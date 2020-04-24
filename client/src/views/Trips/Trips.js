@@ -62,7 +62,7 @@ export default function Trips() {
                             <h4 className={classes.cardTitleWhite}>Trip #1</h4>
                             <p className={classes.cardCategoryWhite}>2020. 06. 17.</p>
                         </CardHeader>
-                        <CardBody>
+                        <CardBody className={classes.customCard}>
 
                         </CardBody>
                     </Card>
@@ -84,7 +84,7 @@ export default function Trips() {
                             <h4 className={classes.cardTitleWhite}>Trip #3</h4>
                             <p className={classes.cardCategoryWhite}>2020. 10. 01.</p>
                         </CardHeader>
-                        <CardBody>
+                        <CardBody className={classes.customCard}>
 
                         </CardBody>
                     </Card>
