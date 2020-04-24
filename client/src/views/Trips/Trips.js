@@ -5,7 +5,6 @@ import GridContainer from "components/Grid/GridContainer";
 import GridItem from "components/Grid/GridItem";
 import CardHeader from "components/Card/CardHeader";
 import { makeStyles } from "@material-ui/core";
-import CustomMap from "components/CustomMap/CustomMap";
 
 const styles = {
     cardCategoryWhite: {

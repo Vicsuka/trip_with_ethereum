@@ -1,5 +1,3 @@
-import { grayColor } from "assets/jss/material-dashboard-react.js";
-
 const customMapStyle = {
   mapHeight: {
     height: "400px",

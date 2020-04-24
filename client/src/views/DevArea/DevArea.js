@@ -1,7 +1,6 @@
 import React from "react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
-import CustomMap from "components/CustomMap/CustomMap";
 
 export default function DevArea() {
   return (
