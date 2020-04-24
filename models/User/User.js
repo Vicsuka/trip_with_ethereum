@@ -9,17 +9,26 @@ var UserSchema = new mongoose.Schema({
     firstname: {
         type: String,
         required: true,
-        lowercase: false
+        lowercase: false,
+        validate: (value) => {
+            return validator.isLength(value,{min: 1, max: 30})
+        }
     },
     lastname: {
         type: String,
         required: true,
-        lowercase: false
+        lowercase: false,
+        validate: (value) => {
+            return validator.isLength(value,{min: 1, max: 30})
+        }
     },
     username: {
         type: String,
         required: false,
-        unique: true
+        unique: true,
+        validate: (value) => {
+            return validator.isLength(value,{min: 1, max: 30})
+        }
     },
     email: {
         type: String,
@@ -27,7 +36,7 @@ var UserSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         validate: (value) => {
-            return validator.isEmail(value)
+            return validator.isEmail(value) && validator.isLength(value,{min: 1, max: 50})
         }
     },
     picture: {
@@ -40,7 +49,7 @@ var UserSchema = new mongoose.Schema({
         type: String,
         lowercase: true,
         validate: (value) => {
-            return validator.isAlpha(value)
+            return validator.isAlpha(value) && validator.isLength(value,{min: 1, max: 5})
         }
     },
     //Not provided through auth0
@@ -48,20 +57,20 @@ var UserSchema = new mongoose.Schema({
         city: {
             type: String,
             validate: (value) => {
-                return validator.isAscii(value)
+                return validator.isAscii(value) && validator.isLength(value,{min: 1, max: 40})
             }
         },
         country: {
             type: String,
             validate: (value) => {
-                return validator.isAscii(value)
+                return validator.isAscii(value) && validator.isLength(value,{min: 1, max: 40})
             }
         },
         streetAddress: {
             type: String,
             required: false,
             validate: (value) => {
-                return validator.isAscii(value)
+                return validator.isAscii(value) && validator.isLength(value,{min: 1, max: 60})
             }
 
         },
@@ -78,7 +87,7 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: false,
         validate: (value) => {
-            return validator.isAscii(value)
+            return validator.isAscii(value) && validator.isLength(value,{min: 20, max: 400})
         }
     },
     ethereumAddress: {

@@ -70,26 +70,6 @@ export default function UserProfile() {
       .then(
         (data) => {
           console.log(data);
-          // Mock data
-          // data = {
-          //   "address": {
-          //     "city": "NEW YORK",
-          //     "country": "USA",
-          //     "streetAddress": "8354 Woodland Drive",
-          //     "postalCode": "11795"
-          //   },
-          //   "_id": "5ea197ef8b66f04600f11664",
-          //   "auth0id": "testID",
-          //   "firstname": "John",
-          //   "lastname": "Black",
-          //   "username": "XjOhnX",
-          //   "email": "xjohnx@john.com",
-          //   "about": "I like to travel with random people!!",
-          //   "ethereumAddress": "0x83d768fcef9DEAFe715420E54b7072bc23aD0892",
-          //   "createdAt": "2020-04-23T13:28:15.377Z",
-          //   "updatedAt": "2020-04-23T13:28:15.377Z",
-          //   "__v": 0
-          // };
           setProfile(data);
           setFirstname(data.firstname);
           setLastname(data.lastname);
