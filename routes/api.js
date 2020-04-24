@@ -9,6 +9,7 @@ router.get('', (req,res) => {
 });
 
 router.use('/user', require('./user'));
+router.use('/trip', require('./trip'));
 
 router.get('/myapicall', (req, res) => {
     res.status(200).send('Your api is protected');

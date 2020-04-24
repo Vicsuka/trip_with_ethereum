@@ -5,6 +5,7 @@
 
 require('./models/Email/Email');
 require('./models/User/User');
+require('./models/Trip/Trip');
 
 /**
  * Required External Modules

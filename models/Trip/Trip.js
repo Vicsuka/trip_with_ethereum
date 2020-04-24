@@ -2,6 +2,10 @@ var mongoose = require('mongoose');
 var validator = require('validator');
 
 var TripSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        unique: true
+    },
     title: {
         type: String,
         required: true,
@@ -16,6 +20,7 @@ var TripSchema = new mongoose.Schema({
             return validator.isLength(value,{min: 10, max: 500})
         }
     },
+    // References to users
     organizerId: {
         type: String,
         required: true,

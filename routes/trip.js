@@ -10,7 +10,7 @@ router.get('', (req,res) => {
 });
 
 
-router.post('/createTrip', tripUtils.createTrip);
+router.post('/createtrip', tripUtils.createTrip);
 
 
 
