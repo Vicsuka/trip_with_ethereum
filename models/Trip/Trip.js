@@ -62,14 +62,14 @@ var TripSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: (value) => {
-            return validator.isISO8601(value) && validator.isBefore(value,startingDate)
+            return validator.isISO8601(value) && validator.isBefore(value,this.startingDate)
         }
     },
     endingDate: {
         type: String,
         required: true,
         validate: (value) => {
-            return validator.isISO8601(value) && validator.isAfter(value,startingDate)
+            return validator.isISO8601(value) && validator.isAfter(value,this.startingDate)
         }
     },
 }, { timestamps: true });

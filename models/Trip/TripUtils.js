@@ -4,7 +4,7 @@ var userUtils = require('../User/UserUtils');
 
 var createTrip = function (req, res, next) {
     var trip = new Trip(req.body);
-    trip.organizerId = req.user ? req.user.id : null;
+    trip.organizerId = req.user ? req.user.id : "null";
 
     trip.save(function (err) {
         if (err) {
