@@ -9,8 +9,9 @@ import { useEffect } from "react";
 import Button from "components/CustomButtons/Button.js";
 import { Link } from "react-router-dom";
 
-
-
+import { Avatar } from '@material-ui/core';
+import { AvatarGroup } from '@material-ui/lab';
+import CardFooter from "components/Card/CardFooter";
 
 const styles = {
     cardCategoryWhite: {
@@ -77,16 +78,27 @@ export default function Trips() {
     const renderedTrips = trips.map((trip) =>
         <GridItem xs={12} sm={6} md={4} key={trip.id}>
             <Link to={`/admin/trips/${trip.id}`}>
-                <Card>
+                <Card className={classes.customCard}>
                     <CardHeader color="warning">
                         <h4 className={classes.cardTitleWhite}>{trip.title}</h4>
                         <p className={classes.cardCategoryWhite}>
                             {trip.startingDate} - {trip.endingDate}
                         </p>
                     </CardHeader>
-                    <CardBody className={classes.customCard}>
+                    <CardBody>
                         <h5 dangerouslySetInnerHTML={{ __html: trip.description }}></h5>
                     </CardBody>
+                    <CardFooter>
+                        <h4>Participants:</h4>
+                        <AvatarGroup max={3}>                            
+                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+                            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
+                            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />                            
+                        </AvatarGroup>
+                        <Button color="warning">Apply</Button>
+                    </CardFooter>
+
                 </Card>
             </Link>
         </GridItem>
