@@ -45,31 +45,28 @@ const useStyles = makeStyles(styles);
 
 export default function UserProfile() {
   const classes = useStyles();
+
   const [profile, setProfile] = useState({});
+  
   const [succNoti, setSuccNoti] = React.useState(false);
   const [errorNoti, setErrorNoti] = React.useState(false);
 
-  var [firstname, setFirstname] = useState("");
-  var [lastname, setLastname] = useState("");
-  var [username, setUsername] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [username, setUsername] = useState("");
 
-  var [city, setCity] = useState("");
-  var [country, setCountry] = useState("");
-  var [streetAddress, setStreetAddress] = useState("");
-  var [postalCode, setPostalCode] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [postalCode, setPostalCode] = useState("");
 
-  var [aboutMe, setAboutMe] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
 
-  var [etherAddress, setEtherAddress] = useState("");
+  const [etherAddress, setEtherAddress] = useState("");
 
   useEffect(() => {
     loadProfile();
   }, []);
-
-  useEffect(() => {
-    // console.log(firstname);
-
-  }, [firstname]);
 
   const loadProfile = () => {
     fetch("/api/user/getUserProfile")
