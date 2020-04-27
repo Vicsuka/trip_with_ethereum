@@ -11,8 +11,13 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import Snackbar from "components/Snackbar/Snackbar.js";
 
 import defaultIcon from "assets/img/faces/profile-icon.png"
+
+import DoneOutline from "@material-ui/icons/DoneOutline";
+import Error from "@material-ui/icons/Error";
+
 
 const styles = {
   cardCategoryWhite: {
@@ -41,6 +46,8 @@ const useStyles = makeStyles(styles);
 export default function UserProfile() {
   const classes = useStyles();
   const [profile, setProfile] = useState({});
+  const [succNoti, setSuccNoti] = React.useState(false);
+  const [errorNoti, setErrorNoti] = React.useState(false);
 
   var [firstname, setFirstname] = useState("");
   var [lastname, setLastname] = useState("");
@@ -69,7 +76,6 @@ export default function UserProfile() {
       .then(response => response.json())
       .then(
         (data) => {
-          console.log(data);
           setProfile(data);
           setFirstname(data.firstname);
           setLastname(data.lastname);
@@ -81,7 +87,7 @@ export default function UserProfile() {
             setStreetAddress(data.address.streetAddress);
             setPostalCode(data.address.postalCode);
           }
-          
+
 
           setAboutMe(data.about);
 
@@ -99,7 +105,7 @@ export default function UserProfile() {
     userData.lastname = lastname;
     userData.username = username;
     userData.ethereumAddress = etherAddress;
-    userData.address= {};
+    userData.address = {};
     userData.address.city = city;
     userData.address.country = country;
     userData.address.streetAddress = streetAddress;
@@ -117,9 +123,30 @@ export default function UserProfile() {
       .then(
         (data) => {
           console.log(data);
+          if (data.errors) {
+            if (!errorNoti) {
+              setErrorNoti(true);
+              setTimeout(function () {
+                setErrorNoti(false);
+              }, 3000);
+            }
+          }else {
+            if (!succNoti) {
+              setSuccNoti(true);
+              setTimeout(function () {
+                setSuccNoti(false);
+              }, 3000);
+            }
+          }
         },
         (error) => {
           console.log(error);
+          if (!errorNoti) {
+            setErrorNoti(true);
+            setTimeout(function () {
+              setErrorNoti(false);
+            }, 3000);
+          }
         }
       );
   }
@@ -390,6 +417,25 @@ export default function UserProfile() {
           </Card>
         </GridItem>
       </GridContainer>
+      <Snackbar
+        place="br"
+        color="success"
+        icon={DoneOutline}
+        message="Update successful!"
+        open={succNoti}
+        closeNotification={() => setSuccNoti(false)}
+        close
+      />
+
+      <Snackbar
+        place="br"
+        color="danger"
+        icon={Error}
+        message="An error occurred! Please check data and try again later!"
+        open={errorNoti}
+        closeNotification={() => setErrorNoti(false)}
+        close
+      />
     </div>
   );
 }
