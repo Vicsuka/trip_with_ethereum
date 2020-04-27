@@ -73,7 +73,7 @@ export default function Trips() {
     }
 
     const renderedTrips = trips.map((trip) =>
-        <GridItem xs={12} sm={6} md={4}>
+        <GridItem xs={12} sm={6} md={4} key={trip.id}>
             <Link to={`/admin/trips/${trip.id}`}>
                 <Card>
                     <CardHeader color="warning">
