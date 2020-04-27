@@ -10,6 +10,8 @@ import Button from "components/CustomButtons/Button.js";
 import { Link } from "react-router-dom";
 
 
+
+
 const styles = {
     cardCategoryWhite: {
         color: "rgba(255,255,255,.62)",

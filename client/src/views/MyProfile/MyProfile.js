@@ -43,11 +43,11 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile() {
+export default function MyProfile() {
   const classes = useStyles();
 
   const [profile, setProfile] = useState({});
-  
+
   const [succNoti, setSuccNoti] = React.useState(false);
   const [errorNoti, setErrorNoti] = React.useState(false);
 

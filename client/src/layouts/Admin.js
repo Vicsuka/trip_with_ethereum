@@ -22,7 +22,8 @@ let ps;
 
 const switchRoutes = (
   <Switch>
-    {routes.map((prop, key) => {
+    <Route path={routes.users.layout + routes.users.path} component={routes.users.component} key={9}/>
+    {routes.dashboard.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
           <Route
@@ -83,7 +84,7 @@ export default function Admin({ ...rest }) {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={routes}
+        routes={routes.dashboard}
         logoText={"Trip Organizer"}
         logo={logo}
         image={image}
@@ -94,7 +95,7 @@ export default function Admin({ ...rest }) {
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
-          routes={routes}
+          routes={routes.dashboard}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
         />
