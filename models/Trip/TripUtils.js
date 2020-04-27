@@ -1,10 +1,13 @@
 var mongoose = require('mongoose');
 var Trip = mongoose.model('Trip');
 var userUtils = require('../User/UserUtils');
+var uuidv4 = require('uuid/v4');
 
 var createTrip = function (req, res, next) {
+    req.body.organizerId = req.user ? req.user.id : "null";
+    req.body.id = uuidv4();
     var trip = new Trip(req.body);
-    trip.organizerId = req.user ? req.user.id : null;
+    
 
     trip.save(function (err) {
         if (err) {
@@ -27,13 +30,13 @@ var updateTrip = function (req, res, next) {
 };
 
 var deleteTrip = function (req, res, next) {
-    // req.trip.remove(function (err) {
-    //     if (err) {
-    //         next(err);
-    //     } else {
-    //         res.status(200).send(req.trip);
-    //     }
-    // });
+    req.trip.remove(function (err) {
+        if (err) {
+            next(err);
+        } else {
+            res.status(200).send(req.trip);
+        }
+    });
 };
 
 var getAllTrips = function (req, res, next) {
@@ -51,7 +54,7 @@ var getTrip = function (req, res) {
 };
 
 var findTripById = function (req, res, next, id) {
-    Trip.findOne({ id: id }, function (err, trip) {
+    Trip.findOne({ _id: id }, function (err, trip) {
         if (err) {
             next(err);
         } else {
@@ -84,7 +87,7 @@ var updateTripProfile = function (req, res, next) {
 module.exports = {
     createTrip,
     // updateTrip,
-    // deleteTrip,
+    deleteTrip,
     getAllTrips,
     getTrip,
     findTripById,
