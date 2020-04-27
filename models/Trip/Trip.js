@@ -27,20 +27,22 @@ var TripSchema = new mongoose.Schema({
     },
     participantIds: [{
         type: String,
-        required: false,
+        required: false
     }],
+    //
+
     price: {
         type: Number,
         required: true,
         validate: (value) => {
-            return value >=0.0001 && value < 100;
+            return value >=0.0001 && value < 100
         }
     },
     maxPersons: {
         type: Number,
         required: true,
         validate: (value) => {
-            return value >=1 && value < 50;
+            return value >=1 && value < 50
         }
     },
     smartContractAddress: {

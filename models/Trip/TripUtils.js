@@ -8,7 +8,6 @@ var createTrip = function (req, res, next) {
     req.body.id = uuidv4();
     var trip = new Trip(req.body);
     
-
     trip.save(function (err) {
         if (err) {
             next(err);
@@ -54,7 +53,7 @@ var getTrip = function (req, res) {
 };
 
 var findTripById = function (req, res, next, id) {
-    Trip.findOne({ _id: id }, function (err, trip) {
+    Trip.findOne({ id: id }, function (err, trip) {
         if (err) {
             next(err);
         } else {

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import GridContainer from "components/Grid/GridContainer";
 import GridItem from "components/Grid/GridItem";
 import CardHeader from "components/Card/CardHeader";
 import { makeStyles } from "@material-ui/core";
+import { useEffect } from "react";
+import Button from "components/CustomButtons/Button.js";
+import { Link } from "react-router-dom";
+
 
 const styles = {
     cardCategoryWhite: {
@@ -32,12 +36,8 @@ const styles = {
         height: 48,
         padding: '0 30px',
     },
-    customMap: {
-        height:"100px",
-        width:"100px"
-    },
     customCard: {
-        height:"300px"
+        height: "300px"
     }
 
 };
@@ -48,48 +48,57 @@ const useStyles = makeStyles(styles);
 export default function Trips() {
     const classes = useStyles();
 
+    const [trips, setTrips] = useState([]);
+
+    useEffect(() => {
+        loadTrips();
+    }, []);
+
+    const handleCreateTrip = () => {
+
+    }
+
+    const loadTrips = () => {
+        fetch("/api/trip/alltrips")
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    console.log(data);
+                    setTrips(data);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            )
+    }
+
+    const renderedTrips = trips.map((trip) =>
+        <GridItem xs={12} sm={6} md={4}>
+            <Link to={`/admin/trips/${trip.id}`}>
+                <Card>
+                    <CardHeader color="warning">
+                        <h4 className={classes.cardTitleWhite}>{trip.title}</h4>
+                        <p className={classes.cardCategoryWhite}>
+                            {trip.startingDate} - {trip.endingDate}
+                        </p>
+                    </CardHeader>
+                    <CardBody className={classes.customCard}>
+                        <h5 dangerouslySetInnerHTML={{ __html: trip.description }}></h5>
+                    </CardBody>
+                </Card>
+            </Link>
+        </GridItem>
+    );
+
+
+
     return (
         <div>
-            <Card>
-                <CardBody>
-                    <div className="container">Trips will be displayed here</div>
-                </CardBody>
-            </Card>
+            <Link to="/admin/user"><Button color="warning" size="lg" round onClick={handleCreateTrip}>Create Your Trip!</Button></Link>
             <GridContainer>
-                <GridItem xs={12} sm={6} md={4}>
-                    <Card>
-                        <CardHeader color="warning">
-                            <h4 className={classes.cardTitleWhite}>Trip #1</h4>
-                            <p className={classes.cardCategoryWhite}>2020. 06. 17.</p>
-                        </CardHeader>
-                        <CardBody className={classes.customCard}>
-
-                        </CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem xs={12} sm={6} md={4}>
-                    <Card>
-                        <CardHeader color="warning">
-                            <h4 className={classes.cardTitleWhite}>Trip #2</h4>
-                            <p className={classes.cardCategoryWhite}>2020. 08. 27.</p>
-                        </CardHeader>
-                        <CardBody className={classes.customCard}>
-                           
-                        </CardBody>
-                    </Card>
-                </GridItem>
-                <GridItem xs={12} sm={6} md={4}>
-                    <Card>
-                        <CardHeader color="warning">
-                            <h4 className={classes.cardTitleWhite}>Trip #3</h4>
-                            <p className={classes.cardCategoryWhite}>2020. 10. 01.</p>
-                        </CardHeader>
-                        <CardBody className={classes.customCard}>
-
-                        </CardBody>
-                    </Card>
-                </GridItem>
+                {renderedTrips}
             </GridContainer>
+
         </div>
     );
 }
