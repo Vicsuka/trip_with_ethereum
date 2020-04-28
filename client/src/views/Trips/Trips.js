@@ -97,7 +97,7 @@ export default function Trips() {
 
         // Wait until all participants are loaded
         Promise.all(allPromises).then(function() {
-            console.log("Done");
+            console.log("Participants loaded");
             console.log(extendedData);
             setTrips(extendedData);
           });
@@ -106,7 +106,7 @@ export default function Trips() {
 
     const renderedTrips = trips.map((trip) =>
         <GridItem xs={12} sm={6} md={4} key={trip.id}>
-            <Link to={`/admin/trips/${trip.id}`}>
+            <Link to={`/admin/trip/${trip.id}`}>
                 <Card className={classes.customCard}>
                     <CardHeader color="warning">
                         <h4 className={classes.cardTitleWhite}>{trip.title}</h4>
@@ -124,7 +124,7 @@ export default function Trips() {
                                 return (<Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i} />)
                             })}                                              
                         </AvatarGroup>
-                        <Button color="warning">Apply</Button>
+                        <Button color="warning">Details</Button>
                     </CardFooter>
 
                 </Card>

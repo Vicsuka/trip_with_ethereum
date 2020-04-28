@@ -17,6 +17,7 @@ import DevArea from "views/DevArea/DevArea.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import Trips from "views/Trips/Trips.js";
 import UserProfile from "views/UserProfile/UserProfile";
+import TripDetails from "views/TripDetails/TripDetails";
 
 const routes = {
   dashboard: [
@@ -81,6 +82,11 @@ const routes = {
     path: "/:userId",
     component: UserProfile,
     layout: "/admin/user"
+  },
+  trips: {
+    path: "/:tripId",
+    component: TripDetails,
+    layout: "/admin/trip"
   }
 
 };
