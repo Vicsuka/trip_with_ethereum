@@ -1,6 +1,7 @@
 
 
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -20,6 +21,9 @@ import defaultIcon from "assets/img/faces/profile-icon.png"
 import DoneOutline from "@material-ui/icons/DoneOutline";
 import Error from "@material-ui/icons/Error";
 
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const styles = {
     cardCategoryWhite: {
@@ -48,11 +52,92 @@ const useStyles = makeStyles(styles);
 export default function MyProfile(props) {
     const classes = useStyles();
 
-    const [profile, setProfile] = useState({});
+    const [title, setTitle] = useState("");
+    const [desc, setDesc] = useState("");
+    const [price, setPrice] = useState("");
+    const [particNumber, setParticN] = useState("");
+    const [type, setType] = useState("");
+
+
+    const [deadline, setDeadline] = useState("");
+    const [deadlineDate, setDeadlineDate] = useState(new Date());
+    
+    const [starting, setStarting] = useState("");
+    const [startingDate, setStartingDate] = useState(new Date());
+
+    const [ending, setEnding] = useState("");
 
     useEffect(() => {
 
     }, []);
+
+    const handleSubmit = () => {
+        console.log("submitted");
+        let tripData = {
+            title: title,
+            description: desc,
+            price: price,
+            maxPersons: particNumber,
+            smartContractType: type,
+            deadLineDate: deadline,
+            startingDate: starting,
+            endingDate: ending
+        };
+        console.log(tripData);
+    };
+
+    const handleTitleChange = (event, value) => {
+        setTitle(event.target.value);
+      };
+    
+      const handlePriceChange = (event, value) => {
+        setPrice(event.target.value);
+      };
+    
+      const handleDescChange = (event, value) => {
+        setDesc(event.target.value);
+      };
+    
+      const handleParticChange = (event, value) => {
+        setParticN(event.target.value);
+      };
+    
+      const handleTypeChange = (event, value) => {
+        setType(event.target.value);
+      };
+    
+      const handleDeadlineChange = (date) => {
+        setDeadline(moment(date).format('YYYY-MM-DD'));
+        
+        if (!moment(starting).isAfter(moment(date).format('YYYY-MM-DD'))) {
+            setStarting("");
+            setEnding("");
+        }
+        date = moment(date).add(1, 'days');
+        setDeadlineDate(date._d);
+        date = moment(date).add(1, 'days');
+        setStartingDate(date._d);
+        
+      };
+    
+      const handleStartingChange = (date) => {
+        setStarting(moment(date).format('YYYY-MM-DD'));
+
+        if (!moment(ending).isAfter(moment(date).format('YYYY-MM-DD'))) {
+            setEnding("");
+        }
+
+        date = moment(date).add(1, 'days');
+        setStartingDate(date._d);
+        
+      };
+    
+      const handleEndingChange = (date) => {
+
+        setEnding(moment(date).format('YYYY-MM-DD'));
+      };
+
+      
     return (
         <div>
             <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
@@ -63,52 +148,114 @@ export default function MyProfile(props) {
                             <h4 className={classes.cardTitleWhite}>Create your trip</h4>
                             <p className={classes.cardCategoryWhite}>Fill out the details</p>
                         </CardHeader>
-                        <CardBody>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CustomInput
-                                        labelText="First Name"
-                                        id="first-name"
-                                        formControlProps={{
-                                            fullWidth: true
-                                        }}
-                                    />
+                            <CardBody>
 
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CustomInput
-                                        labelText="Last Name"
-                                        id="last-name"
-                                        formControlProps={{
-                                            fullWidth: true
-                                        }}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CustomInput
-                                        labelText="Username"
-                                        id="username"
-                                        formControlProps={{
-                                            fullWidth: true
-                                        }}
-                                    />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CustomInput
-                                        labelText="Ethereum Address"
-                                        id="ethereum-address"
-                                        formControlProps={{
-                                            fullWidth: true
-                                        }}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                        </CardBody>
-                        <CardFooter>
-                            <Button size="lg" color="warning">Create trip</Button>
-                        </CardFooter>
+                                <GridContainer>
+                                    <GridItem xs={12} sm={12} md={6}>
+                                        <CustomInput
+                                            labelText="Title (max. 30 char)"
+                                            id="trip-title"
+                                            formControlProps={{
+                                                fullWidth: true,
+                                                onChange: handleTitleChange
+                                            }}
+                                        />
+
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={2}>
+                                        <CustomInput
+                                            labelText="Price"
+                                            id="trip-price"
+                                            formControlProps={{
+                                                fullWidth: true,
+                                                onChange: handlePriceChange
+                                            }}
+                                        />
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={2}>
+                                        <CustomInput
+                                            labelText="Max participants"
+                                            id="trip-participants"
+                                            formControlProps={{
+                                                fullWidth: true,
+                                                onChange: handleParticChange
+                                            }}
+                                        />
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={2}>
+                                        <CustomInput
+                                            labelText="Trust factor"
+                                            id="trip-trust"
+                                            formControlProps={{
+                                                fullWidth: true,
+                                                onChange: handleTypeChange
+                                            }}
+                                        />
+                                    </GridItem>
+                                </GridContainer>
+                                <GridContainer>
+                                    <GridItem xs={12} sm={12} md={4}>
+                                        <CustomInput
+                                            labelText="Deadline date"
+                                            id="trip-deadline"
+                                            formControlProps={{
+                                                fullWidth: true
+                                            }}
+                                            inputProps={{
+                                                value: deadline
+                                              }}
+                                        />
+                                        <DatePicker onChange={handleDeadlineChange} minDate={new Date()} inline/>
+
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={4}>
+                                        <CustomInput
+                                            labelText="Starting date"
+                                            id="trip-starting"
+                                            formControlProps={{
+                                                fullWidth: true
+                                            }}
+                                            inputProps={{
+                                                value: starting
+                                              }}
+                                        />
+                                        <DatePicker onChange={handleStartingChange} minDate={deadlineDate} inline/>
+                                    </GridItem>
+                                    <GridItem xs={12} sm={12} md={4}>
+                                        <CustomInput
+                                            labelText="Ending date"
+                                            id="trip-ending"
+                                            formControlProps={{
+                                                fullWidth: true
+                                            }}
+                                            inputProps={{
+                                                value: ending
+                                              }}
+                                        />
+                                        <DatePicker onChange={handleEndingChange} minDate={startingDate} inline/>
+                                    </GridItem>
+                                </GridContainer>
+                                <GridContainer>
+                                    <GridItem xs={12} sm={12} md={12}>
+                                        <CustomInput
+                                            labelText="Trip description (min. 10 char)"
+                                            id="trip-description"
+                                            formControlProps={{
+                                                fullWidth: true,
+                                                onChange: handleDescChange
+                                            }}
+                                            inputProps={{
+                                                multiline: true,
+                                                rows: 10
+                                            }}
+                                        />
+                                    </GridItem>
+                                </GridContainer>
+
+                            </CardBody>
+                            <CardFooter>
+                                <Button size="lg" color="warning" onClick={handleSubmit}>Create trip</Button>
+                            </CardFooter>
                     </Card>
                 </GridItem>
 
