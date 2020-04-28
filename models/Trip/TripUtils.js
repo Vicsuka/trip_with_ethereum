@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Trip = mongoose.model('Trip');
-var userUtils = require('../User/UserUtils');
 var uuidv4 = require('uuid/v4');
 
 var createTrip = function (req, res, next) {
@@ -63,24 +62,31 @@ var findTripById = function (req, res, next, id) {
     });
 };
 
-var getTripProfile = function (req, res, next) {
-    Trip.findOne({ auth0id: req.trip.id }, function (err, trip) {
-        if (err) {
-            next(err);
-        } else {
-            res.status(200).send(trip);
-        }
-    });
-};
-
-var updateTripProfile = function (req, res, next) {
-    Trip.findOneAndUpdate({ auth0id: req.body.auth0id }, req.body, { new: true }, function (err, trip) {
-        if (err) {
-            next(err);
-        } else {
-            res.status(200).send(trip);
-        }
-    });
+var applyToTrip = function (req, res, next) {
+    if (!req.user) {
+        res.status(401).send({ errors : "You are not logged in!"});
+    } else {
+        Trip.findOne({ id: req.body.tripId }, function (err, trip) {
+            if (err) {
+                next(err);
+            } else {
+                let existingIds = trip.participantIds;
+                if (existingIds.indexOf(req.user.id) === -1) {
+                    existingIds.push(req.user.id);
+                    Trip.findOneAndUpdate({ id: req.body.tripId }, { $set: { participantIds: existingIds } }, { new: true }, function (err, trip) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            res.status(200).send(trip);
+                        }
+                    });
+                } else {
+                    res.status(400).send({ errors : "You are already on this trip!"});
+                }
+            }
+        });
+    }
+    
 };
 
 module.exports = {
@@ -90,6 +96,7 @@ module.exports = {
     getAllTrips,
     getTrip,
     findTripById,
+    applyToTrip,
     // tripExists,
     // newTrip,
     // getTripProfile,

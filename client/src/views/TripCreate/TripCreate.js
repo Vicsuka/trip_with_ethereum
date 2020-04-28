@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,15 +11,9 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Snackbar from "components/Snackbar/Snackbar.js";
 
-import defaultIcon from "assets/img/faces/profile-icon.png"
-
-import DoneOutline from "@material-ui/icons/DoneOutline";
-import Error from "@material-ui/icons/Error";
 
 
 import DatePicker from "react-datepicker";
@@ -66,10 +60,6 @@ export default function MyProfile(props) {
     const [startingDate, setStartingDate] = useState(new Date());
 
     const [ending, setEnding] = useState("");
-
-    useEffect(() => {
-
-    }, []);
 
     const handleSubmit = () => {
         let tripData = {

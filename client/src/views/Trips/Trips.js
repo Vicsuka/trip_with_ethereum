@@ -30,17 +30,11 @@ const styles = {
         marginBottom: "3px",
         textDecoration: "none"
     },
-    gradientButton: {
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-        border: 0,
-        borderRadius: 3,
-        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-        color: 'white',
-        height: 48,
-        padding: '0 30px',
-    },
     customCard: {
         height: "300px"
+    },
+    avatarBorderless: {
+        border: "0 !important"
     }
 
 };
@@ -56,10 +50,6 @@ export default function Trips() {
     useEffect(() => {
         loadTrips();
     }, []);
-
-    const handleCreateTrip = () => {
-
-    }
 
     const loadTrips = () => {
         fetch("/api/trip/alltrips")
@@ -118,13 +108,13 @@ export default function Trips() {
                 </CardBody>
                 <CardFooter>
                     <h4>Participants:</h4>
-                    <AvatarGroup max={3}>
+                    <AvatarGroup max={3} >
                         {trip.participants.map((participant, i) => {
-                            return (<Link to={`/admin/user/${participant.auth0id}`} key={i}><Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i}/></Link>)
+                            return (<Link className={classes.avatarBorderless} to={`/admin/user/${participant.auth0id}`} key={i}><Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i}/></Link>)
                         })}
                     </AvatarGroup>
                     <Link to={`/admin/trip/${trip.id}`}>
-                        <Button color="warning">Details</Button>
+                        <Button color="warning" >Details</Button>
                     </Link>
                 </CardFooter>
             </Card>
@@ -135,7 +125,7 @@ export default function Trips() {
 
     return (
         <div>
-            <Link to="/admin/trips/create"><Button color="warning" size="lg" round onClick={handleCreateTrip}>Create Your Trip</Button></Link>
+            <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
             <GridContainer>
                 {renderedTrips}
             </GridContainer>

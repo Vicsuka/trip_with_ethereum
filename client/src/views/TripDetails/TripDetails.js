@@ -28,6 +28,15 @@ const styles = {
         marginBottom: "3px",
         textDecoration: "none"
     },
+    gradientButton: {
+        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+        border: 0,
+        borderRadius: 3,
+        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        color: 'white',
+        height: 48,
+        padding: '0 30px',
+    },
     aboutInfo: {
         textAlign: "left"
     }
@@ -60,16 +69,22 @@ export default function TripDetails(props) {
     }
 
     const handleApply = () => {
-        // fetch("/api/trip/trips/" + tripId)
-        //     .then(response => response.json())
-        //     .then(
-        //         (data) => {
-        //             setTrip(data);
-        //         },
-        //         (error) => {
-        //             console.log(error);
-        //         }
-        //     )
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({tripId : tripId})
+        };
+
+        fetch('/api/trip/apply', requestOptions)
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    console.log(data);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            )
     }
 
 
@@ -89,7 +104,7 @@ export default function TripDetails(props) {
                             {JSON.stringify(trip)}
                         </CardBody>
                         <CardFooter>
-                            <Button color="warning" block onClick={handleApply}>Apply</Button>
+                            <Button color="warning" className={classes.gradientButton} block onClick={handleApply}>Apply</Button>
                         </CardFooter>
                     </Card>
                 </GridItem>
