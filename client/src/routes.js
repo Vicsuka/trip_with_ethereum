@@ -18,6 +18,7 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import Trips from "views/Trips/Trips.js";
 import UserProfile from "views/UserProfile/UserProfile";
 import TripDetails from "views/TripDetails/TripDetails";
+import TripCreate from "views/TripCreate/TripCreate";
 
 const routes = {
   dashboard: [
@@ -87,6 +88,11 @@ const routes = {
     path: "/:tripId",
     component: TripDetails,
     layout: "/admin/trip"
+  },
+  createTrip: {
+    path: "/create",
+    component: TripCreate,
+    layout: "/admin/trips"
   }
 
 };

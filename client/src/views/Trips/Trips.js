@@ -135,7 +135,7 @@ export default function Trips() {
 
     return (
         <div>
-            <Link to="/admin/user"><Button color="warning" size="lg" round onClick={handleCreateTrip}>Create Your Trip!</Button></Link>
+            <Link to="/admin/trips/create"><Button color="warning" size="lg" round onClick={handleCreateTrip}>Create Your Trip</Button></Link>
             <GridContainer>
                 {renderedTrips}
             </GridContainer>

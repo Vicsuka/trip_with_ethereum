@@ -24,6 +24,7 @@ const switchRoutes = (
   <Switch>
     <Route path={routes.users.layout + routes.users.path} component={routes.users.component} key={9}/>
     <Route path={routes.trips.layout + routes.trips.path} component={routes.trips.component} key={10}/>
+    <Route path={routes.createTrip.layout + routes.createTrip.path} component={routes.createTrip.component} key={11}/>
     {routes.dashboard.map((prop, key) => {
         return (
           <Route
