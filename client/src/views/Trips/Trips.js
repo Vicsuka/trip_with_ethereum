@@ -120,7 +120,7 @@ export default function Trips() {
                     <h4>Participants:</h4>
                     <AvatarGroup max={3}>
                         {trip.participants.map((participant, i) => {
-                            return (<Link to={`/admin/user/${participant.auth0id}`}><Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i} /></Link>)
+                            return (<Link to={`/admin/user/${participant.auth0id}`} key={i}><Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i}/></Link>)
                         })}
                     </AvatarGroup>
                     <Link to={`/admin/trip/${trip.id}`}>

@@ -8,6 +8,7 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
+import Button from "components/CustomButtons/Button.js";
 
 import defaultIcon from "assets/img/faces/profile-icon.png"
 
@@ -63,6 +64,7 @@ export default function UserProfile(props) {
 
     return (
         <div>
+            <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                     <Card profile>

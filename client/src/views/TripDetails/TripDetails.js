@@ -7,6 +7,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import CardFooter from "components/Card/CardFooter.js";
 import Button from "components/CustomButtons/Button.js";
 
 
@@ -58,6 +59,19 @@ export default function TripDetails(props) {
             )
     }
 
+    const handleApply = () => {
+        // fetch("/api/trip/trips/" + tripId)
+        //     .then(response => response.json())
+        //     .then(
+        //         (data) => {
+        //             setTrip(data);
+        //         },
+        //         (error) => {
+        //             console.log(error);
+        //         }
+        //     )
+    }
+
 
     return (
         <div>
@@ -74,6 +88,9 @@ export default function TripDetails(props) {
                         <CardBody>
                             {JSON.stringify(trip)}
                         </CardBody>
+                        <CardFooter>
+                            <Button color="warning" block onClick={handleApply}>Apply</Button>
+                        </CardFooter>
                     </Card>
                 </GridItem>
             </GridContainer>

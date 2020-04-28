@@ -72,7 +72,6 @@ export default function MyProfile(props) {
     }, []);
 
     const handleSubmit = () => {
-        console.log("submitted");
         let tripData = {
             title: title,
             description: desc,
@@ -83,7 +82,23 @@ export default function MyProfile(props) {
             startingDate: starting,
             endingDate: ending
         };
-        console.log(tripData);
+        
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(tripData)
+        };
+
+        fetch('/api/trip/createtrip', requestOptions)
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    console.log(data);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            )
     };
 
     const handleTitleChange = (event, value) => {
@@ -205,7 +220,7 @@ export default function MyProfile(props) {
                                                 value: deadline
                                               }}
                                         />
-                                        <DatePicker onChange={handleDeadlineChange} minDate={new Date()} inline/>
+                                        <DatePicker onChange={handleDeadlineChange} showYearDropdown minDate={new Date()} inline/>
 
                                     </GridItem>
                                     <GridItem xs={12} sm={12} md={4}>
@@ -219,7 +234,7 @@ export default function MyProfile(props) {
                                                 value: starting
                                               }}
                                         />
-                                        <DatePicker onChange={handleStartingChange} minDate={deadlineDate} inline/>
+                                        <DatePicker onChange={handleStartingChange} showYearDropdown minDate={deadlineDate} inline/>
                                     </GridItem>
                                     <GridItem xs={12} sm={12} md={4}>
                                         <CustomInput
@@ -232,7 +247,7 @@ export default function MyProfile(props) {
                                                 value: ending
                                               }}
                                         />
-                                        <DatePicker onChange={handleEndingChange} minDate={startingDate} inline/>
+                                        <DatePicker onChange={handleEndingChange} showYearDropdown minDate={startingDate} inline/>
                                     </GridItem>
                                 </GridContainer>
                                 <GridContainer>
