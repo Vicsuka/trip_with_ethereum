@@ -66,13 +66,42 @@ export default function Trips() {
             .then(response => response.json())
             .then(
                 (data) => {
-                    console.log(data);
-                    setTrips(data);
+                    loadParticipants(data);
                 },
                 (error) => {
                     console.log(error);
                 }
             )
+    }
+
+    const loadParticipants = (data) => {
+        var extendedData = data;
+        var allPromises = [];
+        extendedData.forEach(trip => {
+            trip.participants = [];
+            trip.participantIds.forEach(id => {
+                allPromises.push(
+                    fetch("/api/user/users/" + id)
+                        .then(response => response.json())
+                        .then(
+                            (participant) => {
+                                trip.participants.push(participant);
+                            },
+                            (error) => {
+                                console.log(error);
+                            }
+                        )
+                )
+            })
+        });
+
+        // Wait until all participants are loaded
+        Promise.all(allPromises).then(function() {
+            console.log("Done");
+            console.log(extendedData);
+            setTrips(extendedData);
+          });
+
     }
 
     const renderedTrips = trips.map((trip) =>
@@ -90,11 +119,10 @@ export default function Trips() {
                     </CardBody>
                     <CardFooter>
                         <h4>Participants:</h4>
-                        <AvatarGroup max={3}>                            
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />                            
+                        <AvatarGroup max={3}>
+                            {trip.participants.map((participant, i) => {  
+                                return (<Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i} />)
+                            })}                                              
                         </AvatarGroup>
                         <Button color="warning">Apply</Button>
                     </CardFooter>
