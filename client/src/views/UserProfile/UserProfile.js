@@ -72,7 +72,7 @@ export default function UserProfile(props) {
                         <CardBody profile >
                             <CardHeader color="warning">
                                 <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{profile.firstname} {profile.lastname}</h3>
-                                <p className={classes.cardCategoryWhite + ' ' + classes.description}>YOUR DATA</p>
+                                <p className={classes.cardCategoryWhite + ' ' + classes.description}>USER DATA</p>
                             </CardHeader>
                             <div className={classes.aboutInfo}>
                                 <GridContainer >

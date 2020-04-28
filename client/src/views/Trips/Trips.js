@@ -96,39 +96,38 @@ export default function Trips() {
         });
 
         // Wait until all participants are loaded
-        Promise.all(allPromises).then(function() {
+        Promise.all(allPromises).then(function () {
             console.log("Participants loaded");
             console.log(extendedData);
             setTrips(extendedData);
-          });
+        });
 
     }
 
     const renderedTrips = trips.map((trip) =>
         <GridItem xs={12} sm={6} md={4} key={trip.id}>
-            <Link to={`/admin/trip/${trip.id}`}>
-                <Card className={classes.customCard}>
-                    <CardHeader color="warning">
-                        <h4 className={classes.cardTitleWhite}>{trip.title}</h4>
-                        <p className={classes.cardCategoryWhite}>
-                            {trip.startingDate} - {trip.endingDate}
-                        </p>
-                    </CardHeader>
-                    <CardBody>
-                        <h5 dangerouslySetInnerHTML={{ __html: trip.description }}></h5>
-                    </CardBody>
-                    <CardFooter>
-                        <h4>Participants:</h4>
-                        <AvatarGroup max={3}>
-                            {trip.participants.map((participant, i) => {  
-                                return (<Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i} />)
-                            })}                                              
-                        </AvatarGroup>
+            <Card className={classes.customCard}>
+                <CardHeader color="warning">
+                    <h4 className={classes.cardTitleWhite}>{trip.title}</h4>
+                    <p className={classes.cardCategoryWhite}>
+                        {trip.startingDate} - {trip.endingDate}
+                    </p>
+                </CardHeader>
+                <CardBody>
+                    <h5 dangerouslySetInnerHTML={{ __html: trip.description }}></h5>
+                </CardBody>
+                <CardFooter>
+                    <h4>Participants:</h4>
+                    <AvatarGroup max={3}>
+                        {trip.participants.map((participant, i) => {
+                            return (<Link to={`/admin/user/${participant.auth0id}`}><Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i} /></Link>)
+                        })}
+                    </AvatarGroup>
+                    <Link to={`/admin/trip/${trip.id}`}>
                         <Button color="warning">Details</Button>
-                    </CardFooter>
-
-                </Card>
-            </Link>
+                    </Link>
+                </CardFooter>
+            </Card>
         </GridItem>
     );
 
