@@ -16,65 +16,85 @@ import Icons from "views/Icons/Icons.js";
 import DevArea from "views/DevArea/DevArea.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import Trips from "views/Trips/Trips.js";
+import UserProfile from "views/UserProfile/UserProfile";
+import TripDetails from "views/TripDetails/TripDetails";
+import TripCreate from "views/TripCreate/TripCreate";
 
-const dashboardRoutes = [
-  {
-    path: "/dev",
-    name: "Developer area",
-    icon: DeveloperBoard,
-    component: DevArea,
-    layout: "/admin"
+const routes = {
+  dashboard: [
+    {
+      path: "/dev",
+      name: "Developer area",
+      icon: DeveloperBoard,
+      component: DevArea,
+      layout: "/admin"
+    },
+    {
+      path: "/dashboard",
+      name: "Dashboard",
+      icon: Dashboard,
+      component: DashboardPage,
+      layout: "/admin"
+    },
+    {
+      path: "/user",
+      name: "My Profile",
+      icon: Person,
+      component: MyProfile,
+      layout: "/admin"
+    },
+    {
+      path: "/trips",
+      name: "Trips",
+      icon: CardTravel,
+      component: Trips,
+      layout: "/admin"
+    },
+    {
+      path: "/table",
+      name: "Table List",
+      icon: "content_paste",
+      component: TableList,
+      layout: "/admin"
+    },
+    {
+      path: "/typography",
+      name: "Typography",
+      icon: LibraryBooks,
+      component: Typography,
+      layout: "/admin"
+    },
+    {
+      path: "/icons",
+      name: "Icons",
+      icon: BubbleChart,
+      component: Icons,
+      layout: "/admin"
+    },
+    {
+      path: "/notifications",
+      name: "Notifications",
+      icon: Notifications,
+      component: NotificationsPage,
+      layout: "/admin"
+    }
+  ],
+  users: {
+    path: "/:userId",
+    component: UserProfile,
+    layout: "/admin/user"
   },
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/admin"
+  trips: {
+    path: "/:tripId",
+    component: TripDetails,
+    layout: "/admin/trip"
   },
-  {
-    path: "/user",
-    name: "My Profile",
-    icon: Person,
-    component: MyProfile,
-    layout: "/admin"
-  },
-  {
-    path: "/trips",
-    name: "Trips",
-    icon: CardTravel,
-    component: Trips,
-    layout: "/admin"
-  },
-  {
-    path: "/table",
-    name: "Table List",
-    icon: "content_paste",
-    component: TableList,
-    layout: "/admin"
-  },
-  {
-    path: "/typography",
-    name: "Typography",
-    icon: LibraryBooks,
-    component: Typography,
-    layout: "/admin"
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: BubbleChart,
-    component: Icons,
-    layout: "/admin"
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: "/admin"
+  createTrip: {
+    path: "/create",
+    component: TripCreate,
+    layout: "/admin/trips"
   }
-  
-];
 
-export default dashboardRoutes;
+};
+
+export default routes;

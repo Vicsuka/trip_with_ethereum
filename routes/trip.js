@@ -10,7 +10,19 @@ router.get('', (req,res) => {
 });
 
 
+router.get('/alltrips', tripUtils.getAllTrips);
 router.post('/createtrip', tripUtils.createTrip);
+
+router.post('/apply', tripUtils.applyToTrip);
+
+router.route('/trips/:tripId')
+  .get(tripUtils.getTrip)
+//   .put(tripUtils.updateUser)
+  .delete(tripUtils.deleteTrip);
+  
+router.param('tripId', tripUtils.findTripById);
+
+
 
 
 

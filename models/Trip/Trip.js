@@ -3,7 +3,7 @@ var validator = require('validator');
 
 var TripSchema = new mongoose.Schema({
     id: {
-        type: Number,
+        type: String,
         unique: true
     },
     title: {
@@ -23,24 +23,26 @@ var TripSchema = new mongoose.Schema({
     // References to users
     organizerId: {
         type: String,
-        required: true,
+        required: true
     },
     participantIds: [{
         type: String,
-        required: false,
+        required: false
     }],
+    //
+
     price: {
         type: Number,
         required: true,
         validate: (value) => {
-            return value >=0.0001 && value < 100;
+            return value >=0.0001 && value < 100
         }
     },
     maxPersons: {
         type: Number,
         required: true,
         validate: (value) => {
-            return value >=1 && value < 50;
+            return value >=1 && value < 50
         }
     },
     smartContractAddress: {
@@ -61,17 +63,21 @@ var TripSchema = new mongoose.Schema({
     deadLineDate: {
         type: String,
         required: true,
-        validate: (value) => {
-            return validator.isISO8601(value) && validator.isBefore(value,this.startingDate)
-        }
+        validate: [deadLineValidator, 'Deadline must be before the starting date!']
     },
     endingDate: {
         type: String,
         required: true,
-        validate: (value) => {
-            return validator.isISO8601(value) && validator.isAfter(value,this.startingDate)
-        }
+        validate: [endingDateValidator, 'Ending date must be after the starting date!']
     },
 }, { timestamps: true });
+
+function deadLineValidator(value) {
+    return validator.isISO8601(value) && validator.isBefore(value,this.startingDate)
+}
+
+function endingDateValidator(value) {
+    return validator.isISO8601(value) && validator.isAfter(value,this.startingDate)
+}
 
 module.exports = mongoose.model('Trip', TripSchema);
