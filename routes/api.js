@@ -10,6 +10,7 @@ router.get('', (req,res) => {
 
 router.use('/user', require('./user'));
 router.use('/trip', require('./trip'));
+router.use('/ethereum', require('./ethereum'));
 
 router.get('/myapicall', (req, res) => {
     res.status(200).send('Your api is protected');
