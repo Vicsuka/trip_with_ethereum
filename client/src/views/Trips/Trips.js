@@ -13,6 +13,7 @@ import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";
 
+
 const styles = {
     cardCategoryWhite: {
         color: "rgba(255,255,255,.62)",
@@ -43,6 +44,8 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function Trips() {
+    
+
     const classes = useStyles();
 
     const [trips, setTrips] = useState([]);
@@ -133,3 +136,5 @@ export default function Trips() {
         </div>
     );
 }
+
+

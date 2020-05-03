@@ -11,6 +11,7 @@ web3 = new Web3(new Web3.providers.HttpProvider(process.env.ETHEREUM_MAIN_URL_HT
 // An api endpoint that returns a short list of items
 router.get('', (req,res) => {
     console.log('Etereum API READY');
+    
 });
 
 router.get('/getbalance',(req,res) => {
