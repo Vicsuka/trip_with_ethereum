@@ -13,6 +13,8 @@ import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";
 
+import Web3 from 'web3';
+
 
 const styles = {
     cardCategoryWhite: {
@@ -44,15 +46,38 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function Trips() {
-    
+    const [isEthEnabled, setEthEnabled] = useState(false);
+    const [ethereumAddress, setEthereumAddress] = useState("");
 
     const classes = useStyles();
 
     const [trips, setTrips] = useState([]);
 
     useEffect(() => {
+        if (window.ethereum) {
+            console.log("Eth enabled!");
+            window.web3 = new Web3(Web3.givenProvider || "https://mainnet.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
+            enableEthereum();
+            setEthEnabled(true);
+        } 
         loadTrips();
     }, []);
+
+    async function enableEthereum() {
+        try {
+            // Request account access if needed
+            await window.ethereum.enable();
+            // Acccounts now exposed
+
+            window.web3.eth.getAccounts().then( addresses => {
+                console.log(addresses);
+            })
+            
+            // web3.eth.sendTransaction({/* ... */});
+        } catch (error) {
+            // User denied account access...
+        }
+    }
 
     const loadTrips = () => {
         fetch("/api/trip/alltrips")
@@ -128,11 +153,19 @@ export default function Trips() {
 
     return (
         <div>
-            <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
-            <GridContainer>
-                {renderedTrips}
-            </GridContainer>
-
+            {
+                isEthEnabled
+                ? <div>
+                        <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
+                        <GridContainer>
+                            {renderedTrips}
+                        </GridContainer>
+                    </div>
+                :
+                <Card>
+                    Please connect to an Ethereum Wallet to continue!
+                </Card>
+            }
         </div>
     );
 }
