@@ -18,6 +18,8 @@ import defaultIcon from "assets/img/faces/profile-icon.png"
 import DoneOutline from "@material-ui/icons/DoneOutline";
 import Error from "@material-ui/icons/Error";
 
+import Web3 from 'web3';
+import SnackbarContent from "components/Snackbar/SnackbarContent";
 
 const styles = {
   cardCategoryWhite: {
@@ -46,6 +48,8 @@ const useStyles = makeStyles(styles);
 export default function MyProfile() {
   const classes = useStyles();
 
+  const [isEthEnabled, setEthEnabled] = useState(false);
+
   const [profile, setProfile] = useState({});
 
   const [succNoti, setSuccNoti] = React.useState(false);
@@ -65,6 +69,10 @@ export default function MyProfile() {
   const [etherAddress, setEtherAddress] = useState("");
 
   useEffect(() => {
+    if (window.ethereum) {
+      enableEthereum();
+      setEthEnabled(true);
+    } 
     loadProfile();
   }, []);
 
@@ -96,6 +104,24 @@ export default function MyProfile() {
       )
   }
 
+  async function enableEthereum() {
+    window.web3 = new Web3(Web3.givenProvider || "https://mainnet.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
+    try {
+      // Request account access if needed
+      await window.ethereum.enable();
+      // Acccounts now exposed
+
+      console.log("Eth enabled!");
+
+      window.web3.eth.getAccounts().then(addresses => {
+        console.log(addresses);
+      })
+
+      // web3.eth.sendTransaction({/* ... */});
+    } catch (error) {
+      // User denied account access...
+    }
+  }
   const handleUpdateProfile = () => {
     var userData = { ...profile };
     userData.firstname = firstname;
@@ -308,7 +334,7 @@ export default function MyProfile() {
                   />
                 </GridItem>
               </GridContainer>
-              <GridContainer>
+              <GridContainer alignItems="flex-end">
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="Username"
@@ -323,6 +349,17 @@ export default function MyProfile() {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
+                  {
+                    !isEthEnabled 
+                    ? <SnackbarContent
+                        message={
+                          'You are not connected to the Ethereum network!'
+                        }
+                        color="danger"
+                      />
+                    : ""
+                  }
+                  
                   <CustomInput
                     labelText="Ethereum Address"
                     id="ethereum-address"
@@ -333,6 +370,7 @@ export default function MyProfile() {
                     inputProps={{
                       value: etherAddress
                     }}
+                    error={!isEthEnabled}
                   />
                 </GridItem>
               </GridContainer>
