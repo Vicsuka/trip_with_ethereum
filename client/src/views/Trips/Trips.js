@@ -62,7 +62,7 @@ export default function Trips() {
     }, []);
 
     async function enableEthereum() {
-        window.web3 = new Web3(Web3.givenProvider || "https://mainnet.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
+        window.web3 = new Web3(Web3.givenProvider || "https://ropsten.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
         try {
             // Request account access if needed
             await window.ethereum.enable();

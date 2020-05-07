@@ -96,7 +96,10 @@ export default function MyProfile() {
 
           setAboutMe(data.about);
 
-          setEtherAddress(data.ethereumAddress);
+          if (etherAddress != "") {
+            setEtherAddress(data.ethereumAddress);
+          }
+          
         },
         (error) => {
           console.log(error);
@@ -105,7 +108,7 @@ export default function MyProfile() {
   }
 
   async function enableEthereum() {
-    window.web3 = new Web3(Web3.givenProvider || "https://mainnet.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
+    window.web3 = new Web3(Web3.givenProvider || "https://ropsten.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
     try {
       // Request account access if needed
       await window.ethereum.enable();
@@ -115,6 +118,7 @@ export default function MyProfile() {
 
       window.web3.eth.getAccounts().then(addresses => {
         console.log(addresses);
+        setEtherAddress(addresses[0]);
       })
 
       // web3.eth.sendTransaction({/* ... */});
@@ -368,7 +372,8 @@ export default function MyProfile() {
                       onChange: handleEthereumChange
                     }}
                     inputProps={{
-                      value: etherAddress
+                      value: etherAddress,
+                      disabled: true
                     }}
                     error={!isEthEnabled}
                   />
