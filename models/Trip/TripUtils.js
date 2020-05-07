@@ -1,10 +1,8 @@
 var mongoose = require('mongoose');
 var Trip = mongoose.model('Trip');
-var uuidv4 = require('uuid/v4');
 
 var createTrip = function (req, res, next) {
     req.body.organizerId = req.user ? req.user.id : "null";
-    req.body.id = uuidv4();
     var trip = new Trip(req.body);
     
     trip.save(function (err) {

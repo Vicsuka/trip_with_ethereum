@@ -18,7 +18,7 @@ var server = [
   'Sign contract for "What are conference organizers afraid of?"'
 ];
 
-var ContractAddress = "0x3d698bf2590d9f7b3bd106edf070229c6c9f2653";
+var ContractAddress = "0xd913ac4b8ef11dc5ad43eac93b7b00bd6e3f1a07";
 
 var ContractABI = [
 	{
