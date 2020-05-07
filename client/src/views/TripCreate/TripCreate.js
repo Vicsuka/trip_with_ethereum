@@ -122,7 +122,7 @@ export default function MyProfile(props) {
                     })
                     .then(receipt => {
                         console.log('Mined', receipt);
-                        handleSubmit(tripId, result[0]);
+                        handleSubmit(tripId);
                     })
                     .catch(err => {
                         console.log('Error', err)
@@ -134,9 +134,8 @@ export default function MyProfile(props) {
         });
     }
 
-    const handleSubmit = (tripId, owner) => {
+    const handleSubmit = (tripId) => {
         let tripData = {
-            participantIds: [owner],
             id: tripId,
             title: title,
             description: desc,

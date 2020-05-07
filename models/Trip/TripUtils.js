@@ -4,6 +4,7 @@ var Trip = mongoose.model('Trip');
 var createTrip = function (req, res, next) {
     req.body.organizerId = req.user ? req.user.id : "null";
     var trip = new Trip(req.body);
+    trip.participantIds = [req.user.id];
     
     trip.save(function (err) {
         if (err) {
