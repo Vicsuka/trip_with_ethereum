@@ -10,6 +10,9 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Button from "components/CustomButtons/Button.js";
 
+import GlobalVariables from "variables/general.js";
+
+import Web3 from 'web3';
 
 const styles = {
     cardCategoryWhite: {
@@ -46,12 +49,20 @@ const useStyles = makeStyles(styles);
 
 export default function TripDetails(props) {
     console.log(props);
+
     var tripId = props.match.params.tripId;
     const classes = useStyles();
+
+
+    const [isEthEnabled, setEthEnabled] = useState(false);
 
     const [trip, setTrip] = useState({});
 
     useEffect(() => {
+        if (window.ethereum) {            
+            enableEthereum();
+            setEthEnabled(true);
+        } 
         loadTrip();
     }, []);
 
@@ -60,12 +71,56 @@ export default function TripDetails(props) {
             .then(response => response.json())
             .then(
                 (data) => {
+                    console.log(data);
                     setTrip(data);
                 },
                 (error) => {
                     console.log(error);
                 }
             )
+    }
+
+    async function enableEthereum() {
+        window.web3 = new Web3(Web3.givenProvider || "https://ropsten.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
+        try {
+            // Request account access if needed
+            await window.ethereum.enable();
+
+            // Acccounts now exposed
+            console.log("Eth enabled!");
+            
+            window.web3.eth.getAccounts().then( addresses => {
+                console.log(addresses);
+            })
+            
+            
+        } catch (error) {
+            // User denied account access...
+        }
+    }
+
+    const applyToTrip = () => {  
+        window.web3.eth.getAccounts(function (error, result) {
+            if (!error) {
+                console.log(GlobalVariables.ContractAddress);                
+                var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+                contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 100000, value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
+                    .on('transactionHash', hash => {
+                        console.log('TX Hash', hash)
+                    })
+                    .then(receipt => {
+                        console.log('Mined', receipt);
+                        handleApply();
+                    })
+                    .catch(err => {
+                        console.log('Error', err)
+                    })
+                    .finally(() => {
+                        console.log('Extra Code After Everything')
+                    });
+            }       
+        });
     }
 
     const handleApply = () => {
@@ -104,7 +159,11 @@ export default function TripDetails(props) {
                             {JSON.stringify(trip)}
                         </CardBody>
                         <CardFooter>
-                            <Button color="warning" className={classes.gradientButton} block onClick={handleApply}>Apply</Button>
+                            { isEthEnabled 
+                                ? <Button color="warning" className={classes.gradientButton} block onClick={applyToTrip}>Apply</Button>
+                                : ""
+                            }
+                            
                         </CardFooter>
                     </Card>
                 </GridItem>

@@ -66,8 +66,8 @@ export default function Trips() {
         try {
             // Request account access if needed
             await window.ethereum.enable();
+            
             // Acccounts now exposed
-
             console.log("Eth enabled!");
             
             window.web3.eth.getAccounts().then( addresses => {
