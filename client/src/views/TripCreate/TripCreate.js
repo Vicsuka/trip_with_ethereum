@@ -122,10 +122,11 @@ export default function MyProfile(props) {
                     })
                     .then(receipt => {
                         console.log('Mined', receipt);
-                        handleSubmit(tripId);
+                        //TODO confirm creation
                     })
                     .catch(err => {
-                        console.log('Error', err)
+                        console.log('Error', err);
+                        //TODO revert creation
                     })
                     .finally(() => {
                         console.log('Extra Code After Everything')
@@ -158,6 +159,7 @@ export default function MyProfile(props) {
             .then(
                 (data) => {
                     console.log(data);
+                    createTrip();
                 },
                 (error) => {
                     console.log(error);
@@ -336,7 +338,7 @@ export default function MyProfile(props) {
 
                                 </CardBody>
                                 <CardFooter>
-                                    <Button size="lg" color="warning" onClick={createTrip}>Create trip</Button>
+                                    <Button size="lg" color="warning" onClick={handleSubmit}>Create trip</Button>
                                 </CardFooter>
                             </Card>
                         </GridItem>

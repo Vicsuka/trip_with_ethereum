@@ -35,7 +35,7 @@ var TripSchema = new mongoose.Schema({
         type: Number,
         required: true,
         validate: (value) => {
-            return value >=0.0001 && value < 100
+            return value >= 0 && value < 100
         }
     },
     maxPersons: {
