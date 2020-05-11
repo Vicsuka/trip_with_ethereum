@@ -14,7 +14,36 @@ import GlobalVariables from "variables/general.js";
 
 import Web3 from 'web3';
 
-const styles = {
+import { bugs, website, server } from "variables/general.js";
+import Icon from "@material-ui/core/Icon";
+// @material-ui/icons
+import Store from "@material-ui/icons/Store";
+import Warning from "@material-ui/icons/Warning";
+import DateRange from "@material-ui/icons/DateRange";
+import LocalOffer from "@material-ui/icons/LocalOffer";
+import Update from "@material-ui/icons/Update";
+import ArrowUpward from "@material-ui/icons/ArrowUpward";
+import AccessTime from "@material-ui/icons/AccessTime";
+import Accessibility from "@material-ui/icons/Accessibility";
+import BugReport from "@material-ui/icons/BugReport";
+import Code from "@material-ui/icons/Code";
+import Cloud from "@material-ui/icons/Cloud";
+// core components
+import Table from "components/Table/Table.js";
+import Tasks from "components/Tasks/Tasks.js";
+import CustomTabs from "components/CustomTabs/CustomTabs.js";
+import Danger from "components/Typography/Danger.js";
+import CardIcon from "components/Card/CardIcon.js";
+
+import {
+    dailySalesChart,
+    emailsSubscriptionChart,
+    completedTasksChart
+  } from "variables/charts.js";
+  
+import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+
+const secondaryStyles = {
     cardCategoryWhite: {
         color: "rgba(255,255,255,.62)",
         margin: "0",
@@ -52,6 +81,8 @@ export default function TripDetails(props) {
 
     var tripId = props.match.params.tripId;
     const classes = useStyles();
+    const useSecondaryStyles = makeStyles(secondaryStyles);
+    const secondaryClasses = useStyles(useSecondaryStyles);
 
 
     const [isEthEnabled, setEthEnabled] = useState(false);
@@ -59,10 +90,10 @@ export default function TripDetails(props) {
     const [trip, setTrip] = useState({});
 
     useEffect(() => {
-        if (window.ethereum) {            
+        if (window.ethereum) {
             enableEthereum();
             setEthEnabled(true);
-        } 
+        }
         loadTrip();
     }, []);
 
@@ -88,21 +119,21 @@ export default function TripDetails(props) {
 
             // Acccounts now exposed
             console.log("Eth enabled!");
-            
-            window.web3.eth.getAccounts().then( addresses => {
+
+            window.web3.eth.getAccounts().then(addresses => {
                 console.log(addresses);
             })
-            
-            
+
+
         } catch (error) {
             // User denied account access...
         }
     }
 
-    const applyToTrip = () => {  
+    const applyToTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
-                console.log(GlobalVariables.ContractAddress);                
+                console.log(GlobalVariables.ContractAddress);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
                 contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 100000, value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
@@ -119,7 +150,7 @@ export default function TripDetails(props) {
                     .finally(() => {
                         console.log('Extra Code After Everything')
                     });
-            }       
+            }
         });
     }
 
@@ -127,7 +158,7 @@ export default function TripDetails(props) {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({tripId : tripId})
+            body: JSON.stringify({ tripId: tripId })
         };
 
         fetch('/api/trip/apply', requestOptions)
@@ -146,24 +177,101 @@ export default function TripDetails(props) {
     return (
         <div>
             <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
+
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardHeader color="warning">
-                            <h4 className={classes.cardTitleWhite}>{trip.title}</h4>
-                            <p className={classes.cardCategoryWhite}>
+                            <h4 className={secondaryClasses.cardTitleWhite}>{trip.title}</h4>
+                            <p className={secondaryClasses.cardCategoryWhite}>
                                 {trip.startingDate} - {trip.endingDate}
                             </p>
                         </CardHeader>
                         <CardBody>
+                            <GridContainer>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <Card>
+                                        <CardHeader color="warning" stats icon>
+                                            <CardIcon color="warning">
+                                                <Icon>content_copy</Icon>
+                                            </CardIcon>
+                                            <p className={classes.cardCategory}>Used Space</p>
+                                            <h3 className={classes.cardTitle}>
+                                                49/50 <small>GB</small>
+                                            </h3>
+                                        </CardHeader>
+                                        <CardFooter stats>
+                                            <div className={classes.stats}>
+                                                <Danger>
+                                                    <Warning />
+                                                </Danger>
+                                                <a href="#pablo" onClick={e => e.preventDefault()}>
+                                                    Get more space
+                                                </a>
+                                            </div>
+                                        </CardFooter>
+                                    </Card>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <Card>
+                                        <CardHeader color="success" stats icon>
+                                            <CardIcon color="success">
+                                                <Store />
+                                            </CardIcon>
+                                            <p className={classes.cardCategory}>Revenue</p>
+                                            <h3 className={classes.cardTitle}>$34,245</h3>
+                                        </CardHeader>
+                                        <CardFooter stats>
+                                            <div className={classes.stats}>
+                                                <DateRange />
+                                                Last 24 Hours
+                                            </div>
+                                        </CardFooter>
+                                    </Card>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <Card>
+                                        <CardHeader color="danger" stats icon>
+                                            <CardIcon color="danger">
+                                                <Icon>info_outline</Icon>
+                                            </CardIcon>
+                                            <p className={classes.cardCategory}>Fixed Issues</p>
+                                            <h3 className={classes.cardTitle}>75</h3>
+                                        </CardHeader>
+                                        <CardFooter stats>
+                                            <div className={classes.stats}>
+                                                <LocalOffer />
+                                                Tracked from Github
+                                            </div>
+                                        </CardFooter>
+                                    </Card>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <Card>
+                                        <CardHeader color="info" stats icon>
+                                            <CardIcon color="info">
+                                                <Accessibility />
+                                            </CardIcon>
+                                            <p className={classes.cardCategory}>Followers</p>
+                                            <h3 className={classes.cardTitle}>+245</h3>
+                                        </CardHeader>
+                                        <CardFooter stats>
+                                            <div className={classes.stats}>
+                                                <Update />
+                                                Just Updated
+                                            </div>
+                                        </CardFooter>
+                                    </Card>
+                                </GridItem>
+                            </GridContainer>
                             {JSON.stringify(trip)}
                         </CardBody>
                         <CardFooter>
-                            { isEthEnabled 
-                                ? <Button color="warning" className={classes.gradientButton} block onClick={applyToTrip}>Apply</Button>
+                            {isEthEnabled
+                                ? <Button color="warning" className={secondaryClasses.gradientButton} block onClick={applyToTrip}>Apply</Button>
                                 : ""
                             }
-                            
+
                         </CardFooter>
                     </Card>
                 </GridItem>
