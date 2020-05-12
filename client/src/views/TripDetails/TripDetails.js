@@ -196,6 +196,21 @@ export default function TripDetails(props) {
         }
     }
 
+    const renderStatus = () => {
+        if (isDeadlinePassed) {
+            if (moment(moment().format("YYYY-MM-DD")).isBefore(trip.startingDate)) {
+                return 'Preparing';
+            } else if (moment(moment().format("YYYY-MM-DD")).isBefore(trip.endingDate)) {
+                return 'Ongoing';
+            } else {
+                return 'Finished';
+            }
+        } else {
+            return 'Organizing';
+        }
+        
+    }
+
 
     return (
         <div>
@@ -212,18 +227,18 @@ export default function TripDetails(props) {
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
-                                <GridItem xs={12} sm={6} md={3}>
+                                <GridItem xs={12} sm={6} md={6}>
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
                                                 <HistoryIcon></HistoryIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Status</p>
-                                            <h3 className={classes.cardTitle}></h3>
+                                            <h3 className={classes.cardTitle}>{renderStatus()}</h3>
                                         </CardHeader>
                                     </Card>
                                 </GridItem>
-                                <GridItem xs={12} sm={6} md={3}>
+                                <GridItem xs={12} sm={6} md={6}>
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
@@ -234,7 +249,7 @@ export default function TripDetails(props) {
                                         </CardHeader>
                                     </Card>
                                 </GridItem>
-                                <GridItem xs={12} sm={6} md={3}>
+                                <GridItem xs={12} sm={6} md={6}>
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
@@ -245,7 +260,7 @@ export default function TripDetails(props) {
                                         </CardHeader>
                                     </Card>
                                 </GridItem>
-                                <GridItem xs={12} sm={6} md={3}>
+                                <GridItem xs={12} sm={6} md={6}>
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
