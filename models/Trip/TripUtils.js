@@ -47,7 +47,11 @@ var getAllTrips = function (req, res, next) {
 };
 
 var getTrip = function (req, res) {
-    res.status(200).json(req.trip);
+    let applied = false;
+    if (req.user) {
+        applied = req.trip.participantIds.includes(req.user.id);
+    }
+    res.status(200).json({trip: req.trip, isUserApplied: applied});
 };
 
 var findTripById = function (req, res, next, id) {

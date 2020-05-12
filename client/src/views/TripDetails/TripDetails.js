@@ -68,6 +68,7 @@ export default function TripDetails(props) {
 
 
     const [isEthEnabled, setEthEnabled] = useState(false);
+    const [isUserApplied, setUserApplied] = useState(false);
 
     const [trip, setTrip] = useState({});
 
@@ -85,7 +86,8 @@ export default function TripDetails(props) {
             .then(
                 (data) => {
                     console.log(data);
-                    setTrip(data);
+                    setTrip(data.trip);
+                    setUserApplied(data.isUserApplied);
                 },
                 (error) => {
                     console.log(error);
@@ -112,10 +114,32 @@ export default function TripDetails(props) {
         }
     }
 
+    const unsubscribeFromTrip = () => {
+        window.web3.eth.getAccounts(function (error, result) {
+            if (!error) {
+                var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000 })
+                    .on('transactionHash', hash => {
+                        console.log('TX Hash', hash)
+                    })
+                    .then(receipt => {
+                        console.log('Mined', receipt);
+                        handleApply();
+                    })
+                    .catch(err => {
+                        console.log('Error', err)
+                    })
+                    .finally(() => {
+                        console.log('Extra Code After Everything')
+                    });
+            }
+        });
+    }
+
     const applyToTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
-                console.log(GlobalVariables.ContractAddress);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
                 contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 100000, value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
@@ -153,6 +177,19 @@ export default function TripDetails(props) {
                     console.log(error);
                 }
             )
+    }
+
+    const renderType = () => {
+        switch (trip.smartContractType) {
+            case "1":
+                return 'Personal vote';
+            case "2":
+                return 'Majority vote';
+            case "3":
+                return 'Full trust';
+            default:
+                return 'Unknown type';
+        }
     }
 
 
@@ -200,7 +237,7 @@ export default function TripDetails(props) {
                                                 <InfoOutlinedIcon></InfoOutlinedIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Contract type</p>
-                                            <h3 className={classes.cardTitle}>{trip.smartContractType}</h3>
+                                            <h3 className={classes.cardTitle}>{renderType()}</h3>
                                         </CardHeader>
                                     </Card>
                                 </GridItem>
@@ -216,11 +253,15 @@ export default function TripDetails(props) {
                                     </Card>
                                 </GridItem>
                             </GridContainer>
+                            <h4 className={classes.cardTitle}>{trip.description}</h4>
                             {JSON.stringify(trip)}
                         </CardBody>
                         <CardFooter>
                             {isEthEnabled
-                                ? <Button color="warning" className={secondaryClasses.gradientButton} block onClick={applyToTrip}>Apply</Button>
+                                ? 
+                                    isUserApplied 
+                                    ? <Button color="danger" className={secondaryClasses.gradientButton} block onClick={unsubscribeFromTrip}>Unsubscribe</Button>
+                                    : <Button color="success" className={secondaryClasses.gradientButton} block onClick={applyToTrip}>Apply</Button>
                                 : ""
                             }
 
