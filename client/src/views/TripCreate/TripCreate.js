@@ -60,10 +60,10 @@ export default function MyProfile(props) {
 
 
     const [deadline, setDeadline] = useState("");
-    const [deadlineDate, setDeadlineDate] = useState(new Date());
+    const [deadlineDate, setDeadlineDate] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
 
     const [starting, setStarting] = useState("");
-    const [startingDate, setStartingDate] = useState(new Date());
+    const [startingDate, setStartingDate] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
 
     const [ending, setEnding] = useState("");
 
@@ -289,7 +289,7 @@ export default function MyProfile(props) {
                                                     value: deadline
                                                 }}
                                             />
-                                            <DatePicker onChange={handleDeadlineChange} showYearDropdown minDate={new Date()} inline />
+                                            <DatePicker onChange={handleDeadlineChange} showYearDropdown minDate={new Date(new Date().setDate(new Date().getDate() + 1))} inline />
 
                                         </GridItem>
                                         <GridItem xs={12} sm={12} md={4}>
