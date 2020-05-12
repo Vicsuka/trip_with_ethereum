@@ -14,16 +14,12 @@ import GlobalVariables from "variables/general.js";
 
 import Web3 from 'web3';
 
-import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
-import Store from "@material-ui/icons/Store";
-import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import Accessibility from "@material-ui/icons/Accessibility";
+import HistoryIcon from '@material-ui/icons/History';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import HowToRegOutlinedIcon from '@material-ui/icons/HowToRegOutlined';
 // core components
-import Danger from "components/Typography/Danger.js";
 import CardIcon from "components/Card/CardIcon.js";
 
   
@@ -179,7 +175,7 @@ export default function TripDetails(props) {
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
-                                                <Icon>content_copy</Icon>
+                                                <HistoryIcon></HistoryIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Status</p>
                                             <h3 className={classes.cardTitle}></h3>
@@ -190,7 +186,7 @@ export default function TripDetails(props) {
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
-                                                <Store />
+                                                <AttachMoneyIcon></AttachMoneyIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Price</p>
                                             <h3 className={classes.cardTitle}>{trip.price} Ξ</h3>
@@ -201,7 +197,7 @@ export default function TripDetails(props) {
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
-                                                <Icon>info_outline</Icon>
+                                                <InfoOutlinedIcon></InfoOutlinedIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Contract type</p>
                                             <h3 className={classes.cardTitle}>{trip.smartContractType}</h3>
@@ -212,7 +208,7 @@ export default function TripDetails(props) {
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
-                                                <Accessibility />
+                                                <HowToRegOutlinedIcon></HowToRegOutlinedIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Participants</p>
                                             <h3 className={classes.cardTitle}>{trip.participantIds ? trip.participantIds.length : "?"} / {trip.maxPersons}</h3>
