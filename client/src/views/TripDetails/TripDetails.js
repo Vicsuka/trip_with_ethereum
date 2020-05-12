@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -9,6 +10,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Button from "components/CustomButtons/Button.js";
+import SnackbarContent from "components/Snackbar/SnackbarContent";
 
 import GlobalVariables from "variables/general.js";
 
@@ -22,7 +24,7 @@ import HowToRegOutlinedIcon from '@material-ui/icons/HowToRegOutlined';
 // core components
 import CardIcon from "components/Card/CardIcon.js";
 
-  
+
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 const secondaryStyles = {
@@ -69,6 +71,7 @@ export default function TripDetails(props) {
 
     const [isEthEnabled, setEthEnabled] = useState(false);
     const [isUserApplied, setUserApplied] = useState(false);
+    const [isDeadlinePassed, setDeadlinePassed] = useState(false);
 
     const [trip, setTrip] = useState({});
 
@@ -86,6 +89,7 @@ export default function TripDetails(props) {
             .then(
                 (data) => {
                     console.log(data);
+                    setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
                     setTrip(data.trip);
                     setUserApplied(data.isUserApplied);
                 },
@@ -255,17 +259,37 @@ export default function TripDetails(props) {
                             </GridContainer>
                             <h4 className={classes.cardTitle}>{trip.description}</h4>
                             {JSON.stringify(trip)}
-                        </CardBody>
-                        <CardFooter>
-                            {isEthEnabled
-                                ? 
-                                    isUserApplied 
-                                    ? <Button color="danger" className={secondaryClasses.gradientButton} block onClick={unsubscribeFromTrip}>Unsubscribe</Button>
-                                    : <Button color="success" className={secondaryClasses.gradientButton} block onClick={applyToTrip}>Apply</Button>
-                                : ""
-                            }
+                            <GridContainer>
+                                <GridItem xs={12} sm={6} md={3}>
+                                    <div>
+                                        {isEthEnabled
+                                            ?
+                                            isDeadlinePassed
+                                                ?
+                                                <SnackbarContent
+                                                    message={
+                                                        'Application deadline has already passed!'
+                                                    }
+                                                    color="info"
+                                                />
+                                                :
+                                                isUserApplied
+                                                    ? <Button color="danger" className={secondaryClasses.gradientButton} size="lg" onClick={unsubscribeFromTrip}>Unsubscribe</Button>
+                                                    : <Button color="success" className={secondaryClasses.gradientButton} size="lg" onClick={applyToTrip}>Apply</Button>
+                                            :
+                                            <SnackbarContent
+                                                message={
+                                                    'You are not connected to the Ethereum network!'
+                                                }
+                                                color="danger"
+                                            />
+                                        }
 
-                        </CardFooter>
+                                    </div>
+
+                                </GridItem>
+                            </GridContainer>
+                        </CardBody>
                     </Card>
                 </GridItem>
             </GridContainer>

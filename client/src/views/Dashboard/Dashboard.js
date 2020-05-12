@@ -57,7 +57,7 @@ export default function Dashboard() {
                 49/50 <small>GB</small>
               </h3>
             </CardHeader>
-            <CardFooter stats>
+            <CardFooter>
               <div className={classes.stats}>
                 <Danger>
                   <Warning />
@@ -143,9 +143,7 @@ export default function Dashboard() {
               </p>
             </CardBody>
             <CardFooter chart>
-              <div className={classes.stats}>
                 <AccessTime /> updated 4 minutes ago
-              </div>
             </CardFooter>
           </Card>
         </GridItem>

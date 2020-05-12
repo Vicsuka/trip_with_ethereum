@@ -12,6 +12,7 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Snackbar from "components/Snackbar/Snackbar.js";
+import SnackbarContent from "components/Snackbar/SnackbarContent";
 
 import defaultIcon from "assets/img/faces/profile-icon.png"
 
@@ -19,7 +20,7 @@ import DoneOutline from "@material-ui/icons/DoneOutline";
 import Error from "@material-ui/icons/Error";
 
 import Web3 from 'web3';
-import SnackbarContent from "components/Snackbar/SnackbarContent";
+
 
 const styles = {
   cardCategoryWhite: {
