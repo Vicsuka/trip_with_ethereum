@@ -18,137 +18,9 @@ var server = [
   'Sign contract for "What are conference organizers afraid of?"'
 ];
 
-var ContractAddress = "0x394C938a4b8A7b1b5b6Cc92F4E1b3F58364Eb1Eb";
+var ContractAddress = "0x4d72e171f482b461c379c7e1392dfce56699e55a";
 
 var ContractABI =[
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			}
-		],
-		"name": "applyToTrip",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			}
-		],
-		"name": "cancelTransaction",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			}
-		],
-		"name": "checkVoteAll",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			}
-		],
-		"name": "checkVoteMajority",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "maxPeople",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "trustMode",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "deadlineDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "endingDate",
-				"type": "uint256"
-			}
-		],
-		"name": "createTrip",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			}
-		],
-		"name": "endTrip",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			}
-		],
-		"name": "makeVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -186,29 +58,6 @@ var ContractABI =[
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			},
-			{
-				"internalType": "address payable",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "newTransaction",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -226,13 +75,6 @@ var ContractABI =[
 		],
 		"name": "OwnershipTransferred",
 		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -334,19 +176,6 @@ var ContractABI =[
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -415,19 +244,6 @@ var ContractABI =[
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			}
-		],
-		"name": "unsubscribeFromTrip",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -493,6 +309,70 @@ var ContractABI =[
 		"inputs": [
 			{
 				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			}
+		],
+		"name": "applyToTrip",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			}
+		],
+		"name": "cancelTransaction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			}
+		],
+		"name": "checkVoteAll",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			}
+		],
+		"name": "checkVoteMajority",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
 				"name": "a",
 				"type": "string"
 			},
@@ -511,6 +391,57 @@ var ContractABI =[
 			}
 		],
 		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "maxPeople",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "trustMode",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "deadlineDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "endingDate",
+				"type": "uint256"
+			}
+		],
+		"name": "createTrip",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			}
+		],
+		"name": "endTrip",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -630,6 +561,42 @@ var ContractABI =[
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			}
+		],
+		"name": "makeVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			},
+			{
+				"internalType": "address payable",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "newTransaction",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -640,6 +607,26 @@ var ContractABI =[
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -723,6 +710,19 @@ var ContractABI =[
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			}
+		],
+		"name": "unsubscribeFromTrip",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ];

@@ -123,9 +123,11 @@ export default function TripDetails(props) {
             .then(
                 (data) => {
                     console.log(data);
-                    setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
-                    setTrip(data.trip);
-                    setUserApplied(data.isUserApplied);
+                    if (data.trip !== null) {
+                        setTrip(data.trip);
+                        setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
+                        setUserApplied(data.isUserApplied);
+                    }
                 },
                 (error) => {
                     console.log(error);
@@ -151,6 +153,25 @@ export default function TripDetails(props) {
         }
     }
 
+    const handleUnsubscription = () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tripId: tripId })
+        };
+
+        fetch('/api/trip/unsubscribe', requestOptions)
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    console.log(data);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            )
+    }
+
     const unsubscribeFromTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
@@ -162,7 +183,7 @@ export default function TripDetails(props) {
                     })
                     .then(receipt => {
                         console.log('Mined', receipt);
-                        handleApply();
+                        handleUnsubscription();
                     })
                     .catch(err => {
                         console.log('Error', err)

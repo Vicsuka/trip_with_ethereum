@@ -14,6 +14,7 @@ router.get('/alltrips', tripUtils.getAllTrips);
 router.post('/createtrip', tripUtils.createTrip);
 
 router.post('/apply', tripUtils.applyToTrip);
+router.post('/unsubscribe', tripUtils.unsubscribeFromTrip);
 
 router.route('/trips/:tripId')
   .get(tripUtils.getTrip)

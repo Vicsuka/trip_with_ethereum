@@ -89,7 +89,34 @@ var applyToTrip = function (req, res, next) {
             }
         });
     }
-    
+};
+
+
+var unsubscribeFromTrip = function (req, res, next) {
+    if (!req.user) {
+        res.status(401).send({ errors : "You are not logged in!"});
+    } else {
+        Trip.findOne({ id: req.body.tripId }, function (err, trip) {
+            if (err) {
+                next(err);
+            } else {
+                let existingIds = trip.participantIds;
+                let index = existingIds.indexOf(req.user.id);
+                if (index) {
+                    existingIds.splice(index, 1);
+                    Trip.findOneAndUpdate({ id: req.body.tripId }, { $set: { participantIds: existingIds } }, { new: true }, function (err, trip) {
+                        if (err) {
+                            next(err);
+                        } else {
+                            res.status(200).send(trip);
+                        }
+                    });
+                } else {
+                    res.status(400).send({ errors : "You are NOT on this trip!"});
+                }
+            }
+        });
+    }
 };
 
 module.exports = {
@@ -100,6 +127,7 @@ module.exports = {
     getTrip,
     findTripById,
     applyToTrip,
+    unsubscribeFromTrip,
     // tripExists,
     // newTrip,
     // getTripProfile,
