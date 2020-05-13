@@ -75,6 +75,7 @@ export default function MyProfile() {
       setEthEnabled(true);
     } 
     loadProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadProfile = () => {
@@ -97,7 +98,7 @@ export default function MyProfile() {
 
           setAboutMe(data.about);
 
-          if (etherAddress != "") {
+          if (etherAddress !== "") {
             setEtherAddress(data.ethereumAddress);
           }
           

@@ -18,8 +18,6 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/landing.jpg";
 import logo from "assets/img/logo_transparent.png";
 
-import Web3 from 'web3';
-
 let ps;
 
 const switchRoutes = (

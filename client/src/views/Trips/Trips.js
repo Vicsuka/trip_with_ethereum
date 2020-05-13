@@ -47,7 +47,7 @@ const useStyles = makeStyles(styles);
 
 export default function Trips() {
     const [isEthEnabled, setEthEnabled] = useState(false);
-    const [ethereumAddress, setEthereumAddress] = useState("");
+
 
     const classes = useStyles();
 
@@ -59,6 +59,7 @@ export default function Trips() {
             setEthEnabled(true);
         } 
         loadTrips();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function enableEthereum() {

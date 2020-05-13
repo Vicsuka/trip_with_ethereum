@@ -8,7 +8,6 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 import Button from "components/CustomButtons/Button.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent";
 
@@ -61,12 +60,12 @@ const secondaryStyles = {
 const useStyles = makeStyles(styles);
 
 export default function TripDetails(props) {
-    console.log(props);
-
     var tripId = props.match.params.tripId;
     const classes = useStyles();
     const useSecondaryStyles = makeStyles(secondaryStyles);
     const secondaryClasses = useStyles(useSecondaryStyles);
+
+    // const [events, setEvents] = useState([]);
 
 
     const [isEthEnabled, setEthEnabled] = useState(false);
@@ -81,6 +80,7 @@ export default function TripDetails(props) {
             setEthEnabled(true);
         }
         loadTrip();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const loadTrip = () => {
@@ -112,6 +112,37 @@ export default function TripDetails(props) {
                 console.log(addresses);
             })
 
+            var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+            let creationEvent = contract.TripCreation({}, { fromBlock: 0, toBlock: 'latest' })
+            creationEvent.get((error, logs) => {
+                // we have the logs, now print them
+                logs.forEach(log => console.log(log.args))
+            })
+
+            var options = {
+                fromBlock: 0,
+                toBlock: 'latest',
+                address: GlobalVariables.ContractAddress,
+                topics: ['0xcc8f0d53c07542543674ba5f1187a7a3046d23fcc1a5c435f9f8c7b8aa2d559a']
+            };
+
+            // contract.TripCreation({_uuid: tripId}, options).get((error, eventResult) => {
+            //     if (error)
+            //       console.log('Error in myEvent event handler: ' + error);
+            //     else
+            //       console.log('TripCreation: ' + JSON.stringify(eventResult.args));
+            //   });
+
+            
+            window.web3.eth.subscribe('logs', options, function (error, result) {
+                if (error) console.log(error);
+            }).on("data", function (log) {
+                console.log(log);
+            }).on("changed", function (log) {
+
+            });
+
 
         } catch (error) {
             // User denied account access...
@@ -123,7 +154,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000 })
+                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000 ,gasPrice: window.web3.toWei(20, 'gwei')})
                     .on('transactionHash', hash => {
                         console.log('TX Hash', hash)
                     })
@@ -146,7 +177,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 3000000, value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
+                contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 3000000, gasPrice: window.web3.toWei(20, 'gwei'), value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
                     .on('transactionHash', hash => {
                         console.log('TX Hash', hash)
                     })
