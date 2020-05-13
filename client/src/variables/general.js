@@ -18,9 +18,9 @@ var server = [
   'Sign contract for "What are conference organizers afraid of?"'
 ];
 
-var ContractAddress = "0x8C9EAB4818e1d07669279dF4660A13393e2cDF59";
+var ContractAddress = "0x394C938a4b8A7b1b5b6Cc92F4E1b3F58364Eb1Eb";
 
-var ContractABI = [
+var ContractABI =[
 	{
 		"inputs": [
 			{
@@ -174,6 +174,12 @@ var ContractABI = [
 				"internalType": "uint256",
 				"name": "_currentApplicants",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_creationDate",
+				"type": "uint256"
 			}
 		],
 		"name": "NewApplication",
@@ -242,6 +248,12 @@ var ContractABI = [
 				"internalType": "uint256",
 				"name": "_txNumber",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_creationDate",
+				"type": "uint256"
 			}
 		],
 		"name": "TransactionCanceled",
@@ -273,6 +285,12 @@ var ContractABI = [
 				"internalType": "uint256",
 				"name": "_txNumber",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_creationDate",
+				"type": "uint256"
 			}
 		],
 		"name": "TransactionComplete",
@@ -303,6 +321,12 @@ var ContractABI = [
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "_txNumber",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_creationDate",
 				"type": "uint256"
 			}
 		],
@@ -359,6 +383,12 @@ var ContractABI = [
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "_endingDate",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_creationDate",
 				"type": "uint256"
 			}
 		],
@@ -417,6 +447,12 @@ var ContractABI = [
 				"internalType": "uint256",
 				"name": "_currentApplicants",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_creationDate",
+				"type": "uint256"
 			}
 		],
 		"name": "Unsubscription",
@@ -441,6 +477,12 @@ var ContractABI = [
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "_txNumber",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_creationDate",
 				"type": "uint256"
 			}
 		],

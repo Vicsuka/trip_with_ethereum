@@ -85,7 +85,7 @@ export default function TripDetails(props) {
     }, []);
 
     const loadEvents = () => {
-        var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+        // var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
         var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256)');
         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
@@ -99,13 +99,6 @@ export default function TripDetails(props) {
             topics: [TripCreationHASH, tripIdHASH]
         };
 
-        // contract.TripCreation({_uuid: tripId}, options).get((error, eventResult) => {
-        //     if (error)
-        //       console.log('Error in myEvent event handler: ' + error);
-        //     else
-        //       console.log('TripCreation: ' + JSON.stringify(eventResult.args));
-        //   });
-
 
         window.web3.eth.subscribe('logs', options, function (error, result) {
             if (error) console.log(error);
@@ -115,7 +108,8 @@ export default function TripDetails(props) {
                 {type: 'uint256',name: 'maxPeople'},
                 {type: 'uint256',name: 'trustMode'},
                 {type: 'uint256',name: 'deadlineDate'},
-                {type: 'uint256',name: 'endingDate'}
+                {type: 'uint256',name: 'endingDate'},
+                {type: 'uint256',name: 'creationDate'},
             ], log.data));
         }).on("changed", function (log) {
 
