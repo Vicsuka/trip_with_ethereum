@@ -78,10 +78,50 @@ export default function TripDetails(props) {
         if (window.ethereum) {
             enableEthereum();
             setEthEnabled(true);
+            loadEvents();
         }
         loadTrip();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const loadEvents = () => {
+        var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+        var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256)');
+        var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
+        console.log(TripCreationHASH);
+        console.log(tripIdHASH);
+
+        var options = {
+            fromBlock: 0,
+            toBlock: 'latest',
+            address: GlobalVariables.ContractAddress,
+            topics: [TripCreationHASH, tripIdHASH]
+        };
+
+        // contract.TripCreation({_uuid: tripId}, options).get((error, eventResult) => {
+        //     if (error)
+        //       console.log('Error in myEvent event handler: ' + error);
+        //     else
+        //       console.log('TripCreation: ' + JSON.stringify(eventResult.args));
+        //   });
+
+
+        window.web3.eth.subscribe('logs', options, function (error, result) {
+            if (error) console.log(error);
+        }).on("data", function (log) {
+            console.log(window.web3.eth.abi.decodeParameters([
+                {type: 'uint256',name: 'price'},
+                {type: 'uint256',name: 'maxPeople'},
+                {type: 'uint256',name: 'trustMode'},
+                {type: 'uint256',name: 'deadlineDate'},
+                {type: 'uint256',name: 'endingDate'}
+            ], log.data));
+        }).on("changed", function (log) {
+
+        });
+
+    }
 
     const loadTrip = () => {
         fetch("/api/trip/trips/" + tripId)
@@ -112,38 +152,6 @@ export default function TripDetails(props) {
                 console.log(addresses);
             })
 
-            var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
-
-            let creationEvent = contract.TripCreation({}, { fromBlock: 0, toBlock: 'latest' })
-            creationEvent.get((error, logs) => {
-                // we have the logs, now print them
-                logs.forEach(log => console.log(log.args))
-            })
-
-            var options = {
-                fromBlock: 0,
-                toBlock: 'latest',
-                address: GlobalVariables.ContractAddress,
-                topics: ['0xcc8f0d53c07542543674ba5f1187a7a3046d23fcc1a5c435f9f8c7b8aa2d559a']
-            };
-
-            // contract.TripCreation({_uuid: tripId}, options).get((error, eventResult) => {
-            //     if (error)
-            //       console.log('Error in myEvent event handler: ' + error);
-            //     else
-            //       console.log('TripCreation: ' + JSON.stringify(eventResult.args));
-            //   });
-
-            
-            window.web3.eth.subscribe('logs', options, function (error, result) {
-                if (error) console.log(error);
-            }).on("data", function (log) {
-                console.log(log);
-            }).on("changed", function (log) {
-
-            });
-
-
         } catch (error) {
             // User denied account access...
         }
@@ -154,7 +162,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000 ,gasPrice: window.web3.toWei(20, 'gwei')})
+                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.toWei(20, 'gwei') })
                     .on('transactionHash', hash => {
                         console.log('TX Hash', hash)
                     })
@@ -239,7 +247,7 @@ export default function TripDetails(props) {
         } else {
             return 'Organizing';
         }
-        
+
     }
 
 
