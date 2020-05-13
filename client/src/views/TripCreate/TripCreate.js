@@ -115,7 +115,7 @@ export default function MyProfile(props) {
                     moment(deadline, 'YYYY-MM-DD').unix(),
                     moment(ending, 'YYYY-MM-DD').unix()
                 )
-                    .send({ from: result[0], gas: 300000, value: window.web3.utils.toWei(price.toString(), 'ether') })
+                    .send({ from: result[0], gas: 3000000, value: window.web3.utils.toWei(price.toString(), 'ether') })
                     .on('transactionHash', hash => {
                         console.log('TX Hash', hash)
                     })
