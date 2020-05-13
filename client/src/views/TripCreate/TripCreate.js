@@ -94,11 +94,10 @@ export default function MyProfile(props) {
         }
     }
 
-    const createTrip = () => {
+    const createTrip = (tripId) => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
-                var tripId = uuidv4();
 
                 console.log(tripId,
                     window.web3.utils.toWei(price.toString(), 'ether'),
@@ -135,7 +134,9 @@ export default function MyProfile(props) {
         });
     }
 
-    const handleSubmit = (tripId) => {
+    const handleSubmit = () => {
+        var tripId = uuidv4();
+
         let tripData = {
             id: tripId,
             title: title,
@@ -147,7 +148,7 @@ export default function MyProfile(props) {
             startingDate: starting,
             endingDate: ending
         };
-
+        console.log(tripData);
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -159,7 +160,7 @@ export default function MyProfile(props) {
             .then(
                 (data) => {
                     console.log(data);
-                    createTrip();
+                    createTrip(tripId);
                 },
                 (error) => {
                     console.log(error);
