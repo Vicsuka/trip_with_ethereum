@@ -156,7 +156,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.toWei(20, 'gwei') })
+                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                         console.log('TX Hash', hash)
                     })
@@ -179,7 +179,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 3000000, gasPrice: window.web3.toWei(20, 'gwei'), value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
+                contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 3000000, gasPrice: window.web3.utils.toWei("20", 'gwei'), value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
                     .on('transactionHash', hash => {
                         console.log('TX Hash', hash)
                     })
