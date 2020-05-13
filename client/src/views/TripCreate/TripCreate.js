@@ -124,15 +124,37 @@ export default function MyProfile(props) {
                         //TODO confirm creation
                     })
                     .catch(err => {
-                        console.log('Error', err);
+                        console.log('Trip creation failed', err);
                         //TODO revert creation
+                        deleteTrip(tripId);
                     })
                     .finally(() => {
                         console.log('Extra Code After Everything')
                     });
+            } else {
+                deleteTrip(tripId);
             }
         });
     }
+
+    const deleteTrip = (tripId) => {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        };
+
+        fetch("/api/trip/trips/" + tripId, requestOptions)
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    console.log("Trip deleted", data);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            )
+    };
+
 
     const handleSubmit = () => {
         var tripId = uuidv4();

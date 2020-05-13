@@ -146,7 +146,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 100000, value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
+                contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 3000000, value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
                     .on('transactionHash', hash => {
                         console.log('TX Hash', hash)
                     })

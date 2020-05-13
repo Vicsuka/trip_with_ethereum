@@ -3,7 +3,6 @@
  * Required Models
  */
 
-require('./models/Email/Email');
 require('./models/User/User');
 require('./models/Trip/Trip');
 
