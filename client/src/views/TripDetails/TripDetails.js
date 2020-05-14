@@ -323,6 +323,24 @@ export default function TripDetails(props) {
         });
     }
 
+    const makeVote = () => {
+        window.web3.eth.getAccounts(function (error, result) {
+            if (!error) {
+                var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+                contract.methods.makeVote(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                    .on('transactionHash', hash => {
+                    })
+                    .then(receipt => {
+                        console.log(receipt);
+                    })
+                    .catch(err => {
+                        console.log('Error', err)
+                    })
+            }
+        });
+    }
+
     const unsubscribeFromTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
@@ -461,11 +479,8 @@ export default function TripDetails(props) {
                                 }
                                 color="danger"
                             />
-
                         }
-
                     </div>
-
                 </GridItem>
             </GridContainer>
 
@@ -525,6 +540,7 @@ export default function TripDetails(props) {
                                     </Card>
                                 </GridItem>
                             </GridContainer>
+
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Card>
@@ -536,7 +552,6 @@ export default function TripDetails(props) {
                                             <h3 className={classes.cardTitle}>{renderedParticipants}</h3>                                          
                                         </CardHeader>
                                     </Card>
-                                    
                                 </GridItem>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Card>
@@ -559,9 +574,7 @@ export default function TripDetails(props) {
                                     <p className={classes.cardCategory}>Trip Description</p>
                                 </CardHeader>
                                 <CardBody>
-
                                     <h3 className={classes.cardTitle}>{trip.description}</h3>
-
                                 </CardBody>
                             </Card>
 
@@ -571,13 +584,31 @@ export default function TripDetails(props) {
                                         <SmsIcon></SmsIcon>
                                     </CardIcon>
                                     <p className={classes.cardCategory}>Trip Events</p>
-                                    {
-                                        isDeadlinePassed
-                                            ? 
+                                    {isEthEnabled
+                                        ?
+                                        isContractReady
+                                            ?
+                                            isDeadlinePassed
+                                                ?
                                                 isUserOrganizer
-                                                ? <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                    ? <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                    : ""
                                                 : ""
-                                            : ""                                
+                                            :
+                                            <SnackbarContent
+                                                message={
+                                                    'This trip is currently being deployed on the blockchain!'
+                                                }
+                                                color="info"
+                                            />
+
+                                        :
+                                        <SnackbarContent
+                                            message={
+                                                'You are not connected to the Ethereum network!'
+                                            }
+                                            color="danger"
+                                        />
                                     }
                                 </CardHeader>
                                 <CardBody>
@@ -587,6 +618,32 @@ export default function TripDetails(props) {
                                         tableHead={["Name", "Timestamp", "Input parameters", "Tx"]}
                                         tableData={events}
                                     />
+                                    {isEthEnabled
+                                        ?
+                                        isContractReady
+                                            ?
+                                            isDeadlinePassed
+                                                ? 
+                                                    isUserApplied
+                                                    ? <Button color="success" size="lg" onClick={makeVote}>Vote on current transaction</Button>
+                                                    : ""
+                                                : ""  
+                                            :
+                                            <SnackbarContent
+                                                message={
+                                                    'This trip is currently being deployed on the blockchain!'
+                                                }
+                                                color="info"
+                                            />
+
+                                        :
+                                        <SnackbarContent
+                                            message={
+                                                'You are not connected to the Ethereum network!'
+                                            }
+                                            color="danger"
+                                        />
+                                    }
                                 </CardBody>
                             </Card>
 
@@ -595,7 +652,6 @@ export default function TripDetails(props) {
                     </Card>
                 </GridItem>
             </GridContainer>
-            <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
             <Dialog open={showDialog}>
                 <Button color="danger" onClick={close}>Close</Button>
                 <CustomInput
@@ -623,6 +679,7 @@ export default function TripDetails(props) {
                     }}
                 />
                 <p className={classes.cardCategory}>Please make sure you have the correct data filled in!</p>
+                <p className={classes.cardCategory}>Only 1 transaction can be active at a time!</p>
                 <Button color="success" onClick={createTransaction}>Send</Button>
             </Dialog>
         </div>
