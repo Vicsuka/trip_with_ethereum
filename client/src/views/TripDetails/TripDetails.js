@@ -73,6 +73,7 @@ export default function TripDetails(props) {
     const [isUserApplied, setUserApplied] = useState(false);
     const [isUserOrganizer, setUserOrganizer] = useState(false);
     const [isDeadlinePassed, setDeadlinePassed] = useState(false);
+    const [isEnddatePassed, setEnddatePassed] = useState(false);
 
     const [transactionAddress, setTransactionAddress] = useState("");
     const [transactionAmount, setTransactionAmount] = useState("");
@@ -245,6 +246,7 @@ export default function TripDetails(props) {
                         loadParticipants(data.trip);
                         setTrip(data.trip);
                         setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
+                        setEnddatePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.endingDate));
                         setUserApplied(data.isUserApplied);
                         setUserOrganizer(data.isUserOrganizer);
                     }
@@ -301,6 +303,42 @@ export default function TripDetails(props) {
                     console.log(error);
                 }
             )
+    }
+
+    const endTrip = () => {
+        window.web3.eth.getAccounts(function (error, result) {
+            if (!error) {
+                var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+                contract.methods.endTrip(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                    .on('transactionHash', hash => {
+                    })
+                    .then(receipt => {
+                        console.log(receipt);
+                    })
+                    .catch(err => {
+                        console.log('Error', err)
+                    })
+            }
+        });
+    }
+
+    const cancelTransaction = () => {
+        window.web3.eth.getAccounts(function (error, result) {
+            if (!error) {
+                var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+                contract.methods.cancelTransaction(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                    .on('transactionHash', hash => {
+                    })
+                    .then(receipt => {
+                        console.log(receipt);
+                    })
+                    .catch(err => {
+                        console.log('Error', err)
+                    })
+            }
+        });
     }
 
     const createTransaction = () => {
@@ -445,7 +483,27 @@ export default function TripDetails(props) {
                     <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
 
                 </GridItem>
-                <GridItem xs={12} sm={6} md={6} className={secondaryClasses.alignRight}>
+                <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
+
+                    <div>
+                        {isEthEnabled
+                            ?
+                            isContractReady
+                                ?
+                                isEnddatePassed
+                                    ?
+                                    <Button color="info" block size="lg" onClick={endTrip}>End trip</Button>
+                                    :
+                                    ""
+                                :
+                                ""
+                            :
+                            ""
+                        }
+                    </div>
+                </GridItem>
+                
+                <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
 
                     <div>
                         {isEthEnabled
@@ -591,7 +649,11 @@ export default function TripDetails(props) {
                                             isDeadlinePassed
                                                 ?
                                                 isUserOrganizer
-                                                    ? <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                    ? 
+                                                        <div>
+                                                            <Button color="danger" size="lg" onClick={cancelTransaction}>Cancel current transaction</Button>
+                                                            <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                        </div>
                                                     : ""
                                                 : ""
                                             :
