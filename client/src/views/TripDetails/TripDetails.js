@@ -331,7 +331,7 @@ export default function TripDetails(props) {
                                 <CardBody>
                                     <Table
                                         tableHeaderColor="info"
-                                        tableHead={["Name", "Timepstamp", "Input parameters"]}
+                                        tableHead={["Name", "Timestamp", "Input parameters"]}
                                         tableData={events}
                                     />
                                 </CardBody>

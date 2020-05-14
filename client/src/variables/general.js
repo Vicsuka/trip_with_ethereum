@@ -1,22 +1,13 @@
-// ##############################
-// // // Tasks for TasksCard - see Dashboard view
-// #############################
-
-var bugs = [
-  'Sign contract for "What are conference organizers afraid of?"',
-  "Lines From Great Russian Literature? Or E-mails From My Boss?",
-  "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-  "Create 4 Invisible User Experiences you Never Knew About"
-];
-var website = [
-  "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-  'Sign contract for "What are conference organizers afraid of?"'
-];
-var server = [
-  "Lines From Great Russian Literature? Or E-mails From My Boss?",
-  "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-  'Sign contract for "What are conference organizers afraid of?"'
-];
+var ContractEvents = {
+	TripCreation: "0x828026569d4562b993e3bda939865cd0714b0ddf9187318ad325b14373751fcd",
+	TripEnd: "0x1d033528c6b622bb941493045e6398bc215361b423d54781a60ab3537be11658",
+	NewApplication: "0x92e70116f1ce69cb42c91edcef0e80db59fdcb1023277187f2e1a11bb31710c0",
+	Unsubscription: "0xbe5350b21dbb02956b3e44ab8231102efc12e5f79318c4491ab541dd9566cc5b",
+	TransactionCreation: "0xb9e8e09a20205c1db5270a076f7962852d668d1e8d65e67bd55d7042fbeeae01",
+	TransactionComplete: "0x968ec7f1ca4686bd94f0b5980ed4309cb31cf47c4d528bdbbdc0204671a6652f",
+	TransactionCanceled: "0x71b73eee5c68a375c1b3696e01580e2c7e653c20fce237719ef8ff94efb7a70f",
+	VoteMade: "0xd7bd583010cfc30d8ff1b01becb2313742132793a8c4c29553e8e0ffe148062a"
+};
 
 var ContractAddress = "0xcd062daf1113319e9f76cad0107dd86b76ca22ef";
 
@@ -757,10 +748,7 @@ var ContractABI =[
 
 
 module.exports = {
-  // these 3 are used to create the tasks lists in TasksCard - Dashboard view
-  bugs,
-  website,
-  server,
-  ContractAddress,
-  ContractABI
+	ContractEvents,
+	ContractAddress,
+	ContractABI
 };
