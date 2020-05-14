@@ -305,15 +305,17 @@ export default function TripDetails(props) {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
-
-                contract.methods.newTransaction(tripId, transactionAddress, transactionAmount).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                if (!window.web3.utils.isAddress(transactionAddress)) return;
+                contract.methods.newTransaction(tripId, transactionAddress, window.web3.utils.toWei(transactionAmount.toString())).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
                         console.log(receipt);
+                        close();
                     })
                     .catch(err => {
-                        console.log('Error', err)
+                        console.log('Error', err);
+                        close();
                     })
             }
         });
@@ -588,7 +590,7 @@ export default function TripDetails(props) {
                 </GridItem>
             </GridContainer>
             <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
-            <Dialog open={showDialog} onDismiss={close}>
+            <Dialog open={showDialog}>
                 <Button color="danger" onClick={close}>Close</Button>
                 <CustomInput
                     labelText="Send transaction to (ethereum address)"
@@ -607,7 +609,7 @@ export default function TripDetails(props) {
                     }}
                 />
                 <p className={classes.cardCategory}>Please make sure you have the correct data filled in!</p>
-                <Button color="success" onClick={close}>Send</Button>
+                <Button color="success" onClick={createTransaction}>Send</Button>
             </Dialog>
         </div>
     );
