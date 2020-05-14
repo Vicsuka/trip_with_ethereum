@@ -70,26 +70,24 @@ export default function TripDetails(props) {
         if (window.ethereum) {
             enableEthereum();
             setEthEnabled(true);
-            loadEvents();
+            findCreationEvent();
+            loadAllEvents();
         }
         loadTrip();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const loadEvents = () => {
+    const findCreationEvent = () => {
         // var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
-
-        var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256,uint256)');
         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
         console.log(tripId);
         console.log("tripIdHASH", tripIdHASH);
-        console.log("TripCreationHASH", TripCreationHASH);
 
         var options = {
             fromBlock: 0,
             toBlock: 'latest',
             address: GlobalVariables.ContractAddress,
-            topics: [TripCreationHASH, tripIdHASH]
+            topics: [GlobalVariables.ContractEvents.TripCreation, tripIdHASH]
         };
 
 
@@ -97,6 +95,57 @@ export default function TripDetails(props) {
             if (error) console.log(error);
         }).on("data", function (log) {
             setContractReady(true);
+        }).on("changed", function (log) {
+            //
+        });
+    }
+
+    const loadAllEvents = () => {
+        var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
+
+        var options = {
+            fromBlock: 0,
+            toBlock: 'latest',
+            address: GlobalVariables.ContractAddress,
+            topics: [null, tripIdHASH]
+        };
+
+
+        window.web3.eth.subscribe('logs', options, function (error, result) {
+            if (error) console.log(error);
+        }).on("data", function (log) {
+            console.log("New log:", log);
+
+            console.log("Topic:", log.topics[0]);
+            switch(log.topics[0]) {
+                case (GlobalVariables.ContractEvents.TripCreation):
+                    console.log("Trip creation event");
+                    break;
+                case (GlobalVariables.ContractEvents.TripEnd):
+                    console.log("TripEnd event");
+                    break;
+                case (GlobalVariables.ContractEvents.NewApplication):
+                    console.log("NewApplication event");
+                    break;
+                case (GlobalVariables.ContractEvents.Unsubscription):
+                    console.log("Unsubscription event");
+                    break;
+                case (GlobalVariables.ContractEvents.TransactionCreation):
+                    console.log("TransactionCreation event");
+                    break;
+                case (GlobalVariables.ContractEvents.TransactionComplete):
+                    console.log("TransactionComplete event");
+                    break;
+                case (GlobalVariables.ContractEvents.TransactionCanceled):
+                    console.log("TransactionCanceled event");
+                    break;
+                case (GlobalVariables.ContractEvents.VoteMade):
+                    console.log("VoteMade event");
+                    break;
+                default:
+                    console.log("Unknown Event");
+            }
+
             var creationEventO =  window.web3.eth.abi.decodeParameters([
                 { type: 'uint256', name: 'price' },
                 { type: 'uint256', name: 'maxPeople' },
@@ -107,10 +156,7 @@ export default function TripDetails(props) {
             ], log.data);
 
             setEvents([["TripCreation", convertUinxToDateString(creationEventO.creationDate), JSON.stringify(creationEventO)]]);
-            console.log(events);
-        }).on("changed", function (log) {
-            //
-        });
+        })
     }
 
     const convertUinxToDateString = (unixTime) => {
@@ -140,6 +186,10 @@ export default function TripDetails(props) {
         try {
             // Request account access if needed
             await window.ethereum.enable();
+            
+            window.ethereum.on('chainChanged', () => {
+                document.location.reload()
+            })
 
             // Acccounts now exposed
             console.log("Eth enabled!");
