@@ -128,8 +128,9 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'endingDate' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
-        
-                    setEvents([events.concat(["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+
+                    setEvents(events => [...events, ["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+                    // setEvents(events => [...events,["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.TripEnd):
                     console.log("TripEnd event");
@@ -137,7 +138,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'endingDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.NewApplication):
                     console.log("NewApplication event");
@@ -147,7 +148,8 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + "Current headcount: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + "Current headcount: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+                    // setEvents(events => [...events,["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + "Current headcount: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.Unsubscription):
                     console.log("Unsubscription event");
@@ -157,7 +159,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + "Current headcount: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + "Current headcount: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCreation):
                     console.log("TransactionCreation event");
@@ -169,7 +171,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TransactionCreation", convertUinxToDateString(TransactionCreationevent.creationDate), getTransactionCreation(TransactionCreationevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["TransactionCreation", convertUinxToDateString(TransactionCreationevent.creationDate), getTransactionCreation(TransactionCreationevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionComplete):
                     console.log("TransactionComplete event");
@@ -181,7 +183,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TransactionComplete", convertUinxToDateString(TransactionCompleteevent.creationDate), getTransactionCreation(TransactionCompleteevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["TransactionComplete", convertUinxToDateString(TransactionCompleteevent.creationDate), getTransactionCreation(TransactionCompleteevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCanceled):
                     console.log("TransactionCanceled event");
@@ -191,7 +193,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TransactionCanceled", convertUinxToDateString(TransactionCanceledevent.creationDate), "Transaction number: " + TransactionCanceledevent.txNumber + ", Description: " + TransactionCanceledevent.description, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["TransactionCanceled", convertUinxToDateString(TransactionCanceledevent.creationDate), "Transaction number: " + TransactionCanceledevent.txNumber + ", Description: " + TransactionCanceledevent.description, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.VoteMade):
                     console.log("VoteMade event");
@@ -201,7 +203,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["VoteMade", convertUinxToDateString(VoteMadeevent.creationDate), "Voter address: " + VoteMadeevent.who + ", On transaction: " + VoteMadeevent.txNumber, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["VoteMade", convertUinxToDateString(VoteMadeevent.creationDate), "Voter address: " + VoteMadeevent.who + ", On transaction: " + VoteMadeevent.txNumber, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 default:
                     console.log("Unknown Event");
