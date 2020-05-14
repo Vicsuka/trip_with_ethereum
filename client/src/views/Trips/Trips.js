@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import Button from "components/CustomButtons/Button.js";
 import { Link } from "react-router-dom";
 
-import GlobalVariables from "variables/general.js";
+// import GlobalVariables from "variables/general.js";
 
 import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';

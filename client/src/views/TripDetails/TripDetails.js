@@ -10,6 +10,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent";
+import Table from "components/Table/Table.js";
 
 import GlobalVariables from "variables/general.js";
 
@@ -43,15 +44,6 @@ const secondaryStyles = {
         marginBottom: "3px",
         textDecoration: "none"
     },
-    gradientButton: {
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-        border: 0,
-        borderRadius: 3,
-        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-        color: 'white',
-        height: 48,
-        padding: '0 30px',
-    },
     aboutInfo: {
         textAlign: "left"
     }
@@ -65,13 +57,12 @@ export default function TripDetails(props) {
     const useSecondaryStyles = makeStyles(secondaryStyles);
     const secondaryClasses = useStyles(useSecondaryStyles);
 
-    // const [events, setEvents] = useState([]);
-
-
     const [isContractReady, setContractReady] = useState(false);
     const [isEthEnabled, setEthEnabled] = useState(false);
     const [isUserApplied, setUserApplied] = useState(false);
     const [isDeadlinePassed, setDeadlinePassed] = useState(false);
+
+    const [events, setEvents] = useState([]);
 
     const [trip, setTrip] = useState({});
 
@@ -91,8 +82,8 @@ export default function TripDetails(props) {
         var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256,uint256)');
         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
         console.log(tripId);
-        console.log("tripIdHASH",tripIdHASH);
-        console.log("TripCreationHASH",TripCreationHASH);
+        console.log("tripIdHASH", tripIdHASH);
+        console.log("TripCreationHASH", TripCreationHASH);
 
         var options = {
             fromBlock: 0,
@@ -106,17 +97,24 @@ export default function TripDetails(props) {
             if (error) console.log(error);
         }).on("data", function (log) {
             setContractReady(true);
-            console.log(window.web3.eth.abi.decodeParameters([
-                {type: 'uint256',name: 'price'},
-                {type: 'uint256',name: 'maxPeople'},
-                {type: 'uint256',name: 'trustMode'},
-                {type: 'uint256',name: 'deadlineDate'},
-                {type: 'uint256',name: 'endingDate'},
-                {type: 'uint256',name: 'creationDate'},
-            ], log.data));
+            var creationEventO =  window.web3.eth.abi.decodeParameters([
+                { type: 'uint256', name: 'price' },
+                { type: 'uint256', name: 'maxPeople' },
+                { type: 'uint256', name: 'trustMode' },
+                { type: 'uint256', name: 'deadlineDate' },
+                { type: 'uint256', name: 'endingDate' },
+                { type: 'uint256', name: 'creationDate' },
+            ], log.data);
+
+            setEvents([["TripCreation", convertUinxToDateString(creationEventO.creationDate), JSON.stringify(creationEventO)]]);
+            console.log(events);
         }).on("changed", function (log) {
             //
         });
+    }
+
+    const convertUinxToDateString = (unixTime) => {
+        return moment.unix(unixTime).format("YYYY. MM. DD. HH:mm");
     }
 
     const loadTrip = () => {
@@ -325,41 +323,55 @@ export default function TripDetails(props) {
                             </GridContainer>
                             <h4 className={classes.cardTitle}>{trip.description}</h4>
                             {JSON.stringify(trip)}
+
+                            <Card>
+                                <CardHeader color="warning">
+                                    <h4 className={secondaryClasses.cardTitleWhite}>Trip Events</h4>
+                                </CardHeader>
+                                <CardBody>
+                                    <Table
+                                        tableHeaderColor="info"
+                                        tableHead={["Name", "Timepstamp", "Input parameters"]}
+                                        tableData={events}
+                                    />
+                                </CardBody>
+                            </Card>
+
                             <GridContainer>
                                 <GridItem xs={12} sm={6} md={3}>
                                     <div>
                                         {isEthEnabled
-                                        ?
-                                                isContractReady
+                                            ?
+                                            isContractReady
                                                 ?
-                                                    isDeadlinePassed
+                                                isDeadlinePassed
                                                     ?
-                                                        <SnackbarContent
-                                                            message={
-                                                                'Application deadline has already passed!'
-                                                            }
-                                                            color="danger"
-                                                        />
-                                                    :
-                                                        isUserApplied
-                                                            ? <Button color="danger" className={secondaryClasses.gradientButton} size="lg" onClick={unsubscribeFromTrip}>Unsubscribe</Button>
-                                                            : <Button color="success" className={secondaryClasses.gradientButton} size="lg" onClick={applyToTrip}>Apply</Button>
-                                                :
                                                     <SnackbarContent
                                                         message={
-                                                            'This trip is currently being deployed on the blockchain!'
+                                                            'Application deadline has already passed!'
                                                         }
-                                                        color="info"
+                                                        color="danger"
                                                     />
-                                                    
-                                        :
+                                                    :
+                                                    isUserApplied
+                                                        ? <Button color="danger" size="lg" onClick={unsubscribeFromTrip}>Unsubscribe</Button>
+                                                        : <Button color="success" size="lg" onClick={applyToTrip}>Apply</Button>
+                                                :
+                                                <SnackbarContent
+                                                    message={
+                                                        'This trip is currently being deployed on the blockchain!'
+                                                    }
+                                                    color="info"
+                                                />
+
+                                            :
                                             <SnackbarContent
                                                 message={
                                                     'You are not connected to the Ethereum network!'
                                                 }
                                                 color="danger"
                                             />
-                                            
+
                                         }
 
                                     </div>
