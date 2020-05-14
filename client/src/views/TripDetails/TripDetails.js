@@ -21,6 +21,9 @@ import HistoryIcon from '@material-ui/icons/History';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HowToRegOutlinedIcon from '@material-ui/icons/HowToRegOutlined';
+import BuildIcon from '@material-ui/icons/Build';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import SmsIcon from '@material-ui/icons/Sms';
 // core components
 import CardIcon from "components/Card/CardIcon.js";
 
@@ -140,8 +143,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents(events => [...events,["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + "Current headcount: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
-                    // setEvents(events => [...events,["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + "Current headcount: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events,["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + ", Current participants: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.Unsubscription):
                     var Unsubscriptionevent =  window.web3.eth.abi.decodeParameters([
@@ -383,7 +385,7 @@ export default function TripDetails(props) {
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
-                                                <InfoOutlinedIcon></InfoOutlinedIcon>
+                                                <BuildIcon></BuildIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Contract type</p>
                                             <h3 className={classes.cardTitle}>{renderType()}</h3>
@@ -402,17 +404,48 @@ export default function TripDetails(props) {
                                     </Card>
                                 </GridItem>
                             </GridContainer>
-                            <h4 className={classes.cardTitle}>{trip.description}</h4>
-                            {JSON.stringify(trip)}
+                            <GridContainer>
+                                <GridItem xs={12} sm={6} md={6}>
+                                    <Card>
+                                        <CardHeader color="warning" stats icon>
+                                            <CardIcon color="warning">
+                                                <InfoOutlinedIcon></InfoOutlinedIcon>
+                                            </CardIcon>
+                                            <p className={classes.cardCategory}>Trip Description</p>
+                                        </CardHeader>
+                                        <CardBody>
+
+                                            <h3 className={classes.cardTitle}>{trip.description}</h3>
+
+                                        </CardBody>
+                                    </Card>
+                                </GridItem>
+                                <GridItem xs={12} sm={6} md={6}>
+                                    <Card>
+                                        <CardHeader color="warning" stats icon>
+                                            <CardIcon color="warning">
+                                                <CalendarTodayIcon></CalendarTodayIcon>
+                                            </CardIcon>
+                                            <p className={classes.cardCategory}>Application deadline</p>
+                                            <h3 className={classes.cardTitle}>{trip.deadLineDate}</h3>
+                                        </CardHeader>
+                                    </Card>
+                                </GridItem>    
+                            </GridContainer>
+                            
 
                             <Card>
-                                <CardHeader color="warning">
-                                    <h4 className={secondaryClasses.cardTitleWhite}>Trip Events</h4>
+                                <CardHeader color="warning" stats icon>
+                                    <CardIcon color="warning">
+                                        <SmsIcon></SmsIcon>
+                                    </CardIcon>
+                                    <p className={classes.cardCategory}>Trip Events</p>
                                 </CardHeader>
                                 <CardBody>
+                                
                                     <Table
                                         tableHeaderColor="info"
-                                        tableHead={["Name", "Timestamp", "Input parameters"]}
+                                        tableHead={["Name", "Timestamp", "Input parameters", "Tx"]}
                                         tableData={events}
                                     />
                                 </CardBody>
