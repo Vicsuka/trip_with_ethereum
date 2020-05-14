@@ -120,7 +120,7 @@ export default function TripDetails(props) {
             switch(log.topics[0]) {
                 case (GlobalVariables.ContractEvents.TripCreation):
                     console.log("Trip creation event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var creationEvent =  window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'price' },
                         { type: 'uint256', name: 'maxPeople' },
                         { type: 'uint256', name: 'trustMode' },
@@ -129,39 +129,39 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TripCreation", convertUinxToDateString(event.creationDate), getCreationParameters(event), <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.TripEnd):
                     console.log("TripEnd event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var TripEndevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'endingDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TripEnd", convertUinxToDateString(event.endingDate), <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.NewApplication):
                     console.log("NewApplication event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var NewApplicationevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'applicant' },
                         { type: 'uint256', name: 'currentApplicants' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["NewApplication", convertUinxToDateString(event.creationDate), "Applicant address: " + event.applicant + "Current headcount: " + event.currentApplicants, <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + "Current headcount: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.Unsubscription):
                     console.log("Unsubscription event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var Unsubscriptionevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'unsubscribed' },
                         { type: 'uint256', name: 'currentApplicants' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["Unsubscription", convertUinxToDateString(event.creationDate), "Unsubscribed address: " + event.unsubscribed + "Current headcount: " + event.currentApplicants, <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + "Current headcount: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCreation):
                     console.log("TransactionCreation event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var TransactionCreationevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'to' },
                         { type: 'uint256', name: 'amount' },
                         { type: 'uint256', name: 'txNumber' },
@@ -169,11 +169,11 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TransactionCreation", convertUinxToDateString(event.creationDate), getTransactionCreation(event), <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["TransactionCreation", convertUinxToDateString(TransactionCreationevent.creationDate), getTransactionCreation(TransactionCreationevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionComplete):
                     console.log("TransactionComplete event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var TransactionCompleteevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'to' },
                         { type: 'uint256', name: 'amount' },
                         { type: 'uint256', name: 'txNumber' },
@@ -181,27 +181,27 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TransactionComplete", convertUinxToDateString(event.creationDate), getTransactionCreation(event), <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["TransactionComplete", convertUinxToDateString(TransactionCompleteevent.creationDate), getTransactionCreation(TransactionCompleteevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCanceled):
                     console.log("TransactionCanceled event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var TransactionCanceledevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'txNumber' },
                         { type: 'string', name: 'description' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["TransactionCanceled", convertUinxToDateString(event.creationDate), "Transaction number: " + event.txNumber + ", Description: " + event.description, <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["TransactionCanceled", convertUinxToDateString(TransactionCanceledevent.creationDate), "Transaction number: " + TransactionCanceledevent.txNumber + ", Description: " + TransactionCanceledevent.description, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.VoteMade):
                     console.log("VoteMade event");
-                    var event =  window.web3.eth.abi.decodeParameters([
+                    var VoteMadeevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'who' },
                         { type: 'uint256', name: 'txNumber' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
         
-                    setEvents([events.concat(["VoteMade", convertUinxToDateString(event.creationDate), "Voter address: " + event.who + ", On transaction: " + event.txNumber, <a target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents([events.concat(["VoteMade", convertUinxToDateString(VoteMadeevent.creationDate), "Voter address: " + VoteMadeevent.who + ", On transaction: " + VoteMadeevent.txNumber, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 default:
                     console.log("Unknown Event");
