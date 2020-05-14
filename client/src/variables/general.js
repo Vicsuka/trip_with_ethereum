@@ -18,7 +18,7 @@ var server = [
   'Sign contract for "What are conference organizers afraid of?"'
 ];
 
-var ContractAddress = "0x4d72e171f482b461c379c7e1392dfce56699e55a";
+var ContractAddress = "0xcd062daf1113319e9f76cad0107dd86b76ca22ef";
 
 var ContractABI =[
 	{
@@ -93,6 +93,12 @@ var ContractABI =[
 			},
 			{
 				"indexed": false,
+				"internalType": "string",
+				"name": "_desc",
+				"type": "string"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint256",
 				"name": "_creationDate",
 				"type": "uint256"
@@ -130,6 +136,12 @@ var ContractABI =[
 			},
 			{
 				"indexed": false,
+				"internalType": "string",
+				"name": "_desc",
+				"type": "string"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint256",
 				"name": "_creationDate",
 				"type": "uint256"
@@ -164,6 +176,12 @@ var ContractABI =[
 				"internalType": "uint256",
 				"name": "_txNumber",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_desc",
+				"type": "string"
 			},
 			{
 				"indexed": false,
@@ -536,6 +554,11 @@ var ContractABI =[
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -589,6 +612,11 @@ var ContractABI =[
 				"internalType": "uint256",
 				"name": "amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
 			}
 		],
 		"name": "newTransaction",
@@ -725,7 +753,7 @@ var ContractABI =[
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-];
+]
 
 
 module.exports = {
