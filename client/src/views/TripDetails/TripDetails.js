@@ -68,6 +68,7 @@ export default function TripDetails(props) {
     // const [events, setEvents] = useState([]);
 
 
+    const [isContractReady, setContractReady] = useState(false);
     const [isEthEnabled, setEthEnabled] = useState(false);
     const [isUserApplied, setUserApplied] = useState(false);
     const [isDeadlinePassed, setDeadlinePassed] = useState(false);
@@ -89,7 +90,9 @@ export default function TripDetails(props) {
 
         var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256,uint256)');
         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
+        console.log(tripId);
         console.log("tripIdHASH",tripIdHASH);
+        console.log("TripCreationHASH",TripCreationHASH);
 
         var options = {
             fromBlock: 0,
@@ -102,6 +105,7 @@ export default function TripDetails(props) {
         window.web3.eth.subscribe('logs', options, function (error, result) {
             if (error) console.log(error);
         }).on("data", function (log) {
+            setContractReady(true);
             console.log(window.web3.eth.abi.decodeParameters([
                 {type: 'uint256',name: 'price'},
                 {type: 'uint256',name: 'maxPeople'},
@@ -141,11 +145,6 @@ export default function TripDetails(props) {
 
             // Acccounts now exposed
             console.log("Eth enabled!");
-
-            window.web3.eth.getAccounts().then(addresses => {
-                console.log(addresses);
-            })
-
         } catch (error) {
             // User denied account access...
         }
@@ -330,26 +329,37 @@ export default function TripDetails(props) {
                                 <GridItem xs={12} sm={6} md={3}>
                                     <div>
                                         {isEthEnabled
-                                            ?
-                                            isDeadlinePassed
+                                        ?
+                                                isContractReady
                                                 ?
-                                                <SnackbarContent
-                                                    message={
-                                                        'Application deadline has already passed!'
-                                                    }
-                                                    color="info"
-                                                />
+                                                    isDeadlinePassed
+                                                    ?
+                                                        <SnackbarContent
+                                                            message={
+                                                                'Application deadline has already passed!'
+                                                            }
+                                                            color="danger"
+                                                        />
+                                                    :
+                                                        isUserApplied
+                                                            ? <Button color="danger" className={secondaryClasses.gradientButton} size="lg" onClick={unsubscribeFromTrip}>Unsubscribe</Button>
+                                                            : <Button color="success" className={secondaryClasses.gradientButton} size="lg" onClick={applyToTrip}>Apply</Button>
                                                 :
-                                                isUserApplied
-                                                    ? <Button color="danger" className={secondaryClasses.gradientButton} size="lg" onClick={unsubscribeFromTrip}>Unsubscribe</Button>
-                                                    : <Button color="success" className={secondaryClasses.gradientButton} size="lg" onClick={applyToTrip}>Apply</Button>
-                                            :
+                                                    <SnackbarContent
+                                                        message={
+                                                            'This trip is currently being deployed on the blockchain!'
+                                                        }
+                                                        color="info"
+                                                    />
+                                                    
+                                        :
                                             <SnackbarContent
                                                 message={
                                                     'You are not connected to the Ethereum network!'
                                                 }
                                                 color="danger"
                                             />
+                                            
                                         }
 
                                     </div>

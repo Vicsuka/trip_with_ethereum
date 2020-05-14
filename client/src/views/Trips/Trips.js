@@ -89,7 +89,8 @@ export default function Trips() {
             .then(
                 (data) => {
                     console.log("trips", data);
-                    loadParticipants(data);                
+                    loadParticipants(data);
+                    //verifyTrips(data);            
                 },
                 (error) => {
                     console.log(error);
