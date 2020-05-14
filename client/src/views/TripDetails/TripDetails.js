@@ -76,6 +76,7 @@ export default function TripDetails(props) {
 
     const [transactionAddress, setTransactionAddress] = useState("");
     const [transactionAmount, setTransactionAmount] = useState("");
+    const [transactionDescription, setTransactionDescription] = useState("");
 
     const [events, setEvents] = useState([]);
 
@@ -86,6 +87,7 @@ export default function TripDetails(props) {
     const open = () => {
         setTransactionAddress("");
         setTransactionAmount("");
+        setTransactionDescription("");
         setShowDialog(true);
     }
         
@@ -306,7 +308,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
                 if (!window.web3.utils.isAddress(transactionAddress)) return;
-                contract.methods.newTransaction(tripId, transactionAddress, window.web3.utils.toWei(transactionAmount.toString())).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                contract.methods.newTransaction(tripId, transactionAddress, window.web3.utils.toWei(transactionAmount.toString()), transactionDescription).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
@@ -363,6 +365,10 @@ export default function TripDetails(props) {
 
     const handleTransactionAmountChange = (event, value) => {
         setTransactionAmount(event.target.value);
+    }
+
+    const handleTransactionDescriptionChange = (event, value) => {
+        setTransactionDescription(event.target.value);
     }
 
     const handleApply = () => {
@@ -606,6 +612,14 @@ export default function TripDetails(props) {
                     formControlProps={{
                         fullWidth: true,
                         onChange: handleTransactionAmountChange
+                    }}
+                />
+                <CustomInput
+                    labelText="Description"
+                    id="transaction-description"
+                    formControlProps={{
+                        fullWidth: true,
+                        onChange: handleTransactionDescriptionChange
                     }}
                 />
                 <p className={classes.cardCategory}>Please make sure you have the correct data filled in!</p>
