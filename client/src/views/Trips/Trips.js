@@ -69,15 +69,11 @@ export default function Trips() {
         try {
             // Request account access if needed
             await window.ethereum.enable();
-
-            // Acccounts now exposed
-            console.log("Eth enabled!");
-
-            window.web3.eth.getAccounts().then(addresses => {
-                console.log(addresses);
+            
+            window.ethereum.on('chainChanged', () => {
+                document.location.reload()
             })
-
-            // web3.eth.sendTransaction({/* ... */});
+            // Acccounts now exposed
         } catch (error) {
             // User denied account access...
         }
@@ -88,7 +84,6 @@ export default function Trips() {
             .then(response => response.json())
             .then(
                 (data) => {
-                    console.log("trips", data);
                     loadParticipants(data);
                     //verifyTrips(data);            
                 },
@@ -157,7 +152,6 @@ export default function Trips() {
         extendedData.forEach(trip => {
             trip.participants = [];
             trip.participantIds.forEach(id => {
-                console.log("Pushing participant:", id);
                 allPromises.push(
                     fetch("/api/user/users/" + id)
                         .then(response => response.json())
@@ -177,7 +171,6 @@ export default function Trips() {
 
         // Wait until all participants are loaded
         Promise.all(allPromises).then(function () {
-            console.log("Participants loaded");
             setTrips(extendedData);
         });
 

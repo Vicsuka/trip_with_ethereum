@@ -80,8 +80,6 @@ export default function TripDetails(props) {
     const findCreationEvent = () => {
         // var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
-        console.log(tripId);
-        console.log("tripIdHASH", tripIdHASH);
 
         var options = {
             fromBlock: 0,
@@ -114,12 +112,8 @@ export default function TripDetails(props) {
         window.web3.eth.subscribe('logs', options, function (error, result) {
             if (error) console.log(error);
         }).on("data", function (log) {
-            console.log("New log:", log);
-
-            console.log("Topic:", log.topics[0]);
             switch(log.topics[0]) {
                 case (GlobalVariables.ContractEvents.TripCreation):
-                    console.log("Trip creation event");
                     var creationEvent =  window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'price' },
                         { type: 'uint256', name: 'maxPeople' },
@@ -133,7 +127,6 @@ export default function TripDetails(props) {
                     // setEvents(events => [...events,["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.TripEnd):
-                    console.log("TripEnd event");
                     var TripEndevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'endingDate' },
                     ], log.data);
@@ -141,7 +134,6 @@ export default function TripDetails(props) {
                     setEvents(events => [...events,["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.NewApplication):
-                    console.log("NewApplication event");
                     var NewApplicationevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'applicant' },
                         { type: 'uint256', name: 'currentApplicants' },
@@ -152,7 +144,6 @@ export default function TripDetails(props) {
                     // setEvents(events => [...events,["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + "Current headcount: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.Unsubscription):
-                    console.log("Unsubscription event");
                     var Unsubscriptionevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'unsubscribed' },
                         { type: 'uint256', name: 'currentApplicants' },
@@ -162,7 +153,6 @@ export default function TripDetails(props) {
                     setEvents(events => [...events,["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + "Current headcount: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCreation):
-                    console.log("TransactionCreation event");
                     var TransactionCreationevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'to' },
                         { type: 'uint256', name: 'amount' },
@@ -174,7 +164,6 @@ export default function TripDetails(props) {
                     setEvents(events => [...events,["TransactionCreation", convertUinxToDateString(TransactionCreationevent.creationDate), getTransactionCreation(TransactionCreationevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionComplete):
-                    console.log("TransactionComplete event");
                     var TransactionCompleteevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'to' },
                         { type: 'uint256', name: 'amount' },
@@ -186,7 +175,6 @@ export default function TripDetails(props) {
                     setEvents(events => [...events,["TransactionComplete", convertUinxToDateString(TransactionCompleteevent.creationDate), getTransactionCreation(TransactionCompleteevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCanceled):
-                    console.log("TransactionCanceled event");
                     var TransactionCanceledevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'txNumber' },
                         { type: 'string', name: 'description' },
@@ -196,7 +184,6 @@ export default function TripDetails(props) {
                     setEvents(events => [...events,["TransactionCanceled", convertUinxToDateString(TransactionCanceledevent.creationDate), "Transaction number: " + TransactionCanceledevent.txNumber + ", Description: " + TransactionCanceledevent.description, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.VoteMade):
-                    console.log("VoteMade event");
                     var VoteMadeevent =  window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'who' },
                         { type: 'uint256', name: 'txNumber' },
@@ -228,7 +215,6 @@ export default function TripDetails(props) {
             .then(response => response.json())
             .then(
                 (data) => {
-                    console.log(data);
                     if (data.trip !== null) {
                         setTrip(data.trip);
                         setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
@@ -250,9 +236,8 @@ export default function TripDetails(props) {
             window.ethereum.on('chainChanged', () => {
                 document.location.reload()
             })
-
             // Acccounts now exposed
-            console.log("Eth enabled!");
+            
         } catch (error) {
             // User denied account access...
         }
@@ -268,9 +253,7 @@ export default function TripDetails(props) {
         fetch('/api/trip/unsubscribe', requestOptions)
             .then(response => response.json())
             .then(
-                (data) => {
-                    console.log(data);
-                },
+                (data) => {},
                 (error) => {
                     console.log(error);
                 }
@@ -284,18 +267,13 @@ export default function TripDetails(props) {
 
                 contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
-                        console.log('TX Hash', hash)
                     })
                     .then(receipt => {
-                        console.log('Mined', receipt);
                         handleUnsubscription();
                     })
                     .catch(err => {
                         console.log('Error', err)
                     })
-                    .finally(() => {
-                        console.log('Extra Code After Everything')
-                    });
             }
         });
     }
@@ -307,18 +285,13 @@ export default function TripDetails(props) {
 
                 contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 3000000, gasPrice: window.web3.utils.toWei("20", 'gwei'), value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
                     .on('transactionHash', hash => {
-                        console.log('TX Hash', hash)
                     })
                     .then(receipt => {
-                        console.log('Mined', receipt);
                         handleApply();
                     })
                     .catch(err => {
                         console.log('Error', err)
                     })
-                    .finally(() => {
-                        console.log('Extra Code After Everything')
-                    });
             }
         });
     }
@@ -333,9 +306,7 @@ export default function TripDetails(props) {
         fetch('/api/trip/apply', requestOptions)
             .then(response => response.json())
             .then(
-                (data) => {
-                    console.log(data);
-                },
+                (data) => {},
                 (error) => {
                     console.log(error);
                 }
