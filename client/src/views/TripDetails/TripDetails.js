@@ -3,11 +3,13 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 
 // @material-ui/core components
+import { Dialog } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import CustomInput from "components/CustomInput/CustomInput.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -69,12 +71,25 @@ export default function TripDetails(props) {
     const [isContractReady, setContractReady] = useState(false);
     const [isEthEnabled, setEthEnabled] = useState(false);
     const [isUserApplied, setUserApplied] = useState(false);
+    const [isUserOrganizer, setUserOrganizer] = useState(false);
     const [isDeadlinePassed, setDeadlinePassed] = useState(false);
+
+    const [transactionAddress, setTransactionAddress] = useState("");
+    const [transactionAmount, setTransactionAmount] = useState("");
 
     const [events, setEvents] = useState([]);
 
     const [trip, setTrip] = useState({});
     const [participants, setParticipants] = useState([]);
+
+    const [showDialog, setShowDialog] = React.useState(false);
+    const open = () => {
+        setTransactionAddress("");
+        setTransactionAmount("");
+        setShowDialog(true);
+    }
+        
+    const close = () => setShowDialog(false);
 
     useEffect(() => {
         if (window.ethereum) {
@@ -229,6 +244,7 @@ export default function TripDetails(props) {
                         setTrip(data.trip);
                         setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
                         setUserApplied(data.isUserApplied);
+                        setUserOrganizer(data.isUserOrganizer);
                     }
                 },
                 (error) => {
@@ -285,6 +301,24 @@ export default function TripDetails(props) {
             )
     }
 
+    const createTransaction = () => {
+        window.web3.eth.getAccounts(function (error, result) {
+            if (!error) {
+                var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+
+                contract.methods.newTransaction(tripId, transactionAddress, transactionAmount).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                    .on('transactionHash', hash => {
+                    })
+                    .then(receipt => {
+                        console.log(receipt);
+                    })
+                    .catch(err => {
+                        console.log('Error', err)
+                    })
+            }
+        });
+    }
+
     const unsubscribeFromTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
@@ -319,6 +353,14 @@ export default function TripDetails(props) {
                     })
             }
         });
+    }
+
+    const handleTransactionAddressChange = (event, value) => {
+        setTransactionAddress(event.target.value);
+    }
+
+    const handleTransactionAmountChange = (event, value) => {
+        setTransactionAmount(event.target.value);
     }
 
     const handleApply = () => {
@@ -523,8 +565,11 @@ export default function TripDetails(props) {
                                     <p className={classes.cardCategory}>Trip Events</p>
                                     {
                                         isDeadlinePassed
-                                            ? ""
-                                            : <Button color="success" size="lg" onClick={unsubscribeFromTrip}>Create a new transaction</Button>
+                                            ? 
+                                                isUserOrganizer
+                                                ? <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                : ""
+                                            : ""                                
                                     }
                                 </CardHeader>
                                 <CardBody>
@@ -542,6 +587,28 @@ export default function TripDetails(props) {
                     </Card>
                 </GridItem>
             </GridContainer>
+            <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+            <Dialog open={showDialog} onDismiss={close}>
+                <Button color="danger" onClick={close}>Close</Button>
+                <CustomInput
+                    labelText="Send transaction to (ethereum address)"
+                    id="transaction-address"
+                    formControlProps={{
+                        fullWidth: true,
+                        onChange: handleTransactionAddressChange
+                    }}
+                />
+                <CustomInput
+                    labelText="Amount (ether)"
+                    id="transaction-amount"
+                    formControlProps={{
+                        fullWidth: true,
+                        onChange: handleTransactionAmountChange
+                    }}
+                />
+                <p className={classes.cardCategory}>Please make sure you have the correct data filled in!</p>
+                <Button color="success" onClick={close}>Send</Button>
+            </Dialog>
         </div>
     );
 }

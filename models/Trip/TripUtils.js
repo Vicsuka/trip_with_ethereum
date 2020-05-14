@@ -48,10 +48,12 @@ var getAllTrips = function (req, res, next) {
 
 var getTrip = function (req, res) {
     let applied = false;
+    let organizer;
     if (req.user) {
         applied = req.trip.participantIds.includes(req.user.id);
+        req.trip.organizerId == (req.user.id) ? organizer = true : organizer = false;
     }
-    res.status(200).json({trip: req.trip, isUserApplied: applied});
+    res.status(200).json({trip: req.trip, isUserApplied: applied, isUserOrganizer: organizer});
 };
 
 var findTripById = function (req, res, next, id) {
