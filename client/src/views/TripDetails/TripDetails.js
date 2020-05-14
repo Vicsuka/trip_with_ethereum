@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import { Link } from "react-router-dom";
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -24,6 +27,7 @@ import HowToRegOutlinedIcon from '@material-ui/icons/HowToRegOutlined';
 import BuildIcon from '@material-ui/icons/Build';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import SmsIcon from '@material-ui/icons/Sms';
+import WcIcon from '@material-ui/icons/Wc';
 // core components
 import CardIcon from "components/Card/CardIcon.js";
 
@@ -47,18 +51,20 @@ const secondaryStyles = {
         marginBottom: "3px",
         textDecoration: "none"
     },
-    aboutInfo: {
-        textAlign: "left"
+    gradientButton: {
+        backgroundImage: "linear-gradient(to right, #FF512F 0%, #F09819 51%)",
     }
+
+
 };
 
 const useStyles = makeStyles(styles);
+const useMoreStyles = makeStyles(secondaryStyles);
 
 export default function TripDetails(props) {
     var tripId = props.match.params.tripId;
     const classes = useStyles();
-    const useSecondaryStyles = makeStyles(secondaryStyles);
-    const secondaryClasses = useStyles(useSecondaryStyles);
+    const secondaryClasses = useMoreStyles();
 
     const [isContractReady, setContractReady] = useState(false);
     const [isEthEnabled, setEthEnabled] = useState(false);
@@ -68,6 +74,7 @@ export default function TripDetails(props) {
     const [events, setEvents] = useState([]);
 
     const [trip, setTrip] = useState({});
+    const [participants, setParticipants] = useState([]);
 
     useEffect(() => {
         if (window.ethereum) {
@@ -115,9 +122,9 @@ export default function TripDetails(props) {
         window.web3.eth.subscribe('logs', options, function (error, result) {
             if (error) console.log(error);
         }).on("data", function (log) {
-            switch(log.topics[0]) {
+            switch (log.topics[0]) {
                 case (GlobalVariables.ContractEvents.TripCreation):
-                    var creationEvent =  window.web3.eth.abi.decodeParameters([
+                    var creationEvent = window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'price' },
                         { type: 'uint256', name: 'maxPeople' },
                         { type: 'uint256', name: 'trustMode' },
@@ -130,69 +137,69 @@ export default function TripDetails(props) {
                     // setEvents(events => [...events,["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
                     break;
                 case (GlobalVariables.ContractEvents.TripEnd):
-                    var TripEndevent =  window.web3.eth.abi.decodeParameters([
+                    var TripEndevent = window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'endingDate' },
                     ], log.data);
-        
-                    setEvents(events => [...events,["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+
+                    setEvents(events => [...events, ["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.NewApplication):
-                    var NewApplicationevent =  window.web3.eth.abi.decodeParameters([
+                    var NewApplicationevent = window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'applicant' },
                         { type: 'uint256', name: 'currentApplicants' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
-        
-                    setEvents(events => [...events,["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + ", Current participants: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+
+                    setEvents(events => [...events, ["NewApplication", convertUinxToDateString(NewApplicationevent.creationDate), "Applicant address: " + NewApplicationevent.applicant + ", Current participants: " + NewApplicationevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.Unsubscription):
-                    var Unsubscriptionevent =  window.web3.eth.abi.decodeParameters([
+                    var Unsubscriptionevent = window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'unsubscribed' },
                         { type: 'uint256', name: 'currentApplicants' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
-        
-                    setEvents(events => [...events,["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + "Current headcount: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+
+                    setEvents(events => [...events, ["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + "Current headcount: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCreation):
-                    var TransactionCreationevent =  window.web3.eth.abi.decodeParameters([
+                    var TransactionCreationevent = window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'to' },
                         { type: 'uint256', name: 'amount' },
                         { type: 'uint256', name: 'txNumber' },
                         { type: 'string', name: 'description' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
-        
-                    setEvents(events => [...events,["TransactionCreation", convertUinxToDateString(TransactionCreationevent.creationDate), getTransactionCreation(TransactionCreationevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+
+                    setEvents(events => [...events, ["TransactionCreation", convertUinxToDateString(TransactionCreationevent.creationDate), getTransactionCreation(TransactionCreationevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionComplete):
-                    var TransactionCompleteevent =  window.web3.eth.abi.decodeParameters([
+                    var TransactionCompleteevent = window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'to' },
                         { type: 'uint256', name: 'amount' },
                         { type: 'uint256', name: 'txNumber' },
                         { type: 'string', name: 'description' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
-        
-                    setEvents(events => [...events,["TransactionComplete", convertUinxToDateString(TransactionCompleteevent.creationDate), getTransactionCreation(TransactionCompleteevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+
+                    setEvents(events => [...events, ["TransactionComplete", convertUinxToDateString(TransactionCompleteevent.creationDate), getTransactionCreation(TransactionCompleteevent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCanceled):
-                    var TransactionCanceledevent =  window.web3.eth.abi.decodeParameters([
+                    var TransactionCanceledevent = window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'txNumber' },
                         { type: 'string', name: 'description' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
-        
-                    setEvents(events => [...events,["TransactionCanceled", convertUinxToDateString(TransactionCanceledevent.creationDate), "Transaction number: " + TransactionCanceledevent.txNumber + ", Description: " + TransactionCanceledevent.description, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+
+                    setEvents(events => [...events, ["TransactionCanceled", convertUinxToDateString(TransactionCanceledevent.creationDate), "Transaction number: " + TransactionCanceledevent.txNumber + ", Description: " + TransactionCanceledevent.description, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.VoteMade):
-                    var VoteMadeevent =  window.web3.eth.abi.decodeParameters([
+                    var VoteMadeevent = window.web3.eth.abi.decodeParameters([
                         { type: 'address', name: 'who' },
                         { type: 'uint256', name: 'txNumber' },
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
-        
-                    setEvents(events => [...events,["VoteMade", convertUinxToDateString(VoteMadeevent.creationDate), "Voter address: " + VoteMadeevent.who + ", On transaction: " + VoteMadeevent.txNumber, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+
+                    setEvents(events => [...events, ["VoteMade", convertUinxToDateString(VoteMadeevent.creationDate), "Voter address: " + VoteMadeevent.who + ", On transaction: " + VoteMadeevent.txNumber, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 default:
                     console.log("Unknown Event");
@@ -218,6 +225,7 @@ export default function TripDetails(props) {
             .then(
                 (data) => {
                     if (data.trip !== null) {
+                        loadParticipants(data.trip);
                         setTrip(data.trip);
                         setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
                         setUserApplied(data.isUserApplied);
@@ -229,17 +237,32 @@ export default function TripDetails(props) {
             )
     }
 
+    const loadParticipants = (data) => {
+        data.participantIds.forEach(id => {
+                fetch("/api/user/users/" + id)
+                    .then(response => response.json())
+                    .then(
+                        (participant) => {
+                            setParticipants(participants => [...participants, participant]);
+                        },
+                        (error) => {
+                            console.log(error);
+                        }
+                    )
+        })
+    }
+
     async function enableEthereum() {
         window.web3 = new Web3(Web3.givenProvider || "https://ropsten.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
         try {
             // Request account access if needed
             await window.ethereum.enable();
-            
+
             window.ethereum.on('chainChanged', () => {
                 document.location.reload()
             })
             // Acccounts now exposed
-            
+
         } catch (error) {
             // User denied account access...
         }
@@ -255,7 +278,7 @@ export default function TripDetails(props) {
         fetch('/api/trip/unsubscribe', requestOptions)
             .then(response => response.json())
             .then(
-                (data) => {},
+                (data) => { },
                 (error) => {
                     console.log(error);
                 }
@@ -308,7 +331,7 @@ export default function TripDetails(props) {
         fetch('/api/trip/apply', requestOptions)
             .then(response => response.json())
             .then(
-                (data) => {},
+                (data) => { },
                 (error) => {
                     console.log(error);
                 }
@@ -343,10 +366,58 @@ export default function TripDetails(props) {
 
     }
 
+    const renderedParticipants = participants.map((participant, i) => {
+        return (<Link to={`/admin/user/${participant.auth0id}`} key={i}>{participant.firstname + " " + participant.lastname}<br></br></Link>)
+    })
 
     return (
         <div>
-            <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
+            <GridContainer >
+                <GridItem xs={12} sm={6} md={6}>
+                    <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
+
+                </GridItem>
+                <GridItem xs={12} sm={6} md={6} className={secondaryClasses.alignRight}>
+
+                    <div>
+                        {isEthEnabled
+                            ?
+                            isContractReady
+                                ?
+                                isDeadlinePassed
+                                    ?
+                                    <SnackbarContent
+                                        message={
+                                            'Application deadline has already passed!'
+                                        }
+                                        color="danger"
+                                    />
+                                    :
+                                    isUserApplied
+                                        ? <Button color="danger" block size="lg" onClick={unsubscribeFromTrip}>Unsubscribe from trip</Button>
+                                        : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={applyToTrip}>Apply to trip</Button>
+                                :
+                                <SnackbarContent
+                                    message={
+                                        'This trip is currently being deployed on the blockchain!'
+                                    }
+                                    color="info"
+                                />
+
+                            :
+                            <SnackbarContent
+                                message={
+                                    'You are not connected to the Ethereum network!'
+                                }
+                                color="danger"
+                            />
+
+                        }
+
+                    </div>
+
+                </GridItem>
+            </GridContainer>
 
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
@@ -409,16 +480,13 @@ export default function TripDetails(props) {
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
-                                                <InfoOutlinedIcon></InfoOutlinedIcon>
+                                                <WcIcon></WcIcon>
                                             </CardIcon>
-                                            <p className={classes.cardCategory}>Trip Description</p>
+                                            <p className={classes.cardCategory}>Participants</p>
+                                            <h3 className={classes.cardTitle}>{renderedParticipants}</h3>                                          
                                         </CardHeader>
-                                        <CardBody>
-
-                                            <h3 className={classes.cardTitle}>{trip.description}</h3>
-
-                                        </CardBody>
                                     </Card>
+                                    
                                 </GridItem>
                                 <GridItem xs={12} sm={6} md={6}>
                                     <Card>
@@ -430,9 +498,22 @@ export default function TripDetails(props) {
                                             <h3 className={classes.cardTitle}>{trip.deadLineDate}</h3>
                                         </CardHeader>
                                     </Card>
-                                </GridItem>    
+                                </GridItem>
                             </GridContainer>
-                            
+
+                            <Card>
+                                <CardHeader color="warning" stats icon>
+                                    <CardIcon color="warning">
+                                        <InfoOutlinedIcon></InfoOutlinedIcon>
+                                    </CardIcon>
+                                    <p className={classes.cardCategory}>Trip Description</p>
+                                </CardHeader>
+                                <CardBody>
+
+                                    <h3 className={classes.cardTitle}>{trip.description}</h3>
+
+                                </CardBody>
+                            </Card>
 
                             <Card>
                                 <CardHeader color="warning" stats icon>
@@ -440,9 +521,14 @@ export default function TripDetails(props) {
                                         <SmsIcon></SmsIcon>
                                     </CardIcon>
                                     <p className={classes.cardCategory}>Trip Events</p>
+                                    {
+                                        isDeadlinePassed
+                                            ? ""
+                                            : <Button color="success" size="lg" onClick={unsubscribeFromTrip}>Create a new transaction</Button>
+                                    }
                                 </CardHeader>
                                 <CardBody>
-                                
+
                                     <Table
                                         tableHeaderColor="info"
                                         tableHead={["Name", "Timestamp", "Input parameters", "Tx"]}
@@ -451,47 +537,7 @@ export default function TripDetails(props) {
                                 </CardBody>
                             </Card>
 
-                            <GridContainer>
-                                <GridItem xs={12} sm={6} md={3}>
-                                    <div>
-                                        {isEthEnabled
-                                            ?
-                                            isContractReady
-                                                ?
-                                                isDeadlinePassed
-                                                    ?
-                                                    <SnackbarContent
-                                                        message={
-                                                            'Application deadline has already passed!'
-                                                        }
-                                                        color="danger"
-                                                    />
-                                                    :
-                                                    isUserApplied
-                                                        ? <Button color="danger" size="lg" onClick={unsubscribeFromTrip}>Unsubscribe</Button>
-                                                        : <Button color="success" size="lg" onClick={applyToTrip}>Apply</Button>
-                                                :
-                                                <SnackbarContent
-                                                    message={
-                                                        'This trip is currently being deployed on the blockchain!'
-                                                    }
-                                                    color="info"
-                                                />
 
-                                            :
-                                            <SnackbarContent
-                                                message={
-                                                    'You are not connected to the Ethereum network!'
-                                                }
-                                                color="danger"
-                                            />
-
-                                        }
-
-                                    </div>
-
-                                </GridItem>
-                            </GridContainer>
                         </CardBody>
                     </Card>
                 </GridItem>

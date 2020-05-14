@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import GridContainer from "components/Grid/GridContainer";
@@ -7,7 +9,7 @@ import CardHeader from "components/Card/CardHeader";
 import { makeStyles } from "@material-ui/core";
 import { useEffect } from "react";
 import Button from "components/CustomButtons/Button.js";
-import { Link } from "react-router-dom";
+
 
 // import GlobalVariables from "variables/general.js";
 
@@ -69,7 +71,7 @@ export default function Trips() {
         try {
             // Request account access if needed
             await window.ethereum.enable();
-            
+
             window.ethereum.on('chainChanged', () => {
                 document.location.reload()
             })
