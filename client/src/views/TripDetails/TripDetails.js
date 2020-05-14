@@ -87,10 +87,9 @@ export default function TripDetails(props) {
     const loadEvents = () => {
         // var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-        var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256)');
+        var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256,uint256)');
         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
-        console.log(TripCreationHASH);
-        console.log(tripIdHASH);
+        console.log("tripIdHASH",tripIdHASH);
 
         var options = {
             fromBlock: 0,
@@ -112,9 +111,8 @@ export default function TripDetails(props) {
                 {type: 'uint256',name: 'creationDate'},
             ], log.data));
         }).on("changed", function (log) {
-
+            //
         });
-
     }
 
     const loadTrip = () => {

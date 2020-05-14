@@ -9,6 +9,8 @@ import { useEffect } from "react";
 import Button from "components/CustomButtons/Button.js";
 import { Link } from "react-router-dom";
 
+import GlobalVariables from "variables/general.js";
+
 import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";
@@ -54,10 +56,10 @@ export default function Trips() {
     const [trips, setTrips] = useState([]);
 
     useEffect(() => {
-        if (window.ethereum) {            
+        if (window.ethereum) {
             enableEthereum();
             setEthEnabled(true);
-        } 
+        }
         loadTrips();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -67,14 +69,14 @@ export default function Trips() {
         try {
             // Request account access if needed
             await window.ethereum.enable();
-            
+
             // Acccounts now exposed
             console.log("Eth enabled!");
-            
-            window.web3.eth.getAccounts().then( addresses => {
+
+            window.web3.eth.getAccounts().then(addresses => {
                 console.log(addresses);
             })
-            
+
             // web3.eth.sendTransaction({/* ... */});
         } catch (error) {
             // User denied account access...
@@ -86,7 +88,8 @@ export default function Trips() {
             .then(response => response.json())
             .then(
                 (data) => {
-                    loadParticipants(data);
+                    console.log("trips", data);
+                    loadParticipants(data);                
                 },
                 (error) => {
                     console.log(error);
@@ -94,18 +97,74 @@ export default function Trips() {
             )
     }
 
+
+    // const verifyTrips = (data) => {
+    //     // var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
+    //     var allPromises = [];
+    //     var verifiedTrips = [];
+    //     var subscriptions = [];
+
+    //     data.forEach(trip => {
+    //         console.log(trip);
+
+    //         var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256,uint256)');
+    //         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(trip.id);
+    //         console.log("tripIdHASH",tripIdHASH);
+
+    //         var options = {
+    //             fromBlock: 0,
+    //             toBlock: 'latest',
+    //             address: GlobalVariables.ContractAddress,
+    //             topics: [TripCreationHASH, tripIdHASH]
+    //         };
+
+    //         allPromises.push(
+
+    //             new Promise(function(resolve, reject) {
+    //                 subscriptions.push(window.web3.eth.subscribe('logs', options, function (error, result) {
+    //                     if (error) console.log(error);
+    //                     console.log("result",result);
+    //                     console.log("Verifing trip: ", trip);
+    //                     verifiedTrips.push(trip);
+    //                     resolve();
+    //                 }).on("data", function (log) {
+                        
+    //                 }).on("changed", function (log) {
+    //                     //
+    //                 }))
+    //             })
+    //         );
+    //     });
+    //     // Wait until all trips are verified
+    //     Promise.all(allPromises).then(function () {
+    //         console.log("Trips verified");
+    //         subscriptions.forEach(element => {
+    //             element.unsubscribe(function(error, success){
+    //                 if(success)
+    //                     console.log('Successfully unsubscribed!');
+    //             });
+    //         });
+    //         loadParticipants(verifiedTrips);
+    //     });
+
+
+    // }
+
     const loadParticipants = (data) => {
         var extendedData = data;
         var allPromises = [];
         extendedData.forEach(trip => {
             trip.participants = [];
             trip.participantIds.forEach(id => {
+                console.log("Pushing participant:", id);
                 allPromises.push(
                     fetch("/api/user/users/" + id)
                         .then(response => response.json())
                         .then(
                             (participant) => {
-                                trip.participants.push(participant);
+                                if (!trip.participants.includes(participant)) {
+                                    trip.participants.push(participant);
+                                }
                             },
                             (error) => {
                                 console.log(error);
@@ -118,7 +177,6 @@ export default function Trips() {
         // Wait until all participants are loaded
         Promise.all(allPromises).then(function () {
             console.log("Participants loaded");
-            console.log(extendedData);
             setTrips(extendedData);
         });
 
@@ -139,9 +197,14 @@ export default function Trips() {
                 <CardFooter>
                     <h4>Participants:</h4>
                     <AvatarGroup max={3} >
-                        {trip.participants.map((participant, i) => {
-                            return (<Link className={classes.avatarBorderless} to={`/admin/user/${participant.auth0id}`} key={i}><Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i}/></Link>)
-                        })}
+                        { trip.participants
+                        ? 
+                            trip.participants.map((participant, i) => {
+                                return (<Link className={classes.avatarBorderless} to={`/admin/user/${participant.auth0id}`} key={i}><Avatar alt={participant.firstname + " " + participant.lastname} src={participant.picture} key={i} /></Link>)
+                            })
+                        :
+                        ""
+                        }
                     </AvatarGroup>
                     <Link to={`/admin/trip/${trip.id}`}>
                         <Button color="warning" >Details</Button>
@@ -157,18 +220,18 @@ export default function Trips() {
         <div>
             {
                 isEthEnabled
-                ? <div>
+                    ? <div>
                         <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
                         <GridContainer>
                             {renderedTrips}
                         </GridContainer>
                     </div>
-                :
-                <Card>
-                    <CardBody>
-                        <h2>Please connect to an Ethereum wallet to continue!</h2>
-                    </CardBody>                    
-                </Card>
+                    :
+                    <Card>
+                        <CardBody>
+                            <h2>Please connect to an Ethereum wallet to continue!</h2>
+                        </CardBody>
+                    </Card>
             }
         </div>
     );
