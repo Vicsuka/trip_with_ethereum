@@ -489,57 +489,83 @@ export default function TripDetails(props) {
                 <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
 
                     <div>
-                        {isEthEnabled
+                        {isFree
                             ?
-                            isContractReady
+                            ""
+                            :
+                            isEthEnabled
                                 ?
-                                isEnddatePassed
+                                isContractReady
                                     ?
-                                    <Button color="info" block size="lg" onClick={endTrip}>End trip</Button>
+                                    isEnddatePassed
+                                        ?
+                                        <Button color="info" block size="lg" onClick={endTrip}>End trip</Button>
+                                        :
+                                        ""
                                     :
                                     ""
                                 :
                                 ""
-                            :
-                            ""
                         }
                     </div>
                 </GridItem>
                 
                 <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
-
                     <div>
-                        {isEthEnabled
+                        {isFree
                             ?
-                            isContractReady
+                            isDeadlinePassed
                                 ?
-                                isDeadlinePassed
+                                isEnddatePassed
                                     ?
+                                        <SnackbarContent
+                                            message={
+                                                'This trip has already ended!'
+                                            }
+                                            color="danger"
+                                        />                                        
+                                    :
+                                        <SnackbarContent
+                                            message={
+                                                'Application deadline has already passed!'
+                                            }
+                                            color="danger"
+                                        />  
+                                :
+                                isUserApplied                                
+                                    ? <Button color="danger" block size="lg" onClick={handleUnsubscription}>Unsubscribe from trip</Button>
+                                    : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={handleApply}>Apply to trip</Button>
+                            :
+                            isEthEnabled
+                                ?
+                                isContractReady
+                                    ?
+                                    isDeadlinePassed
+                                        ?
+                                        <SnackbarContent
+                                            message={
+                                                'Application deadline has already passed!'
+                                            }
+                                            color="danger"
+                                        />
+                                        :
+                                        isUserApplied
+                                            ? <Button color="danger" block size="lg" onClick={unsubscribeFromTrip}>Unsubscribe from trip</Button>
+                                            : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={applyToTrip}>Apply to trip</Button>
+                                    :
                                     <SnackbarContent
                                         message={
-                                            'Application deadline has already passed!'
+                                            'This trip is currently being deployed on the blockchain!'
                                         }
-                                        color="danger"
+                                        color="info"
                                     />
-                                    :
-                                    isUserApplied
-                                        ? <Button color="danger" block size="lg" onClick={unsubscribeFromTrip}>Unsubscribe from trip</Button>
-                                        : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={applyToTrip}>Apply to trip</Button>
                                 :
                                 <SnackbarContent
                                     message={
-                                        'This trip is currently being deployed on the blockchain!'
+                                        'You are not connected to the Ethereum network!'
                                     }
-                                    color="info"
+                                    color="danger"
                                 />
-
-                            :
-                            <SnackbarContent
-                                message={
-                                    'You are not connected to the Ethereum network!'
-                                }
-                                color="danger"
-                            />
                         }
                     </div>
                 </GridItem>
@@ -581,7 +607,9 @@ export default function TripDetails(props) {
                                 {
                                     isFree 
                                     ?
-                                        <GridItem xs={12} sm={6} md={6}>
+                                        ""
+                                    :
+                                        <GridItem xs={12} sm={12} md={12}>
                                             <GridContainer>
                                                 <GridItem xs={12} sm={6} md={6}>
                                                     <Card>
@@ -607,8 +635,6 @@ export default function TripDetails(props) {
                                                 </GridItem>
                                             </GridContainer>
                                         </GridItem>
-                                    :
-                                        ""
                                 }                                
                             </GridContainer>
 
@@ -648,80 +674,94 @@ export default function TripDetails(props) {
                                     <h3 className={classes.cardTitle}>{trip.description}</h3>
                                 </CardBody>
                             </Card>
-
-                            <Card>
-                                <CardHeader color="warning" stats icon>
-                                    <CardIcon color="warning">
-                                        <SmsIcon></SmsIcon>
-                                    </CardIcon>
-                                    <p className={classes.cardCategory}>Trip Events</p>
-                                    {isEthEnabled
-                                        ?
-                                        isContractReady
+                            
+                            {isFree
+                                ?
+                                ""
+                                :
+                                <Card>
+                                    <CardHeader color="warning" stats icon>
+                                        <CardIcon color="warning">
+                                            <SmsIcon></SmsIcon>
+                                        </CardIcon>
+                                        <p className={classes.cardCategory}>Trip Events</p>
+                                        {isFree
                                             ?
-                                            isDeadlinePassed
+                                            ""
+                                            :
+                                            isEthEnabled
                                                 ?
-                                                isUserOrganizer
-                                                    ? 
-                                                        <div>
-                                                            <Button color="danger" size="lg" onClick={cancelTransaction}>Cancel current transaction</Button>
-                                                            <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
-                                                        </div>
-                                                    : ""
-                                                : ""
-                                            :
-                                            <SnackbarContent
-                                                message={
-                                                    'This trip is currently being deployed on the blockchain!'
-                                                }
-                                                color="info"
-                                            />
+                                                isContractReady
+                                                    ?
+                                                    isDeadlinePassed
+                                                        ?
+                                                        isUserOrganizer
+                                                            ?
+                                                            <div>
+                                                                <Button color="danger" size="lg" onClick={cancelTransaction}>Cancel current transaction</Button>
+                                                                <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                            </div>
+                                                            : ""
+                                                        : ""
+                                                    :
+                                                    <SnackbarContent
+                                                        message={
+                                                            'This trip is currently being deployed on the blockchain!'
+                                                        }
+                                                        color="info"
+                                                    />
 
-                                        :
-                                        <SnackbarContent
-                                            message={
-                                                'You are not connected to the Ethereum network!'
-                                            }
-                                            color="danger"
+                                                :
+                                                <SnackbarContent
+                                                    message={
+                                                        'You are not connected to the Ethereum network!'
+                                                    }
+                                                    color="danger"
+                                                />
+                                        }
+                                    </CardHeader>
+                                    <CardBody>
+
+                                        <Table
+                                            tableHeaderColor="info"
+                                            tableHead={["Name", "Timestamp", "Input parameters", "Tx"]}
+                                            tableData={events}
                                         />
-                                    }
-                                </CardHeader>
-                                <CardBody>
-
-                                    <Table
-                                        tableHeaderColor="info"
-                                        tableHead={["Name", "Timestamp", "Input parameters", "Tx"]}
-                                        tableData={events}
-                                    />
-                                    {isEthEnabled
-                                        ?
-                                        isContractReady
+                                        {isFree
                                             ?
-                                            isDeadlinePassed
-                                                ? 
-                                                    isUserApplied
-                                                    ? <Button color="success" size="lg" onClick={makeVote}>Vote on current transaction</Button>
-                                                    : ""
-                                                : ""  
+                                            ""
                                             :
-                                            <SnackbarContent
-                                                message={
-                                                    'This trip is currently being deployed on the blockchain!'
-                                                }
-                                                color="info"
-                                            />
+                                            isEthEnabled
+                                                ?
+                                                isContractReady
+                                                    ?
+                                                    isDeadlinePassed
+                                                        ?
+                                                        isUserApplied
+                                                            ? <Button color="success" size="lg" onClick={makeVote}>Vote on current transaction</Button>
+                                                            : ""
+                                                        : ""
+                                                    :
+                                                    <SnackbarContent
+                                                        message={
+                                                            'This trip is currently being deployed on the blockchain!'
+                                                        }
+                                                        color="info"
+                                                    />
 
-                                        :
-                                        <SnackbarContent
-                                            message={
-                                                'You are not connected to the Ethereum network!'
-                                            }
-                                            color="danger"
-                                        />
-                                    }
-                                </CardBody>
-                            </Card>
+                                                :
+                                                <SnackbarContent
+                                                    message={
+                                                        'You are not connected to the Ethereum network!'
+                                                    }
+                                                    color="danger"
+                                                />
+                                        }
+                                    </CardBody>
+                                </Card>
 
+                            }
+                            
 
                         </CardBody>
                     </Card>
