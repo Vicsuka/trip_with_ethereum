@@ -58,7 +58,6 @@ const useStyles = makeStyles(styles);
 export default function MyProfile(props) {
     const classes = useStyles();
 
-    const [isEthEnabled, setEthEnabled] = useState(false);
     const [isFree, setFree] = useState(false);
 
     const [title, setTitle] = useState("");
@@ -80,7 +79,6 @@ export default function MyProfile(props) {
     useEffect(() => {
         if (window.ethereum) {
             enableEthereum();
-            setEthEnabled(true);
         }
     }, []);
 

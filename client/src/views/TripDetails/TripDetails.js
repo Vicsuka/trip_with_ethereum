@@ -68,6 +68,8 @@ export default function TripDetails(props) {
     const classes = useStyles();
     const secondaryClasses = useMoreStyles();
 
+    const [isFree, setFree] = useState(false);
+
     const [isContractReady, setContractReady] = useState(false);
     const [isEthEnabled, setEthEnabled] = useState(false);
     const [isUserApplied, setUserApplied] = useState(false);
@@ -244,6 +246,7 @@ export default function TripDetails(props) {
                 (data) => {
                     if (data.trip !== null) {
                         loadParticipants(data.trip);
+                        if (data.trip.price === 0) setFree(true);
                         setTrip(data.trip);
                         setDeadlinePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.deadLineDate));
                         setEnddatePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.endingDate));
@@ -568,28 +571,6 @@ export default function TripDetails(props) {
                                     <Card>
                                         <CardHeader color="warning" stats icon>
                                             <CardIcon color="warning">
-                                                <AttachMoneyIcon></AttachMoneyIcon>
-                                            </CardIcon>
-                                            <p className={classes.cardCategory}>Price</p>
-                                            <h3 className={classes.cardTitle}>{trip.price} Ξ</h3>
-                                        </CardHeader>
-                                    </Card>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
-                                                <BuildIcon></BuildIcon>
-                                            </CardIcon>
-                                            <p className={classes.cardCategory}>Contract type</p>
-                                            <h3 className={classes.cardTitle}>{renderType()}</h3>
-                                        </CardHeader>
-                                    </Card>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
                                                 <HowToRegOutlinedIcon></HowToRegOutlinedIcon>
                                             </CardIcon>
                                             <p className={classes.cardCategory}>Participants</p>
@@ -597,6 +578,38 @@ export default function TripDetails(props) {
                                         </CardHeader>
                                     </Card>
                                 </GridItem>
+                                {
+                                    isFree 
+                                    ?
+                                        <GridItem xs={12} sm={6} md={6}>
+                                            <GridContainer>
+                                                <GridItem xs={12} sm={6} md={6}>
+                                                    <Card>
+                                                        <CardHeader color="warning" stats icon>
+                                                            <CardIcon color="warning">
+                                                                <BuildIcon></BuildIcon>
+                                                            </CardIcon>
+                                                            <p className={classes.cardCategory}>Contract type</p>
+                                                            <h3 className={classes.cardTitle}>{renderType()}</h3>
+                                                        </CardHeader>
+                                                    </Card>
+                                                </GridItem>
+                                                <GridItem xs={12} sm={6} md={6}>
+                                                    <Card>
+                                                        <CardHeader color="warning" stats icon>
+                                                            <CardIcon color="warning">
+                                                                <AttachMoneyIcon></AttachMoneyIcon>
+                                                            </CardIcon>
+                                                            <p className={classes.cardCategory}>Price</p>
+                                                            <h3 className={classes.cardTitle}>{trip.price} Ξ</h3>
+                                                        </CardHeader>
+                                                    </Card>
+                                                </GridItem>
+                                            </GridContainer>
+                                        </GridItem>
+                                    :
+                                        ""
+                                }                                
                             </GridContainer>
 
                             <GridContainer>
