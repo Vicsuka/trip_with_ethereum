@@ -4,6 +4,10 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import MoneyOffIcon from '@material-ui/icons/MoneyOff';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -13,6 +17,7 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+
 
 import GlobalVariables from "variables/general.js";
 
@@ -42,6 +47,9 @@ const styles = {
     },
     aboutInfo: {
         textAlign: "left"
+    },
+    alignRightCenter: {
+        textAlign: "right"
     }
 };
 
@@ -51,6 +59,7 @@ export default function MyProfile(props) {
     const classes = useStyles();
 
     const [isEthEnabled, setEthEnabled] = useState(false);
+    const [isFree, setFree] = useState(false);
 
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
@@ -158,19 +167,35 @@ export default function MyProfile(props) {
 
     const handleSubmit = () => {
         var tripId = uuidv4();
+        let tripData = {};
 
-        let tripData = {
-            id: tripId,
-            title: title,
-            description: desc,
-            price: price,
-            maxPersons: particNumber,
-            smartContractType: type,
-            deadLineDate: deadline,
-            startingDate: starting,
-            endingDate: ending
-        };
-        console.log(tripData);
+        if (isFree) {
+            tripData = {
+                id: tripId,
+                title: title,
+                description: desc,
+                price: "0",
+                maxPersons: particNumber,
+                smartContractType: "1",
+                deadLineDate: deadline,
+                startingDate: starting,
+                endingDate: ending
+            };
+        } else {
+            tripData = {
+                id: tripId,
+                title: title,
+                description: desc,
+                price: price,
+                maxPersons: particNumber,
+                smartContractType: type,
+                deadLineDate: deadline,
+                startingDate: starting,
+                endingDate: ending
+            };
+        }
+        
+
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -182,7 +207,7 @@ export default function MyProfile(props) {
             .then(
                 (data) => {
                     console.log(data);
-                    createTrip(tripId);
+                    if (!isFree) createTrip(tripId);                   
                 },
                 (error) => {
                     console.log(error);
@@ -237,17 +262,17 @@ export default function MyProfile(props) {
     };
 
     const handleEndingChange = (date) => {
-
         setEnding(moment(date).format('YYYY-MM-DD'));
     };
+
+    const setFreeTrip = () => {
+        setFree(!isFree);
+    }
 
 
     return (
         <div>
             <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
-            {
-                isEthEnabled
-                    ?
                     <GridContainer>
                         <GridItem xs={12} sm={12} md={12}>
                             <Card>
@@ -256,7 +281,9 @@ export default function MyProfile(props) {
                                     <p className={classes.cardCategoryWhite}>Fill out the details</p>
                                 </CardHeader>
                                 <CardBody>
+                                    <GridContainer>
 
+                                    </GridContainer>
                                     <GridContainer>
                                         <GridItem xs={12} sm={12} md={6}>
                                             <CustomInput
@@ -271,16 +298,6 @@ export default function MyProfile(props) {
                                         </GridItem>
                                         <GridItem xs={12} sm={12} md={2}>
                                             <CustomInput
-                                                labelText="Price"
-                                                id="trip-price"
-                                                formControlProps={{
-                                                    fullWidth: true,
-                                                    onChange: handlePriceChange
-                                                }}
-                                            />
-                                        </GridItem>
-                                        <GridItem xs={12} sm={12} md={2}>
-                                            <CustomInput
                                                 labelText="Max participants"
                                                 id="trip-participants"
                                                 formControlProps={{
@@ -290,15 +307,46 @@ export default function MyProfile(props) {
                                             />
                                         </GridItem>
                                         <GridItem xs={12} sm={12} md={2}>
-                                            <CustomInput
-                                                labelText="Trust factor"
-                                                id="trip-trust"
-                                                formControlProps={{
-                                                    fullWidth: true,
-                                                    onChange: handleTypeChange
-                                                }}
+                                            <FormControlLabel
+                                                label="Free trip"
+                                                control={
+                                                    <Checkbox checked={isFree} onChange={setFreeTrip} icon={<AttachMoneyIcon />} checkedIcon={<MoneyOffIcon />} />
+                                                }
+                                                labelPlacement="start"                                                        
                                             />
                                         </GridItem>
+                                        {
+                                            isFree
+                                                ?
+                                                ""
+                                                :
+                                                <GridItem xs={12} sm={12} md={2}>
+                                                    <GridContainer >
+                                                        <GridItem xs={4} sm={4} md={4}>
+                                                            <CustomInput
+                                                                labelText="Price"
+                                                                id="trip-price"
+                                                                formControlProps={{
+                                                                    fullWidth: true,
+                                                                    onChange: handlePriceChange
+                                                                }}
+                                                            />
+
+                                                        </GridItem>
+                                                        <GridItem xs={8} sm={8} md={8}>
+                                                            <CustomInput
+                                                                labelText="Trust factor"
+                                                                id="trip-trust"
+                                                                formControlProps={{
+                                                                    fullWidth: true,
+                                                                    onChange: handleTypeChange
+                                                                }}
+                                                            />
+                                                        </GridItem>
+                                                    </GridContainer>
+                                                </GridItem>
+                                        }
+
                                     </GridContainer>
                                     <GridContainer>
                                         <GridItem xs={12} sm={12} md={4}>
@@ -367,13 +415,6 @@ export default function MyProfile(props) {
                         </GridItem>
 
                     </GridContainer>
-                    :
-                    <Card>
-                        <CardBody>
-                            <h2>Please connect to an Ethereum wallet to continue!</h2>
-                        </CardBody>
-                    </Card>
-            }
         </div>
     );
 }
