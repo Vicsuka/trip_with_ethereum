@@ -17,8 +17,6 @@ import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";
 
-import Web3 from 'web3';
-
 
 const styles = {
     cardCategoryWhite: {
@@ -50,36 +48,14 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function Trips() {
-    const [isEthEnabled, setEthEnabled] = useState(false);
-
-
     const classes = useStyles();
 
     const [trips, setTrips] = useState([]);
 
     useEffect(() => {
-        if (window.ethereum) {
-            enableEthereum();
-            setEthEnabled(true);
-        }
         loadTrips();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    async function enableEthereum() {
-        window.web3 = new Web3(Web3.givenProvider || "https://ropsten.infura.io/v3/63eae98070cc47a681277e95a2b2d7c0");
-        try {
-            // Request account access if needed
-            await window.ethereum.enable();
-
-            window.ethereum.on('chainChanged', () => {
-                document.location.reload()
-            })
-            // Acccounts now exposed
-        } catch (error) {
-            // User denied account access...
-        }
-    }
 
     const loadTrips = () => {
         fetch("/api/trip/alltrips")
@@ -214,21 +190,10 @@ export default function Trips() {
 
     return (
         <div>
-            {
-                isEthEnabled
-                    ? <div>
-                        <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
-                        <GridContainer>
-                            {renderedTrips}
-                        </GridContainer>
-                    </div>
-                    :
-                    <Card>
-                        <CardBody>
-                            <h2>Please connect to an Ethereum wallet to continue!</h2>
-                        </CardBody>
-                    </Card>
-            }
+            <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
+            <GridContainer>
+                {renderedTrips}
+            </GridContainer>
         </div>
     );
 }

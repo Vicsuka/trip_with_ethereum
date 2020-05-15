@@ -98,9 +98,15 @@ export default function MyProfile() {
 
           setAboutMe(data.about);
 
-          if (etherAddress !== "") {
+
+          if (data.ethereumAddress) {
             setEtherAddress(data.ethereumAddress);
+          } else {
+            window.web3.eth.getAccounts().then(addresses => {
+              setEtherAddress(addresses[0]);
+            })
           }
+          
           
         },
         (error) => {
@@ -115,15 +121,6 @@ export default function MyProfile() {
       // Request account access if needed
       await window.ethereum.enable();
       // Acccounts now exposed
-
-      console.log("Eth enabled!");
-
-      window.web3.eth.getAccounts().then(addresses => {
-        console.log(addresses);
-        setEtherAddress(addresses[0]);
-      })
-
-      // web3.eth.sendTransaction({/* ... */});
     } catch (error) {
       // User denied account access...
     }
@@ -233,7 +230,7 @@ export default function MyProfile() {
               <div className={classes.aboutInfo}>
                 <GridContainer >
                   <GridItem xs={6} sm={6} md={3}>
-                    <h4>Username:</h4>
+                    <h3><strong>Username:</strong></h3>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={9}>
                     <h4>{username}</h4>
@@ -241,7 +238,7 @@ export default function MyProfile() {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={6} sm={6} md={3}>
-                    <h4>Email:</h4>
+                    <h3><strong>Email:</strong></h3>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={9}>
                     <h4>{profile.email}</h4>
@@ -249,7 +246,7 @@ export default function MyProfile() {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={6} sm={6} md={3}>
-                    <h4>ID:</h4>
+                    <h3><strong>ID:</strong></h3>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={9}>
                     <h4>{profile.auth0id}</h4>
@@ -257,43 +254,43 @@ export default function MyProfile() {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={6} sm={6} md={3}>
-                    <h4>Ethereum Address:</h4>
+                    <h3><strong>Ethereum Address:</strong></h3>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={9}>
                     <h4>{etherAddress}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
-                  <GridItem xs={6} sm={6} md={3}>
-                    <h4>City:</h4>
+                  <GridItem xs={6} sm={6} md={6}>
+                    <h3><strong>City:</strong></h3>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={3}>
+                  <GridItem xs={6} sm={6} md={6}>
                     <h4>{city}</h4>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={3}>
-                    <h4>Country:</h4>
+                  <GridItem xs={6} sm={6} md={6}>
+                    <h3><strong>Country:</strong></h3>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={3}>
+                  <GridItem xs={6} sm={6} md={6}>
                     <h4>{country}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
-                  <GridItem xs={6} sm={6} md={2}>
-                    <h4>Street Address:</h4>
+                  <GridItem xs={6} sm={6} md={6}>
+                    <h3><strong>Street Address:</strong></h3>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={5}>
+                  <GridItem xs={6} sm={6} md={6}>
                     <h4>{streetAddress}</h4>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={3}>
-                    <h4>Postal Code:</h4>
+                  <GridItem xs={6} sm={6} md={6}>
+                    <h3><strong>Postal Code:</strong></h3>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={2}>
+                  <GridItem xs={6} sm={6} md={6}>
                     <h4>{postalCode}</h4>
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={6} sm={6} md={3}>
-                    <h4>About:</h4>
+                    <h3><strong>About:</strong></h3>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={9}>
                     <h4>{aboutMe}</h4>

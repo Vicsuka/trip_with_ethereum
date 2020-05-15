@@ -54,6 +54,7 @@ export default function UserProfile(props) {
             .then(response => response.json())
             .then(
                 (data) => {
+                    console.log(data);
                     setProfile(data);
                 },
                 (error) => {
@@ -80,7 +81,7 @@ export default function UserProfile(props) {
                             <div className={classes.aboutInfo}>
                                 <GridContainer >
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>Username:</h4>
+                                        <h3><strong>Username:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={9}>
                                         <h4>{profile.username}</h4>
@@ -88,7 +89,7 @@ export default function UserProfile(props) {
                                 </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>Email:</h4>
+                                        <h3><strong>Email:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={9}>
                                         <h4>{profile.email}</h4>
@@ -96,7 +97,7 @@ export default function UserProfile(props) {
                                 </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>ID:</h4>
+                                        <h3><strong>ID:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={9}>
                                         <h4>{profile.auth0id}</h4>
@@ -104,46 +105,46 @@ export default function UserProfile(props) {
                                 </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>Ethereum Address:</h4>
+                                        <h3><strong>Ethereum Address:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={9}>
-                                        <h4>{profile.etherAddress}</h4>
+                                        <h4>{profile.ethereumAddress}</h4>
                                     </GridItem>
                                 </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>City:</h4>
+                                        <h3><strong>City:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>{profile.city}</h4>
+                                        <h4>{profile.address ? profile.address.city : ""}</h4>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>Country:</h4>
+                                        <h3><strong>Country:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>{profile.country}</h4>
+                                        <h4>{profile.address ? profile.address.country : ""}</h4>
                                     </GridItem>
                                 </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={6} sm={6} md={2}>
-                                        <h4>Street Address:</h4>
+                                        <h3><strong>Street Address:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={5}>
-                                        <h4>{profile.streetAddress}</h4>
+                                        <h4>{profile.address ? profile.address.streetAddress : ""}</h4>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>Postal Code:</h4>
+                                        <h3><strong>Postal Code:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={2}>
-                                        <h4>{profile.postalCode}</h4>
+                                        <h4>{profile.address ? profile.address.postalCode : ""}</h4>
                                     </GridItem>
                                 </GridContainer>
                                 <GridContainer>
                                     <GridItem xs={6} sm={6} md={3}>
-                                        <h4>About:</h4>
+                                        <h3><strong>About:</strong></h3>
                                     </GridItem>
                                     <GridItem xs={6} sm={6} md={9}>
-                                        <h4>{profile.aboutMe}</h4>
+                                        <h4>{profile.about}</h4>
                                     </GridItem>
                                 </GridContainer>
                             </div>

@@ -245,8 +245,8 @@ export default function TripDetails(props) {
                     if (data.trip !== null) {
                         loadParticipants(data.trip);
                         setTrip(data.trip);
-                        setDeadlinePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.deadLineDate));
-                        setEnddatePassed(moment(moment().format("YYYY-MM-DD")).isAfter(data.trip.endingDate));
+                        setDeadlinePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.deadLineDate));
+                        setEnddatePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.endingDate));
                         setUserApplied(data.isUserApplied);
                         setUserOrganizer(data.isUserOrganizer);
                     }
@@ -310,7 +310,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.endTrip(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                contract.methods.endTrip(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
@@ -328,7 +328,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.cancelTransaction(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                contract.methods.cancelTransaction(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
@@ -346,7 +346,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
                 if (!window.web3.utils.isAddress(transactionAddress)) return;
-                contract.methods.newTransaction(tripId, transactionAddress, window.web3.utils.toWei(transactionAmount.toString()), transactionDescription).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                contract.methods.newTransaction(tripId, transactionAddress, window.web3.utils.toWei(transactionAmount.toString()), transactionDescription).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
@@ -366,7 +366,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.makeVote(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                contract.methods.makeVote(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
@@ -384,7 +384,7 @@ export default function TripDetails(props) {
             if (!error) {
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
-                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 100000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
+                contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
