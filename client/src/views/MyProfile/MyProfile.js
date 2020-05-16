@@ -49,12 +49,15 @@ const useStyles = makeStyles(styles);
 export default function MyProfile() {
   const classes = useStyles();
 
+  
   const [isEthEnabled, setEthEnabled] = useState(false);
 
   const [profile, setProfile] = useState({});
 
-  const [succNoti, setSuccNoti] = React.useState(false);
-  const [errorNoti, setErrorNoti] = React.useState(false);
+  const [succNoti, setSuccNoti] = useState(false);
+  const [errorNoti, setErrorNoti] = useState(false);
+  const [etherNoti, setEtherNoti] = useState(false);
+  const [etherErrorNoti, setEtherErrorNoti] = useState(false);
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -73,7 +76,14 @@ export default function MyProfile() {
     if (window.ethereum) {
       enableEthereum();
       setEthEnabled(true);
-    } 
+    } else {
+      if (!etherErrorNoti) {
+        setEtherErrorNoti(true);
+        setTimeout(function () {
+          setEtherErrorNoti(false);
+        }, 3000);
+      }
+    }
     loadProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -95,19 +105,21 @@ export default function MyProfile() {
             setPostalCode(data.address.postalCode);
           }
 
-
           setAboutMe(data.about);
-
 
           if (data.ethereumAddress) {
             setEtherAddress(data.ethereumAddress);
           } else {
             window.web3.eth.getAccounts().then(addresses => {
               setEtherAddress(addresses[0]);
+              if (!etherNoti) {
+                setEtherNoti(true);
+                setTimeout(function () {
+                  setEtherNoti(false);
+                }, 3000);
+              }
             })
           }
-          
-          
         },
         (error) => {
           console.log(error);
@@ -121,6 +133,7 @@ export default function MyProfile() {
       // Request account access if needed
       await window.ethereum.enable();
       // Acccounts now exposed
+
     } catch (error) {
       // User denied account access...
     }
@@ -468,11 +481,31 @@ export default function MyProfile() {
 
       <Snackbar
         place="br"
+        color="success"
+        icon={DoneOutline}
+        message="Ethereum address loaded!"
+        open={etherNoti}
+        closeNotification={() => setEtherNoti(false)}
+        close
+      />
+
+      <Snackbar
+        place="br"
         color="danger"
         icon={Error}
-        message="An error occurred! Please check data and try again later!"
+        message="An error occurred! Please check the data or try again later!"
         open={errorNoti}
         closeNotification={() => setErrorNoti(false)}
+        close
+      />
+
+      <Snackbar
+        place="br"
+        color="danger"
+        icon={Error}
+        message="Could not connect to the Ethereum network!"
+        open={etherErrorNoti}
+        closeNotification={() => setEtherErrorNoti(false)}
         close
       />
     </div>

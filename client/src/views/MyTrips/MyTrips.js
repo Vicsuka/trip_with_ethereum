@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Loader from 'react-loader-spinner'
 
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -13,6 +14,8 @@ import Button from "components/CustomButtons/Button.js";
 import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";
+
+
 
 
 const styles = {
@@ -37,6 +40,9 @@ const styles = {
     },
     avatarBorderless: {
         border: "0 !important"
+    },
+    centerLoader: {
+        textAlign: "center"
     }
 
 };
@@ -48,6 +54,7 @@ export default function MyTrips() {
     const classes = useStyles();
 
     const [trips, setTrips] = useState([]);
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         loadTrips();
@@ -95,6 +102,7 @@ export default function MyTrips() {
         // Wait until all participants are loaded
         Promise.all(allPromises).then(function () {
             setTrips(extendedData);
+            setLoading(false);
         });
 
     }
@@ -135,18 +143,28 @@ export default function MyTrips() {
 
     return (
         <div>
-            <GridContainer>
-                { trips.length 
+            
+            
+                { 
+                isLoading
                     ?
-                    renderedTrips
-                    : 
-                    <Card>
-                        <CardBody>
-                            <h3>You don't have any trips yet!</h3>
-                        </CardBody>
-                    </Card>
+                    <div className={classes.centerLoader}>
+                        <Loader type="Grid" color="#ff9800" height={120} width={120} />
+                    </div>
+                    :
+                    trips.length 
+                        ?
+                        renderedTrips
+                        : 
+                        <GridContainer >
+                            <Card>
+                                <CardBody>
+                                    <h3>You don't have any trips yet!</h3>
+                                </CardBody>
+                            </Card>
+                        </GridContainer>
                 }
-            </GridContainer>
+            
         </div>
     );
 }

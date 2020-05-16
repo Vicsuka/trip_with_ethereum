@@ -21,6 +21,7 @@
     "react-datepicker": "^2.14.1",
     "react-dom": "16.9.0",
     "react-leaflet": "^2.6.3",
+    "react-loader-spinner": "^3.1.14",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.1.0",
     "uuid": "^8.0.0",
