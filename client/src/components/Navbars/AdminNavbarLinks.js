@@ -72,7 +72,7 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
-                    <Link to="/admin/user">
+                    <Link to="/admin/myprofile">
                       <MenuItem>
                         My Profile
                     </MenuItem>

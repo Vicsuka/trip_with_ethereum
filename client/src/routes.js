@@ -40,14 +40,14 @@ const routes = {
       layout: "/admin"
     },
     {
-      path: "/user",
+      path: "/myprofile",
       name: "My Profile",
       icon: Person,
       component: MyProfile,
       layout: "/admin"
     },
     {
-      path: "/myTrips",
+      path: "/mytrips",
       name: "My Trips",
       icon: AssignmentIndIcon,
       component: MyTrips,

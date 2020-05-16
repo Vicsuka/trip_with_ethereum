@@ -69,6 +69,8 @@ export default function TripDetails(props) {
     const secondaryClasses = useMoreStyles();
 
     const [isFree, setFree] = useState(false);
+    const [tripEnded, setTripEnded] = useState(false);
+    
 
     const [isContractReady, setContractReady] = useState(false);
     const [isEthEnabled, setEthEnabled] = useState(false);
@@ -160,7 +162,7 @@ export default function TripDetails(props) {
                     var TripEndevent = window.web3.eth.abi.decodeParameters([
                         { type: 'uint256', name: 'endingDate' },
                     ], log.data);
-
+                    setTripEnded(true);
                     setEvents(events => [...events, ["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.NewApplication):
@@ -499,7 +501,16 @@ export default function TripDetails(props) {
                                     ?
                                     isEnddatePassed
                                         ?
-                                        <Button color="info" block size="lg" onClick={endTrip}>End trip</Button>
+                                            tripEnded
+                                            ?
+                                                <SnackbarContent
+                                                    message={
+                                                        'This trip has already ended!'
+                                                    }
+                                                    color="danger"
+                                                />
+                                            :
+                                                <Button color="info" block size="lg" onClick={endTrip}>End trip</Button>
                                         :
                                         ""
                                     :
