@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import Loader from 'react-loader-spinner'
+import Loader from 'react-loader-spinner';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -52,7 +52,6 @@ const useStyles = makeStyles(styles);
 
 export default function MyProfile() {
   const classes = useStyles();
-
   
   const [isEthEnabled, setEthEnabled] = useState(false);
   const [isLoading, setLoading] = useState(true);
@@ -115,15 +114,17 @@ export default function MyProfile() {
           if (data.ethereumAddress) {
             setEtherAddress(data.ethereumAddress);
           } else {
-            window.web3.eth.getAccounts().then(addresses => {
-              setEtherAddress(addresses[0]);
-              if (!etherNoti) {
-                setEtherNoti(true);
-                setTimeout(function () {
-                  setEtherNoti(false);
-                }, 3000);
-              }
-            })
+            if (isEthEnabled) {
+              window.web3.eth.getAccounts().then(addresses => {
+                setEtherAddress(addresses[0]);
+                if (!etherNoti) {
+                  setEtherNoti(true);
+                  setTimeout(function () {
+                    setEtherNoti(false);
+                  }, 3000);
+                }
+              })
+            } 
           }
           setLoading(false);
         },

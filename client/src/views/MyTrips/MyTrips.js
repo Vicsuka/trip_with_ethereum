@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Loader from 'react-loader-spinner'
+import Loader from 'react-loader-spinner';
 
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";

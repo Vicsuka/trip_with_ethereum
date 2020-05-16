@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Loader from 'react-loader-spinner';
 
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -37,6 +38,9 @@ const styles = {
     },
     avatarBorderless: {
         border: "0 !important"
+    },
+    centerLoader: {
+        textAlign: "center"
     }
 
 };
@@ -48,6 +52,7 @@ export default function Trips() {
     const classes = useStyles();
 
     const [trips, setTrips] = useState([]);
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         loadTrips();
@@ -147,6 +152,7 @@ export default function Trips() {
         // Wait until all participants are loaded
         Promise.all(allPromises).then(function () {
             setTrips(extendedData);
+            setLoading(false);
         });
 
     }
@@ -186,11 +192,21 @@ export default function Trips() {
 
 
     return (
-        <div>
+        <div> 
             <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
-            <GridContainer>
-                {renderedTrips}
-            </GridContainer>
+            {
+            isLoading
+                ?
+                <div className={classes.centerLoader}>
+                    <Loader type="Grid" color="#ff9800" height={120} width={120} />
+                </div>
+                :
+                <GridContainer>
+                    {renderedTrips}
+                </GridContainer>
+            }
+            
+            
         </div>
     );
 }

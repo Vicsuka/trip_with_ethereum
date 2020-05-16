@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import Loader from 'react-loader-spinner';
 
 // @material-ui/core components
 import { Dialog } from '@material-ui/core';
@@ -55,6 +56,9 @@ const secondaryStyles = {
     },
     gradientButton: {
         backgroundImage: "linear-gradient(to right, #FF512F 0%, #F09819 51%)",
+    },
+    centerLoader: {
+        textAlign: "center"
     }
 
 
@@ -70,7 +74,9 @@ export default function TripDetails(props) {
 
     const [isFree, setFree] = useState(false);
     const [tripEnded, setTripEnded] = useState(false);
-    
+    const [isLoading, setLoading] = useState(true);
+
+    const [transactionInProgress, setTransactionInProgress] = useState(false);
 
     const [isContractReady, setContractReady] = useState(false);
     const [isEthEnabled, setEthEnabled] = useState(false);
@@ -95,7 +101,7 @@ export default function TripDetails(props) {
         setTransactionDescription("");
         setShowDialog(true);
     }
-        
+
     const close = () => setShowDialog(false);
 
     useEffect(() => {
@@ -152,7 +158,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
 
-                    setEvents(events => [...events, ["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);    
+                    setEvents(events => [...events, ["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TripEnd):
                     var TripEndevent = window.web3.eth.abi.decodeParameters([
@@ -260,16 +266,17 @@ export default function TripDetails(props) {
 
     const loadParticipants = (data) => {
         data.participantIds.forEach(id => {
-                fetch("/api/user/users/" + id)
-                    .then(response => response.json())
-                    .then(
-                        (participant) => {
-                            setParticipants(participants => [...participants, participant]);
-                        },
-                        (error) => {
-                            console.log(error);
-                        }
-                    )
+            fetch("/api/user/users/" + id)
+                .then(response => response.json())
+                .then(
+                    (participant) => {
+                        setParticipants(participants => [...participants, participant]);
+                        setLoading(false);
+                    },
+                    (error) => {
+                        console.log(error);
+                    }
+                )
         })
     }
 
@@ -299,8 +306,11 @@ export default function TripDetails(props) {
         fetch('/api/trip/unsubscribe', requestOptions)
             .then(response => response.json())
             .then(
-                (data) => { },
+                (data) => {
+                    setTransactionInProgress(false);
+                 },
                 (error) => {
+                    setTransactionInProgress(false);
                     console.log(error);
                 }
             )
@@ -309,16 +319,19 @@ export default function TripDetails(props) {
     const endTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
+                setTransactionInProgress(true);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
                 contract.methods.endTrip(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
+                        setTransactionInProgress(false);
                         console.log(receipt);
                     })
                     .catch(err => {
-                        console.log('Error', err)
+                        setTransactionInProgress(false);
+                        console.log('Error', err);
                     })
             }
         });
@@ -327,15 +340,18 @@ export default function TripDetails(props) {
     const cancelTransaction = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
+                setTransactionInProgress(true);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
                 contract.methods.cancelTransaction(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
+                        setTransactionInProgress(false);
                         console.log(receipt);
                     })
                     .catch(err => {
+                        setTransactionInProgress(false);
                         console.log('Error', err)
                     })
             }
@@ -345,6 +361,7 @@ export default function TripDetails(props) {
     const createTransaction = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
+                setTransactionInProgress(true);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
                 if (!window.web3.utils.isAddress(transactionAddress)) return;
                 contract.methods.newTransaction(tripId, transactionAddress, window.web3.utils.toWei(transactionAmount.toString()), transactionDescription).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
@@ -353,10 +370,12 @@ export default function TripDetails(props) {
                     .then(receipt => {
                         console.log(receipt);
                         close();
+                        setTransactionInProgress(false);
                     })
                     .catch(err => {
                         console.log('Error', err);
                         close();
+                        setTransactionInProgress(false);
                     })
             }
         });
@@ -365,16 +384,19 @@ export default function TripDetails(props) {
     const makeVote = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
+                setTransactionInProgress(true);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
                 contract.methods.makeVote(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
                     .on('transactionHash', hash => {
                     })
                     .then(receipt => {
+                        setTransactionInProgress(false);
                         console.log(receipt);
                     })
                     .catch(err => {
-                        console.log('Error', err)
+                        setTransactionInProgress(false);
+                        console.log('Error', err);
                     })
             }
         });
@@ -383,6 +405,7 @@ export default function TripDetails(props) {
     const unsubscribeFromTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
+                setTransactionInProgress(true);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
                 contract.methods.unsubscribeFromTrip(tripId).send({ from: result[0], gas: 300000, gasPrice: window.web3.utils.toWei("20", 'gwei') })
@@ -392,6 +415,7 @@ export default function TripDetails(props) {
                         handleUnsubscription();
                     })
                     .catch(err => {
+                        setTransactionInProgress(false);
                         console.log('Error', err)
                     })
             }
@@ -401,6 +425,7 @@ export default function TripDetails(props) {
     const applyToTrip = () => {
         window.web3.eth.getAccounts(function (error, result) {
             if (!error) {
+                setTransactionInProgress(true);
                 var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
 
                 contract.methods.applyToTrip(tripId).send({ from: result[0], gas: 3000000, gasPrice: window.web3.utils.toWei("20", 'gwei'), value: window.web3.utils.toWei(trip.price.toString(), 'ether') })
@@ -410,7 +435,8 @@ export default function TripDetails(props) {
                         handleApply();
                     })
                     .catch(err => {
-                        console.log('Error', err)
+                        setTransactionInProgress(false);
+                        console.log('Error', err);
                     })
             }
         });
@@ -438,8 +464,11 @@ export default function TripDetails(props) {
         fetch('/api/trip/apply', requestOptions)
             .then(response => response.json())
             .then(
-                (data) => { },
+                (data) => { 
+                    setTransactionInProgress(false);
+                },
                 (error) => {
+                    setTransactionInProgress(false);
                     console.log(error);
                 }
             )
@@ -479,301 +508,333 @@ export default function TripDetails(props) {
 
     return (
         <div>
-            <GridContainer >
-                <GridItem xs={12} sm={6} md={6}>
-                    <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
-
-                </GridItem>
-                <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
-
+            {
+                isLoading
+                    ?
+                    <div className={secondaryClasses.centerLoader}>
+                        <Loader type="Grid" color="#ff9800" height={120} width={120} />
+                    </div>
+                    :
                     <div>
-                        {isFree
-                            ?
-                            ""
-                            :
-                            isEthEnabled
-                                ?
-                                isContractReady
-                                    ?
-                                    isEnddatePassed
+                        <GridContainer >
+                            <GridItem xs={12} sm={6} md={6}>
+                                <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
+
+                            </GridItem>
+                            <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
+
+                                <div>
+                                    {isFree
                                         ?
-                                            tripEnded
+                                        ""
+                                        :
+                                        isEthEnabled
                                             ?
+                                            isContractReady
+                                                ?
+                                                isEnddatePassed
+                                                    ?
+                                                    tripEnded
+                                                        ?
+                                                        <SnackbarContent
+                                                            message={
+                                                                'This trip has already ended!'
+                                                            }
+                                                            color="danger"
+                                                        />
+                                                        :
+                                                            transactionInProgress
+                                                            ?
+                                                            <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                                            :
+                                                            <Button color="info" block size="lg" onClick={endTrip}>End trip</Button>
+                                                    :
+                                                    ""
+                                                :
+                                                ""
+                                            :
+                                            ""
+                                    }
+                                </div>
+                            </GridItem>
+
+                            <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
+                                <div>
+                                    {isFree
+                                        ?
+                                        isDeadlinePassed
+                                            ?
+                                            isEnddatePassed
+                                                ?
                                                 <SnackbarContent
                                                     message={
                                                         'This trip has already ended!'
                                                     }
                                                     color="danger"
                                                 />
-                                            :
-                                                <Button color="info" block size="lg" onClick={endTrip}>End trip</Button>
-                                        :
-                                        ""
-                                    :
-                                    ""
-                                :
-                                ""
-                        }
-                    </div>
-                </GridItem>
-                
-                <GridItem xs={12} sm={6} md={3} className={secondaryClasses.alignRight}>
-                    <div>
-                        {isFree
-                            ?
-                            isDeadlinePassed
-                                ?
-                                isEnddatePassed
-                                    ?
-                                        <SnackbarContent
-                                            message={
-                                                'This trip has already ended!'
-                                            }
-                                            color="danger"
-                                        />                                        
-                                    :
-                                        <SnackbarContent
-                                            message={
-                                                'Application deadline has already passed!'
-                                            }
-                                            color="danger"
-                                        />  
-                                :
-                                isUserApplied                                
-                                    ? <Button color="danger" block size="lg" onClick={handleUnsubscription}>Unsubscribe from trip</Button>
-                                    : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={handleApply}>Apply to trip</Button>
-                            :
-                            isEthEnabled
-                                ?
-                                isContractReady
-                                    ?
-                                    isDeadlinePassed
-                                        ?
-                                        <SnackbarContent
-                                            message={
-                                                'Application deadline has already passed!'
-                                            }
-                                            color="danger"
-                                        />
-                                        :
-                                        isUserApplied
-                                            ? <Button color="danger" block size="lg" onClick={unsubscribeFromTrip}>Unsubscribe from trip</Button>
-                                            : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={applyToTrip}>Apply to trip</Button>
-                                    :
-                                    <SnackbarContent
-                                        message={
-                                            'This trip is currently being deployed on the blockchain!'
-                                        }
-                                        color="info"
-                                    />
-                                :
-                                <SnackbarContent
-                                    message={
-                                        'You are not connected to the Ethereum network!'
-                                    }
-                                    color="danger"
-                                />
-                        }
-                    </div>
-                </GridItem>
-            </GridContainer>
-
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                    <Card>
-                        <CardHeader color="warning">
-                            <h4 className={secondaryClasses.cardTitleWhite}>{trip.title}</h4>
-                            <p className={secondaryClasses.cardCategoryWhite}>
-                                {trip.startingDate} - {trip.endingDate}
-                            </p>
-                        </CardHeader>
-                        <CardBody>
-                            <GridContainer>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
-                                                <HistoryIcon></HistoryIcon>
-                                            </CardIcon>
-                                            <p className={classes.cardCategory}>Status</p>
-                                            <h3 className={classes.cardTitle}>{renderStatus()}</h3>
-                                        </CardHeader>
-                                    </Card>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
-                                                <HowToRegOutlinedIcon></HowToRegOutlinedIcon>
-                                            </CardIcon>
-                                            <p className={classes.cardCategory}>Participants</p>
-                                            <h3 className={classes.cardTitle}>{trip.participantIds ? trip.participantIds.length : "?"} / {trip.maxPersons}</h3>
-                                        </CardHeader>
-                                    </Card>
-                                </GridItem>
-                                {
-                                    isFree 
-                                    ?
-                                        ""
-                                    :
-                                        <GridItem xs={12} sm={12} md={12}>
-                                            <GridContainer>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <Card>
-                                                        <CardHeader color="warning" stats icon>
-                                                            <CardIcon color="warning">
-                                                                <BuildIcon></BuildIcon>
-                                                            </CardIcon>
-                                                            <p className={classes.cardCategory}>Contract type</p>
-                                                            <h3 className={classes.cardTitle}>{renderType()}</h3>
-                                                        </CardHeader>
-                                                    </Card>
-                                                </GridItem>
-                                                <GridItem xs={12} sm={6} md={6}>
-                                                    <Card>
-                                                        <CardHeader color="warning" stats icon>
-                                                            <CardIcon color="warning">
-                                                                <AttachMoneyIcon></AttachMoneyIcon>
-                                                            </CardIcon>
-                                                            <p className={classes.cardCategory}>Price</p>
-                                                            <h3 className={classes.cardTitle}>{trip.price} Ξ</h3>
-                                                        </CardHeader>
-                                                    </Card>
-                                                </GridItem>
-                                            </GridContainer>
-                                        </GridItem>
-                                }                                
-                            </GridContainer>
-
-                            <GridContainer>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
-                                                <WcIcon></WcIcon>
-                                            </CardIcon>
-                                            <p className={classes.cardCategory}>Participants</p>
-                                            <h3 className={classes.cardTitle}>{renderedParticipants}</h3>                                          
-                                        </CardHeader>
-                                    </Card>
-                                </GridItem>
-                                <GridItem xs={12} sm={6} md={6}>
-                                    <Card>
-                                        <CardHeader color="warning" stats icon>
-                                            <CardIcon color="warning">
-                                                <CalendarTodayIcon></CalendarTodayIcon>
-                                            </CardIcon>
-                                            <p className={classes.cardCategory}>Application deadline</p>
-                                            <h3 className={classes.cardTitle}>{trip.deadLineDate}</h3>
-                                        </CardHeader>
-                                    </Card>
-                                </GridItem>
-                            </GridContainer>
-
-                            <Card>
-                                <CardHeader color="warning" stats icon>
-                                    <CardIcon color="warning">
-                                        <InfoOutlinedIcon></InfoOutlinedIcon>
-                                    </CardIcon>
-                                    <p className={classes.cardCategory}>Trip Description</p>
-                                </CardHeader>
-                                <CardBody>
-                                    <h3 className={classes.cardTitle}>{trip.description}</h3>
-                                </CardBody>
-                            </Card>
-                            
-                            {isFree
-                                ?
-                                ""
-                                :
-                                <Card>
-                                    <CardHeader color="warning" stats icon>
-                                        <CardIcon color="warning">
-                                            <SmsIcon></SmsIcon>
-                                        </CardIcon>
-                                        <p className={classes.cardCategory}>Trip Events</p>
-                                        {isFree
-                                            ?
-                                            ""
-                                            :
-                                            isEthEnabled
-                                                ?
-                                                isContractReady
-                                                    ?
-                                                    isDeadlinePassed
-                                                        ?
-                                                        isUserOrganizer
-                                                            ?
-                                                            <div>
-                                                                <Button color="danger" size="lg" onClick={cancelTransaction}>Cancel current transaction</Button>
-                                                                <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
-                                                            </div>
-                                                            : ""
-                                                        : ""
-                                                    :
-                                                    <SnackbarContent
-                                                        message={
-                                                            'This trip is currently being deployed on the blockchain!'
-                                                        }
-                                                        color="info"
-                                                    />
-
                                                 :
                                                 <SnackbarContent
                                                     message={
-                                                        'You are not connected to the Ethereum network!'
+                                                        'Application deadline has already passed!'
                                                     }
                                                     color="danger"
                                                 />
-                                        }
+                                            :
+                                            transactionInProgress
+                                                ?
+                                                    <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                                :
+                                                isUserApplied
+                                                    ? <Button color="danger" block size="lg" onClick={handleUnsubscription}>Unsubscribe from trip</Button>
+                                                    : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={handleApply}>Apply to trip</Button>
+                                        :
+                                        isEthEnabled
+                                            ?
+                                            isContractReady
+                                                ?
+                                                isDeadlinePassed
+                                                    ?
+                                                    <SnackbarContent
+                                                        message={
+                                                            'Application deadline has already passed!'
+                                                        }
+                                                        color="danger"
+                                                    />
+                                                    :
+                                                    transactionInProgress
+                                                        ?
+                                                            <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                                        : 
+                                                            isUserApplied
+                                                                ? <Button color="danger" block size="lg" onClick={unsubscribeFromTrip}>Unsubscribe from trip</Button>
+                                                                : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={applyToTrip}>Apply to trip</Button>
+                                                :
+                                                <SnackbarContent
+                                                    message={
+                                                        'This trip is currently being deployed on the blockchain!'
+                                                    }
+                                                    color="info"
+                                                />
+                                            :
+                                            <SnackbarContent
+                                                message={
+                                                    'You are not connected to the Ethereum network!'
+                                                }
+                                                color="danger"
+                                            />
+                                    }
+                                </div>
+                            </GridItem>
+                        </GridContainer>
+
+                        <GridContainer>
+                            <GridItem xs={12} sm={12} md={12}>
+                                <Card>
+                                    <CardHeader color="warning">
+                                        <h4 className={secondaryClasses.cardTitleWhite}>{trip.title}</h4>
+                                        <p className={secondaryClasses.cardCategoryWhite}>
+                                            {trip.startingDate} - {trip.endingDate}
+                                        </p>
                                     </CardHeader>
                                     <CardBody>
+                                        <GridContainer>
+                                            <GridItem xs={12} sm={6} md={6}>
+                                                <Card>
+                                                    <CardHeader color="warning" stats icon>
+                                                        <CardIcon color="warning">
+                                                            <HistoryIcon></HistoryIcon>
+                                                        </CardIcon>
+                                                        <p className={classes.cardCategory}>Status</p>
+                                                        <h3 className={classes.cardTitle}>{renderStatus()}</h3>
+                                                    </CardHeader>
+                                                </Card>
+                                            </GridItem>
+                                            <GridItem xs={12} sm={6} md={6}>
+                                                <Card>
+                                                    <CardHeader color="warning" stats icon>
+                                                        <CardIcon color="warning">
+                                                            <HowToRegOutlinedIcon></HowToRegOutlinedIcon>
+                                                        </CardIcon>
+                                                        <p className={classes.cardCategory}>Participants</p>
+                                                        <h3 className={classes.cardTitle}>{trip.participantIds ? trip.participantIds.length : "?"} / {trip.maxPersons}</h3>
+                                                    </CardHeader>
+                                                </Card>
+                                            </GridItem>
+                                            {
+                                                isFree
+                                                    ?
+                                                    ""
+                                                    :
+                                                    <GridItem xs={12} sm={12} md={12}>
+                                                        <GridContainer>
+                                                            <GridItem xs={12} sm={6} md={6}>
+                                                                <Card>
+                                                                    <CardHeader color="warning" stats icon>
+                                                                        <CardIcon color="warning">
+                                                                            <BuildIcon></BuildIcon>
+                                                                        </CardIcon>
+                                                                        <p className={classes.cardCategory}>Contract type</p>
+                                                                        <h3 className={classes.cardTitle}>{renderType()}</h3>
+                                                                    </CardHeader>
+                                                                </Card>
+                                                            </GridItem>
+                                                            <GridItem xs={12} sm={6} md={6}>
+                                                                <Card>
+                                                                    <CardHeader color="warning" stats icon>
+                                                                        <CardIcon color="warning">
+                                                                            <AttachMoneyIcon></AttachMoneyIcon>
+                                                                        </CardIcon>
+                                                                        <p className={classes.cardCategory}>Price</p>
+                                                                        <h3 className={classes.cardTitle}>{trip.price} Ξ</h3>
+                                                                    </CardHeader>
+                                                                </Card>
+                                                            </GridItem>
+                                                        </GridContainer>
+                                                    </GridItem>
+                                            }
+                                        </GridContainer>
 
-                                        <Table
-                                            tableHeaderColor="warning"
-                                            tableHead={["Name", "Timestamp", "Input parameters", "Tx"]}
-                                            tableData={events}
-                                        />
+                                        <GridContainer>
+                                            <GridItem xs={12} sm={6} md={6}>
+                                                <Card>
+                                                    <CardHeader color="warning" stats icon>
+                                                        <CardIcon color="warning">
+                                                            <WcIcon></WcIcon>
+                                                        </CardIcon>
+                                                        <p className={classes.cardCategory}>Participants</p>
+                                                        <h3 className={classes.cardTitle}>{renderedParticipants}</h3>
+                                                    </CardHeader>
+                                                </Card>
+                                            </GridItem>
+                                            <GridItem xs={12} sm={6} md={6}>
+                                                <Card>
+                                                    <CardHeader color="warning" stats icon>
+                                                        <CardIcon color="warning">
+                                                            <CalendarTodayIcon></CalendarTodayIcon>
+                                                        </CardIcon>
+                                                        <p className={classes.cardCategory}>Application deadline</p>
+                                                        <h3 className={classes.cardTitle}>{trip.deadLineDate}</h3>
+                                                    </CardHeader>
+                                                </Card>
+                                            </GridItem>
+                                        </GridContainer>
+
+                                        <Card>
+                                            <CardHeader color="warning" stats icon>
+                                                <CardIcon color="warning">
+                                                    <InfoOutlinedIcon></InfoOutlinedIcon>
+                                                </CardIcon>
+                                                <p className={classes.cardCategory}>Trip Description</p>
+                                            </CardHeader>
+                                            <CardBody>
+                                                <h3 className={classes.cardTitle}>{trip.description}</h3>
+                                            </CardBody>
+                                        </Card>
+
                                         {isFree
                                             ?
                                             ""
                                             :
-                                            isEthEnabled
-                                                ?
-                                                isContractReady
-                                                    ?
-                                                    isDeadlinePassed
+                                            <Card>
+                                                <CardHeader color="warning" stats icon>
+                                                    <CardIcon color="warning">
+                                                        <SmsIcon></SmsIcon>
+                                                    </CardIcon>
+                                                    <p className={classes.cardCategory}>Trip Events</p>
+                                                    {isFree
                                                         ?
-                                                        isUserApplied
-                                                            ? <Button color="success" size="lg" onClick={makeVote}>Vote on current transaction</Button>
-                                                            : ""
-                                                        : ""
-                                                    :
-                                                    <SnackbarContent
-                                                        message={
-                                                            'This trip is currently being deployed on the blockchain!'
-                                                        }
-                                                        color="info"
-                                                    />
+                                                        ""
+                                                        :
+                                                        isEthEnabled
+                                                            ?
+                                                            isContractReady
+                                                                ?
+                                                                isDeadlinePassed
+                                                                    ?
+                                                                    isUserOrganizer
+                                                                        ?
+                                                                        transactionInProgress
+                                                                            ?
+                                                                                <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                                                            :
+                                                                                <div>
+                                                                                    <Button color="danger" size="lg" onClick={cancelTransaction}>Cancel current transaction</Button>
+                                                                                    <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                                                </div>
+                                                                        : ""
+                                                                    : ""
+                                                                :
+                                                                <SnackbarContent
+                                                                    message={
+                                                                        'This trip is currently being deployed on the blockchain!'
+                                                                    }
+                                                                    color="info"
+                                                                />
 
-                                                :
-                                                <SnackbarContent
-                                                    message={
-                                                        'You are not connected to the Ethereum network!'
+                                                            :
+                                                            <SnackbarContent
+                                                                message={
+                                                                    'You are not connected to the Ethereum network!'
+                                                                }
+                                                                color="danger"
+                                                            />
                                                     }
-                                                    color="danger"
-                                                />
+                                                </CardHeader>
+                                                <CardBody>
+
+                                                    <Table
+                                                        tableHeaderColor="warning"
+                                                        tableHead={["Name", "Timestamp", "Input parameters", "Tx"]}
+                                                        tableData={events}
+                                                    />
+                                                    {isFree
+                                                        ?
+                                                        ""
+                                                        :
+                                                        isEthEnabled
+                                                            ?
+                                                            isContractReady
+                                                                ?
+                                                                isDeadlinePassed
+                                                                    ?
+                                                                    isUserApplied
+                                                                        ? 
+                                                                            transactionInProgress
+                                                                            ?
+                                                                                <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                                                            :
+                                                                                <Button color="success" size="lg" onClick={makeVote}>Vote on current transaction</Button>
+                                                                        : ""
+                                                                    : ""
+                                                                :
+                                                                <SnackbarContent
+                                                                    message={
+                                                                        'This trip is currently being deployed on the blockchain!'
+                                                                    }
+                                                                    color="info"
+                                                                />
+
+                                                            :
+                                                            <SnackbarContent
+                                                                message={
+                                                                    'You are not connected to the Ethereum network!'
+                                                                }
+                                                                color="danger"
+                                                            />
+                                                    }
+                                                </CardBody>
+                                            </Card>
+
                                         }
+
+
                                     </CardBody>
                                 </Card>
+                            </GridItem>
+                        </GridContainer>
+                    </div>
+            }
 
-                            }
-                            
-
-                        </CardBody>
-                    </Card>
-                </GridItem>
-            </GridContainer>
             <Dialog open={showDialog}>
                 <Button color="danger" onClick={close}>Close</Button>
                 <CustomInput
@@ -802,8 +863,16 @@ export default function TripDetails(props) {
                 />
                 <p className={classes.cardCategory}>Please make sure you have the correct data filled in!</p>
                 <p className={classes.cardCategory}>Only 1 transaction can be active at a time!</p>
-                <Button color="success" onClick={createTransaction}>Send</Button>
+                {
+                    transactionInProgress
+                    ?
+                        <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                    :
+                        <Button color="success" onClick={createTransaction}>Send</Button>
+                }
+                
             </Dialog>
+            
         </div>
     );
 }
