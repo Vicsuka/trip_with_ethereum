@@ -35,6 +35,9 @@ const styles = {
     customCard: {
         height: "300px"
     },
+    customCardBody: {
+        overflow: "hidden",
+    },
     avatarBorderless: {
         border: "0 !important"
     },
@@ -113,7 +116,7 @@ export default function MyTrips() {
                         {trip.startingDate} - {trip.endingDate}
                     </p>
                 </CardHeader>
-                <CardBody>
+                <CardBody className={classes.customCardBody}>
                     <h5 dangerouslySetInnerHTML={{ __html: trip.description }}></h5>
                 </CardBody>
                 <CardFooter>
