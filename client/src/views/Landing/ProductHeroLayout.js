@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import arrow from "assets/img/productHeroArrowDown.png";
 import logo from "assets/img/logo_transparent.png";
 
 const styles = (theme) => ({
@@ -45,14 +44,6 @@ const styles = (theme) => ({
     backgroundRepeat: 'no-repeat',
     zIndex: -2,
   },
-  arrowDown: {
-    position: 'absolute',
-    bottom: theme.spacing(4),
-    transition: 'width 2s, height 2s, transform 1s;',
-    '&:hover': {
-      transform: "rotate(360deg);",
-    },
-  },
   logo: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(5),
@@ -84,16 +75,6 @@ function ProductHeroLayout(props) {
                 {children}
                 <div className={classes.backdrop} />
                 <div className={clsx(classes.background, backgroundClassName)} />
-                <a
-                    href="/login">
-                    <img
-                        className={classes.arrowDown}
-                        src={arrow}
-                        height="16"
-                        width="12"
-                        alt="arrow down"
-                    />
-                </a>
             </Container>
         </section>
     );

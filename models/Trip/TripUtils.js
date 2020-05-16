@@ -116,15 +116,10 @@ var unsubscribeFromTrip = function (req, res, next) {
 
 module.exports = {
     createTrip,
-    // updateTrip,
     deleteTrip,
     getAllTrips,
     getTrip,
     findTripById,
     applyToTrip,
-    unsubscribeFromTrip,
-    // tripExists,
-    // newTrip,
-    // getTripProfile,
-    // updateTripProfile
+    unsubscribeFromTrip
 };
