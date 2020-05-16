@@ -15,9 +15,6 @@ import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";
 
-
-
-
 const styles = {
     cardCategoryWhite: {
         color: "rgba(255,255,255,.62)",
@@ -143,8 +140,6 @@ export default function MyTrips() {
 
     return (
         <div>
-            
-            
                 { 
                 isLoading
                     ?
@@ -154,15 +149,15 @@ export default function MyTrips() {
                     :
                     trips.length 
                         ?
-                        renderedTrips
-                        : 
                         <GridContainer >
-                            <Card>
-                                <CardBody>
-                                    <h3>You don't have any trips yet!</h3>
-                                </CardBody>
-                            </Card>
+                            {renderedTrips}
                         </GridContainer>
+                        : 
+                        <Card>
+                            <CardBody>
+                                <h3>You don't have any trips yet!</h3>
+                            </CardBody>
+                        </Card>                        
                 }
             
         </div>
