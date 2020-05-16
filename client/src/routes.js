@@ -6,10 +6,12 @@ import BubbleChart from "@material-ui/icons/BubbleChart";
 import DeveloperBoard from "@material-ui/icons/DeveloperBoard";
 import Notifications from "@material-ui/icons/Notifications";
 import CardTravel from "@material-ui/icons/CardTravel";
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import MyProfile from "views/MyProfile/MyProfile.js";
+import MyTrips from "views/MyTrips/MyTrips.js";
 import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
@@ -19,6 +21,7 @@ import Trips from "views/Trips/Trips.js";
 import UserProfile from "views/UserProfile/UserProfile";
 import TripDetails from "views/TripDetails/TripDetails";
 import TripCreate from "views/TripCreate/TripCreate";
+
 
 const routes = {
   dashboard: [
@@ -41,6 +44,13 @@ const routes = {
       name: "My Profile",
       icon: Person,
       component: MyProfile,
+      layout: "/admin"
+    },
+    {
+      path: "/myTrips",
+      name: "My Trips",
+      icon: AssignmentIndIcon,
+      component: MyTrips,
       layout: "/admin"
     },
     {

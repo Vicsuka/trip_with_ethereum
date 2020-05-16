@@ -15,17 +15,6 @@ var createTrip = function (req, res, next) {
     });
 };
 
-var updateTrip = function (req, res, next) {
-    //TODO only the organizer can change the trip!
-    // Trip.findByIdAndUpdate(req.body.tripId, req.body, { new: true }, function (err, trip) {
-    //     if (err) {
-    //         next(err);
-    //     } else {
-    //         res.status(200).send(trip);
-    //     }
-    // });
-};
-
 var deleteTrip = function (req, res, next) {
     req.trip.remove(function (err) {
         if (err) {
@@ -37,11 +26,15 @@ var deleteTrip = function (req, res, next) {
 };
 
 var getAllTrips = function (req, res, next) {
+    let userId;
+    if (req.user) {
+        userId = req.user.id;
+    }
     Trip.find(function (err, trips) {
         if (err) {
             next(err);
         } else {
-            res.status(200).send(trips);
+            res.status(200).send({trips: trips, userId: userId});
         }
     });
 };

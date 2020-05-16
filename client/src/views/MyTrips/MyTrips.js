@@ -47,7 +47,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function Trips() {
+export default function MyTrips() {
     const classes = useStyles();
 
     const [trips, setTrips] = useState([]);
@@ -62,8 +62,8 @@ export default function Trips() {
             .then(response => response.json())
             .then(
                 (data) => {
-                    loadParticipants(data.trips);
-                    //verifyTrips(data);            
+                    var userTrips = data.trips.filter(trip => trip.participantIds.includes(data.userId));
+                    loadParticipants(userTrips);         
                 },
                 (error) => {
                     console.log(error);
@@ -71,58 +71,6 @@ export default function Trips() {
             )
     }
 
-
-    // const verifyTrips = (data) => {
-    //     // var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
-    //     var allPromises = [];
-    //     var verifiedTrips = [];
-    //     var subscriptions = [];
-
-    //     data.forEach(trip => {
-    //         console.log(trip);
-
-    //         var TripCreationHASH = window.web3.eth.abi.encodeEventSignature('TripCreation(string,uint256,uint256,uint256,uint256,uint256,uint256)');
-    //         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(trip.id);
-    //         console.log("tripIdHASH",tripIdHASH);
-
-    //         var options = {
-    //             fromBlock: 0,
-    //             toBlock: 'latest',
-    //             address: GlobalVariables.ContractAddress,
-    //             topics: [TripCreationHASH, tripIdHASH]
-    //         };
-
-    //         allPromises.push(
-
-    //             new Promise(function(resolve, reject) {
-    //                 subscriptions.push(window.web3.eth.subscribe('logs', options, function (error, result) {
-    //                     if (error) console.log(error);
-    //                     console.log("result",result);
-    //                     console.log("Verifing trip: ", trip);
-    //                     verifiedTrips.push(trip);
-    //                     resolve();
-    //                 }).on("data", function (log) {
-                        
-    //                 }).on("changed", function (log) {
-    //                     //
-    //                 }))
-    //             })
-    //         );
-    //     });
-    //     // Wait until all trips are verified
-    //     Promise.all(allPromises).then(function () {
-    //         console.log("Trips verified");
-    //         subscriptions.forEach(element => {
-    //             element.unsubscribe(function(error, success){
-    //                 if(success)
-    //                     console.log('Successfully unsubscribed!');
-    //             });
-    //         });
-    //         loadParticipants(verifiedTrips);
-    //     });
-
-
-    // }
 
     const loadParticipants = (data) => {
         var extendedData = data;
@@ -190,12 +138,18 @@ export default function Trips() {
 
     return (
         <div>
-            <Link to="/admin/trips/create"><Button color="warning" size="lg" round >Create Your Trip</Button></Link>
             <GridContainer>
-                {renderedTrips}
+                { trips.length 
+                    ?
+                    renderedTrips
+                    : 
+                    <Card>
+                        <CardBody>
+                            <h3>You don't have any trips yet!</h3>
+                        </CardBody>
+                    </Card>
+                }
             </GridContainer>
         </div>
     );
 }
-
-
