@@ -249,13 +249,13 @@ export default function TripDetails(props) {
             .then(
                 (data) => {
                     if (data.trip !== null) {
-                        loadParticipants(data.trip);
                         if (data.trip.price === 0) setFree(true);
                         setTrip(data.trip);
                         setDeadlinePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.deadLineDate));
                         setEnddatePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.endingDate));
                         setUserApplied(data.isUserApplied);
                         setUserOrganizer(data.isUserOrganizer);
+                        loadParticipants(data.trip);
                     }
                 },
                 (error) => {
@@ -466,6 +466,7 @@ export default function TripDetails(props) {
             .then(
                 (data) => { 
                     setTransactionInProgress(false);
+                    if (data.errors) console.log("succes");
                 },
                 (error) => {
                     setTransactionInProgress(false);
@@ -566,12 +567,7 @@ export default function TripDetails(props) {
                                             ?
                                             isEnddatePassed
                                                 ?
-                                                <SnackbarContent
-                                                    message={
-                                                        'This trip has already ended!'
-                                                    }
-                                                    color="danger"
-                                                />
+                                                    ""
                                                 :
                                                 <SnackbarContent
                                                     message={
@@ -594,12 +590,16 @@ export default function TripDetails(props) {
                                                 ?
                                                 isDeadlinePassed
                                                     ?
-                                                    <SnackbarContent
-                                                        message={
-                                                            'Application deadline has already passed!'
-                                                        }
-                                                        color="danger"
-                                                    />
+                                                        isEnddatePassed
+                                                            ?
+                                                                ""
+                                                            :
+                                                            <SnackbarContent
+                                                                message={
+                                                                    'Application deadline has already passed!'
+                                                                }
+                                                                color="danger"
+                                                            />
                                                     :
                                                     transactionInProgress
                                                         ?
@@ -751,18 +751,22 @@ export default function TripDetails(props) {
                                                                 ?
                                                                 isDeadlinePassed
                                                                     ?
-                                                                    isUserOrganizer
+                                                                        isEnddatePassed
                                                                         ?
-                                                                        transactionInProgress
+                                                                            ""
+                                                                        :
+                                                                        isUserOrganizer
                                                                             ?
-                                                                                <Loader type="Watch" color="#ff9800" height={45} width={45} />
-                                                                            :
-                                                                                <div>
-                                                                                    <Button color="danger" size="lg" onClick={cancelTransaction}>Cancel current transaction</Button>
-                                                                                    <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
-                                                                                </div>
+                                                                            transactionInProgress
+                                                                                ?
+                                                                                    <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                                                                :
+                                                                                    <div>
+                                                                                        <Button color="danger" size="lg" onClick={cancelTransaction}>Cancel current transaction</Button>
+                                                                                        <Button color="success" size="lg" onClick={open}>Create a new transaction</Button>
+                                                                                    </div>
+                                                                            : ""
                                                                         : ""
-                                                                    : ""
                                                                 :
                                                                 <SnackbarContent
                                                                     message={
@@ -797,22 +801,26 @@ export default function TripDetails(props) {
                                                                 ?
                                                                 isDeadlinePassed
                                                                     ?
-                                                                    isUserApplied
-                                                                        ? 
-                                                                            transactionInProgress
-                                                                            ?
-                                                                                <Loader type="Watch" color="#ff9800" height={45} width={45} />
-                                                                            :
-                                                                                <Button color="success" size="lg" onClick={makeVote}>Vote on current transaction</Button>
+                                                                    isEnddatePassed
+                                                                        ?
+                                                                            ""
+                                                                        :
+                                                                        isUserApplied
+                                                                            ? 
+                                                                                transactionInProgress
+                                                                                ?
+                                                                                    <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                                                                :
+                                                                                    <Button color="success" size="lg" onClick={makeVote}>Vote on current transaction</Button>
+                                                                            : ""
                                                                         : ""
-                                                                    : ""
                                                                 :
-                                                                <SnackbarContent
-                                                                    message={
-                                                                        'This trip is currently being deployed on the blockchain!'
-                                                                    }
-                                                                    color="info"
-                                                                />
+                                                                    <SnackbarContent
+                                                                        message={
+                                                                            'This trip is currently being deployed on the blockchain!'
+                                                                        }
+                                                                        color="info"
+                                                                    />
 
                                                             :
                                                             <SnackbarContent
