@@ -110,7 +110,6 @@ export default function TripDetails(props) {
     }, []);
 
     const findCreationEvent = () => {
-        // var contract = new window.web3.eth.Contract(GlobalVariables.ContractABI, GlobalVariables.ContractAddress);
         var tripIdHASH = window.web3.eth.abi.encodeEventSignature(tripId);
 
         var options = {
@@ -125,9 +124,7 @@ export default function TripDetails(props) {
             if (error) console.log(error);
         }).on("data", function (log) {
             setContractReady(true);
-        }).on("changed", function (log) {
-            //
-        });
+        })
     }
 
     const loadAllEvents = () => {
@@ -155,8 +152,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
 
-                    setEvents(events => [...events, ["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
-                    // setEvents(events => [...events,["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>])]);
+                    setEvents(events => [...events, ["TripCreation", convertUinxToDateString(creationEvent.creationDate), getCreationParameters(creationEvent), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);    
                     break;
                 case (GlobalVariables.ContractEvents.TripEnd):
                     var TripEndevent = window.web3.eth.abi.decodeParameters([

@@ -132,7 +132,6 @@ export default function MyProfile(props) {
                     })
                     .catch(err => {
                         console.log('Trip creation failed', err);
-                        //TODO revert creation
                         deleteTrip(tripId);
                     })
                     .finally(() => {

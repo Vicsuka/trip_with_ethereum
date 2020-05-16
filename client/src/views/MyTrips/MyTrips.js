@@ -10,9 +10,6 @@ import { makeStyles } from "@material-ui/core";
 import { useEffect } from "react";
 import Button from "components/CustomButtons/Button.js";
 
-
-// import GlobalVariables from "variables/general.js";
-
 import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";

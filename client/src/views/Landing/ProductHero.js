@@ -11,7 +11,7 @@ import backgroundImage from "assets/img/landing.jpg";
 const styles = (theme) => ({
   background: {
     backgroundImage: `url(${backgroundImage})`,
-    backgroundColor: '#7fc7d9', // Average color of the background image.
+    backgroundColor: '#7fc7d9',
     backgroundPosition: 'center',
   },
   button: {

@@ -10,8 +10,7 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
 const useStyles = makeStyles(styles);
 
-export default function Landing({ ...rest }) {
-  // styles
+export default function Landing() {
   const classes = useStyles();
 
   return (
