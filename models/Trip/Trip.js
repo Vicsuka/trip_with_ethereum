@@ -10,14 +10,14 @@ var TripSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: (value) => {
-            return validator.isLength(value,{min: 1, max: 30})
+            return validator.isLength(value,{min: 1, max: 50})
         }
     },
     description: {
         type: String,
         required: true,
         validate: (value) => {
-            return validator.isLength(value,{min: 10, max: 500})
+            return validator.isLength(value,{min: 10, max: 2000})
         }
     },
     // References to users

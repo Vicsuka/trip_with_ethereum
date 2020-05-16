@@ -204,7 +204,7 @@ export default function MyProfile(props) {
             .then(
                 (data) => {
                     console.log(data);
-                    if (!isFree) createTrip(tripId);                   
+                    if (!isFree && !data.errors) createTrip(tripId);                   
                 },
                 (error) => {
                     console.log(error);
