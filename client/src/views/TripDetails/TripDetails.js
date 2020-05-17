@@ -88,6 +88,7 @@ export default function TripDetails(props) {
     const [errTranCancel, setErrTranCancel] = useState(false);
     const [succEnd, setSuccEnd] = useState(false);
     const [errEnd, setErrEnd] = useState(false);
+    const [errorLoad, setErrorLoad] = useState(false);
     
 
     const [isFree, setFree] = useState(false);
@@ -277,6 +278,13 @@ export default function TripDetails(props) {
                     }
                 },
                 (error) => {
+                    if (!errorLoad) {
+                        setErrorLoad(true);
+                        setTimeout(function () {
+                          setErrorLoad(false);
+                        }, 3000);
+                      }
+                    setLoading(false);
                     console.log(error);
                 }
             )
@@ -1145,6 +1153,16 @@ export default function TripDetails(props) {
                 message="Error while ending trip!"
                 open={errEnd}
                 closeNotification={() => setErrEnd(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="We could not connect to the database!"
+                open={errorLoad}
+                closeNotification={() => setErrorLoad(false)}
                 close
             />
             

@@ -14,6 +14,8 @@ import Button from "components/CustomButtons/Button.js";
 import { Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import CardFooter from "components/Card/CardFooter";
+import Snackbar from "components/Snackbar/Snackbar";
+import Error from "@material-ui/icons/Error";
 
 
 const styles = {
@@ -56,6 +58,7 @@ export default function Trips() {
 
     const [trips, setTrips] = useState([]);
     const [isLoading, setLoading] = useState(true);
+    const [errorLoad, setErrorLoad] = useState(false);
 
     useEffect(() => {
         loadTrips();
@@ -71,6 +74,13 @@ export default function Trips() {
                     //verifyTrips(data);            
                 },
                 (error) => {
+                    if (!errorLoad) {
+                        setErrorLoad(true);
+                        setTimeout(function () {
+                          setErrorLoad(false);
+                        }, 3000);
+                      }
+                    setLoading(false);
                     console.log(error);
                 }
             )
@@ -208,6 +218,15 @@ export default function Trips() {
                     {renderedTrips}
                 </GridContainer>
             }
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="We could not connect to the database!"
+                open={errorLoad}
+                closeNotification={() => setErrorLoad(false)}
+                close
+            />
             
             
         </div>

@@ -12,6 +12,8 @@ import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 
 import defaultIcon from "assets/img/faces/profile-icon.png"
+import Snackbar from "components/Snackbar/Snackbar";
+import Error from "@material-ui/icons/Error";
 
 
 const styles = {
@@ -48,6 +50,7 @@ export default function UserProfile(props) {
 
     const [isLoading, setLoading] = useState(true);
     const [profile, setProfile] = useState({});
+    const [errorLoad, setErrorLoad] = useState(false);
 
     useEffect(() => {
         loadProfile();
@@ -64,6 +67,13 @@ export default function UserProfile(props) {
                     setLoading(false);
                 },
                 (error) => {
+                    if (!errorLoad) {
+                        setErrorLoad(true);
+                        setTimeout(function () {
+                          setErrorLoad(false);
+                        }, 3000);
+                      }
+                    setLoading(false);
                     console.log(error);
                 }
             )
@@ -167,6 +177,16 @@ export default function UserProfile(props) {
                     </GridContainer>
 
             }
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="We could not connect to the database!"
+                open={errorLoad}
+                closeNotification={() => setErrorLoad(false)}
+                close
+            />
         </div>
     );
 }

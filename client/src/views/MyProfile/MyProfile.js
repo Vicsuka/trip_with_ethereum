@@ -63,7 +63,8 @@ export default function MyProfile() {
   const [errorNoti, setErrorNoti] = useState(false);
   const [etherNoti, setEtherNoti] = useState(false);
   const [etherErrorNoti, setEtherErrorNoti] = useState(false);
-
+  const [errorLoad, setErrorLoad] = useState(false);
+  
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
@@ -134,6 +135,13 @@ export default function MyProfile() {
         },
         (error) => {
           console.log(error);
+          setLoading(false);
+          if (!errorLoad) {
+            setErrorLoad(true);
+            setTimeout(function () {
+              setErrorLoad(false);
+            }, 3000);
+          }
         }
       )
   }
@@ -542,6 +550,16 @@ export default function MyProfile() {
         message="An error occurred! Please check the data or try again later!"
         open={errorNoti}
         closeNotification={() => setErrorNoti(false)}
+        close
+      />
+
+      <Snackbar
+        place="br"
+        color="danger"
+        icon={Error}
+        message="We could not connect to the database!"
+        open={errorLoad}
+        closeNotification={() => setErrorLoad(false)}
         close
       />
 
