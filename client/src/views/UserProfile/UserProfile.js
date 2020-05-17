@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import Loader from 'react-loader-spinner';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -32,6 +33,9 @@ const styles = {
     },
     aboutInfo: {
         textAlign: "left"
+    },
+    centerLoader: {
+        textAlign: "center"
     }
 };
 
@@ -42,6 +46,7 @@ export default function UserProfile(props) {
     var userId = props.match.params.userId;
     const classes = useStyles();
 
+    const [isLoading, setLoading] = useState(true);
     const [profile, setProfile] = useState({});
 
     useEffect(() => {
@@ -50,12 +55,13 @@ export default function UserProfile(props) {
     }, []);
 
     const loadProfile = () => {
-        fetch("/api/user/users/"+userId)
+        fetch("/api/user/users/" + userId)
             .then(response => response.json())
             .then(
                 (data) => {
                     console.log(data);
                     setProfile(data);
+                    setLoading(false);
                 },
                 (error) => {
                     console.log(error);
@@ -67,91 +73,100 @@ export default function UserProfile(props) {
     return (
         <div>
             <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                    <Card profile>
-                        <CardAvatar profile>
-                            <img src={profile.picture || defaultIcon} alt="" />
-                        </CardAvatar>
-                        <CardBody profile >
-                            <CardHeader color="warning">
-                                <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{profile.firstname} {profile.lastname}</h3>
-                                <p className={classes.cardCategoryWhite + ' ' + classes.description}>USER DATA</p>
-                            </CardHeader>
-                            <div className={classes.aboutInfo}>
-                                <GridContainer >
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>Username:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={9}>
-                                        <h4>{profile.username}</h4>
-                                    </GridItem>
-                                </GridContainer>
-                                <GridContainer>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>Email:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={9}>
-                                        <h4>{profile.email}</h4>
-                                    </GridItem>
-                                </GridContainer>
-                                <GridContainer>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>ID:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={9}>
-                                        <h4>{profile.auth0id}</h4>
-                                    </GridItem>
-                                </GridContainer>
-                                <GridContainer>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>Ethereum Address:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={9}>
-                                        <h4>{profile.ethereumAddress}</h4>
-                                    </GridItem>
-                                </GridContainer>
-                                <GridContainer>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>City:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h4>{profile.address ? profile.address.city : ""}</h4>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>Country:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h4>{profile.address ? profile.address.country : ""}</h4>
-                                    </GridItem>
-                                </GridContainer>
-                                <GridContainer>
-                                    <GridItem xs={6} sm={6} md={2}>
-                                        <h3><strong>Street Address:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={5}>
-                                        <h4>{profile.address ? profile.address.streetAddress : ""}</h4>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>Postal Code:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={2}>
-                                        <h4>{profile.address ? profile.address.postalCode : ""}</h4>
-                                    </GridItem>
-                                </GridContainer>
-                                <GridContainer>
-                                    <GridItem xs={6} sm={6} md={3}>
-                                        <h3><strong>About:</strong></h3>
-                                    </GridItem>
-                                    <GridItem xs={6} sm={6} md={9}>
-                                        <h4>{profile.about}</h4>
-                                    </GridItem>
-                                </GridContainer>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </GridItem>
-             </GridContainer>
+            {
+                isLoading
+                    ?
+                    <div className={classes.centerLoader}>
+                        <Loader type="Grid" color="#ff9800" height={120} width={120} />
+                    </div>
+                    :
+                    <GridContainer>
+                        <GridItem xs={12} sm={12} md={12}>
+                            <Card profile>
+                                <CardAvatar profile>
+                                    <img src={profile.picture || defaultIcon} alt="" />
+                                </CardAvatar>
+                                <CardBody profile >
+                                    <CardHeader color="warning">
+                                        <h3 className={classes.cardTitleWhite + ' ' + classes.cardTitle}>{profile.firstname} {profile.lastname}</h3>
+                                        <p className={classes.cardCategoryWhite + ' ' + classes.description}>USER DATA</p>
+                                    </CardHeader>
+                                    <div className={classes.aboutInfo}>
+                                        <GridContainer >
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>Username:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={9}>
+                                                <h4>{profile.username}</h4>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>Email:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={9}>
+                                                <h4>{profile.email}</h4>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>ID:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={9}>
+                                                <h4>{profile.auth0id}</h4>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>Ethereum Address:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={9}>
+                                                <h4>{profile.ethereumAddress}</h4>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>City:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h4>{profile.address ? profile.address.city : ""}</h4>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>Country:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h4>{profile.address ? profile.address.country : ""}</h4>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={2}>
+                                                <h3><strong>Street Address:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={5}>
+                                                <h4>{profile.address ? profile.address.streetAddress : ""}</h4>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>Postal Code:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={2}>
+                                                <h4>{profile.address ? profile.address.postalCode : ""}</h4>
+                                            </GridItem>
+                                        </GridContainer>
+                                        <GridContainer>
+                                            <GridItem xs={6} sm={6} md={3}>
+                                                <h3><strong>About:</strong></h3>
+                                            </GridItem>
+                                            <GridItem xs={6} sm={6} md={9}>
+                                                <h4>{profile.about}</h4>
+                                            </GridItem>
+                                        </GridContainer>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </GridItem>
+                    </GridContainer>
+
+            }
         </div>
     );
 }
