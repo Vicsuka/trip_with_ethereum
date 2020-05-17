@@ -87,7 +87,7 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: false,
         validate: (value) => {
-            return validator.isAscii(value) && validator.isLength(value,{min: 20, max: 400})
+            return validator.isAscii(value) && validator.isLength(value,{min: 20, max: 1000})
         }
     },
     ethereumAddress: {

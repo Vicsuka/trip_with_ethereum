@@ -55,6 +55,7 @@ export default function MyProfile() {
   
   const [isEthEnabled, setEthEnabled] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const [isAboutRange, setAboutRange] = useState(true);
 
   const [profile, setProfile] = useState({});
 
@@ -109,7 +110,10 @@ export default function MyProfile() {
             setPostalCode(data.address.postalCode);
           }
 
-          setAboutMe(data.about);
+          if (data.about) {
+            setAboutInLoad(data.about);
+          }
+          
 
           if (data.ethereumAddress) {
             setEtherAddress(data.ethereumAddress);
@@ -212,7 +216,21 @@ export default function MyProfile() {
     setUsername(event.target.value);
   };
 
+  const setAboutInLoad = (value) => {
+    if (value.length >= 20 && value.length <= 1000) {
+      setAboutRange(true);
+    } else {
+      setAboutRange(false);
+    }
+    setAboutMe(value);
+  };
+
   const handleAboutChange = (event, value) => {
+    if (event.target.value.length >= 20 && event.target.value.length <= 1000) {
+      setAboutRange(true);
+    } else {
+      setAboutRange(false);
+    }
     setAboutMe(event.target.value);
   };
 
@@ -345,6 +363,7 @@ export default function MyProfile() {
                         id="first-name"
                         formControlProps={{
                           fullWidth: true,
+                          required: true,
                           onChange: handleFirstnameChange
                         }}
                         inputProps={{
@@ -359,6 +378,7 @@ export default function MyProfile() {
                         id="last-name"
                         formControlProps={{
                           fullWidth: true,
+                          required: true,
                           onChange: handleLastnameChange
                         }}
                         inputProps={{
@@ -476,6 +496,8 @@ export default function MyProfile() {
                           rows: 5,
                           value: aboutMe
                         }}
+                        success={isAboutRange}
+                        error={!isAboutRange}
                       />
                     </GridItem>
                   </GridContainer>
