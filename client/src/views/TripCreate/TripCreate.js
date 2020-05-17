@@ -83,6 +83,11 @@ export default function MyProfile(props) {
 
     const [isFree, setFree] = useState(false);
 
+    const [isTitleInRange, setTitleRange] = useState(false);
+    const [isParticipantsInRange, setParticipantsRange] = useState(false);
+    const [isPriceInRange, setPriceRange] = useState(false);
+    const [isTripDescInRange, setDescRange] = useState(false);
+
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [price, setPrice] = useState("");
@@ -284,19 +289,41 @@ export default function MyProfile(props) {
             )
     };
 
+    
+
     const handleTitleChange = (event, value) => {
+        if (event.target.value.length > 0 && event.target.value.length <= 50) {
+            setTitleRange(true);
+        } else {
+            setTitleRange(false);
+        }
         setTitle(event.target.value);
     };
 
     const handlePriceChange = (event, value) => {
+        if (event.target.value >= 0.00001 && event.target.value <= 100) {
+            setPriceRange(true);
+        } else {
+            setPriceRange(false);
+        }
         setPrice(event.target.value);
     };
 
     const handleDescChange = (event, value) => {
+        if (event.target.value.length >= 100 && event.target.value.length <= 5000) {
+            setDescRange(true);
+        } else {
+            setDescRange(false);
+        }
         setDesc(event.target.value);
     };
 
     const handleParticChange = (event, value) => {
+        if (event.target.value > 1 && event.target.value <= 30) {
+            setParticipantsRange(true);
+        } else {
+            setParticipantsRange(false);
+        }
         setParticN(event.target.value);
     };
 
@@ -351,32 +378,38 @@ export default function MyProfile(props) {
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
-
-                            </GridContainer>
-                            <GridContainer>
                                 <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
-                                        labelText="Title (max. 30 char)"
+                                        labelText="Title (max. 50 char)"
                                         id="trip-title"
                                         formControlProps={{
                                             fullWidth: true,
+                                            required: true,
                                             onChange: handleTitleChange
                                         }}
+                                        success={isTitleInRange}
+                                        error={!isTitleInRange}
                                     />
 
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={2}>
                                     <CustomInput
-                                        labelText="Max participants"
+                                        labelText="Max participants (2-30)"
                                         id="trip-participants"
                                         formControlProps={{
                                             fullWidth: true,
+                                            required: true,
                                             onChange: handleParticChange
                                         }}
+                                        success={isParticipantsInRange}
+                                        error={!isParticipantsInRange}
                                     />
                                 </GridItem>
+                            </GridContainer>
+                            <GridContainer>
                                 <GridItem xs={12} sm={12} md={2}>
                                     <FormControlLabel
+                                        className={classes.primaryColored}
                                         label="Free trip"
                                         control={
                                             <Checkbox className={classes.primaryColored} checked={isFree} onChange={setFreeTrip} icon={<AttachMoneyIcon />} checkedIcon={<MoneyOffIcon className={classes.primaryColored}/>} />
@@ -389,28 +422,31 @@ export default function MyProfile(props) {
                                         ?
                                         ""
                                         :
-                                        <GridItem xs={12} sm={12} md={2}>
+                                        <GridItem xs={12} sm={12} md={6}>
                                             <GridContainer >
                                                 <GridItem xs={4} sm={4} md={4}>
                                                     <CustomInput
-                                                        labelText="Price"
+                                                        labelText="Price (0.00001 - 100 ether)"
                                                         id="trip-price"
                                                         formControlProps={{
                                                             fullWidth: true,
+                                                            required: true,
                                                             onChange: handlePriceChange
                                                         }}
+                                                        success={isPriceInRange}
+                                                        error={!isPriceInRange} 
                                                     />
 
                                                 </GridItem>
                                                 <GridItem xs={8} sm={8} md={8}>
-                                                <FormControl component="fieldset">
-                                                    <FormLabel component="legend">Trust factor</FormLabel>
-                                                    <RadioGroup aria-label="Trust factor" name="trip-trust" onChange={handleTypeChange}>
-                                                        <FormControlLabel value="1" control={<PrimaryRadio  />} label='Personal vote' />
-                                                        <FormControlLabel value="2" control={<PrimaryRadio />} label='Majority vote' />
-                                                        <FormControlLabel value="3" control={<PrimaryRadio />} label='Full trust' />
-                                                    </RadioGroup>
-                                                </FormControl>
+                                                    <FormControl component="fieldset" required>
+                                                        <FormLabel component="legend">Trust factor</FormLabel>
+                                                        <RadioGroup aria-label="Trust factor" name="trip-trust" onChange={handleTypeChange}>
+                                                            <FormControlLabel value="1" control={<PrimaryRadio  />} label='Personal vote' />
+                                                            <FormControlLabel value="2" control={<PrimaryRadio />} label='Majority vote' />
+                                                            <FormControlLabel value="3" control={<PrimaryRadio />} label='Full trust' />
+                                                        </RadioGroup>
+                                                    </FormControl>
                                                 </GridItem>
                                                 
                                             </GridContainer>
@@ -424,7 +460,8 @@ export default function MyProfile(props) {
                                         labelText="Deadline date"
                                         id="trip-deadline"
                                         formControlProps={{
-                                            fullWidth: true
+                                            fullWidth: true,
+                                            required: true,
                                         }}
                                         inputProps={{
                                             value: deadline
@@ -438,7 +475,8 @@ export default function MyProfile(props) {
                                         labelText="Starting date"
                                         id="trip-starting"
                                         formControlProps={{
-                                            fullWidth: true
+                                            fullWidth: true,
+                                            required: true,
                                         }}
                                         inputProps={{
                                             value: starting
@@ -451,7 +489,8 @@ export default function MyProfile(props) {
                                         labelText="Ending date"
                                         id="trip-ending"
                                         formControlProps={{
-                                            fullWidth: true
+                                            fullWidth: true,
+                                            required: true,
                                         }}
                                         inputProps={{
                                             value: ending
@@ -463,16 +502,19 @@ export default function MyProfile(props) {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <CustomInput
-                                        labelText="Trip description (min. 10 char)"
+                                        labelText="Trip description (min. 100 char)"
                                         id="trip-description"
                                         formControlProps={{
                                             fullWidth: true,
+                                            required: true,
                                             onChange: handleDescChange
                                         }}
                                         inputProps={{
                                             multiline: true,
                                             rows: 10
                                         }}
+                                        success={isTripDescInRange}
+                                        error={!isTripDescInRange} 
                                     />
                                 </GridItem>
                             </GridContainer>

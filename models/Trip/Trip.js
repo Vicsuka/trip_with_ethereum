@@ -17,7 +17,7 @@ var TripSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: (value) => {
-            return validator.isLength(value,{min: 10, max: 5000})
+            return validator.isLength(value,{min: 100, max: 5000})
         }
     },
     // References to users
@@ -35,7 +35,7 @@ var TripSchema = new mongoose.Schema({
         type: Number,
         required: true,
         validate: (value) => {
-            return value >= 0 && value < 100
+            return value >= 0 && value <= 100
         }
     },
     maxPersons: {
