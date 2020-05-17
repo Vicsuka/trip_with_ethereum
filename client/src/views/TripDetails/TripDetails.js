@@ -201,7 +201,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'creationDate' },
                     ], log.data);
 
-                    setEvents(events => [...events, ["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + "Current headcount: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+                    setEvents(events => [...events, ["Unsubscription", convertUinxToDateString(Unsubscriptionevent.creationDate), "Unsubscribed address: " + Unsubscriptionevent.unsubscribed + ", Current participants: " + Unsubscriptionevent.currentApplicants, <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.TransactionCreation):
                     var TransactionCreationevent = window.web3.eth.abi.decodeParameters([
@@ -283,6 +283,7 @@ export default function TripDetails(props) {
     }
 
     const loadParticipants = (data) => {
+        setParticipants(participants => []);
         data.participantIds.forEach(id => {
             fetch("/api/user/users/" + id)
                 .then(response => response.json())
@@ -332,6 +333,15 @@ export default function TripDetails(props) {
                             setTimeout(function () {
                                 setUnsubSucc(false);
                             }, 3000);
+                        }
+                        if (data.trip !== null) {
+                            if (data.trip.price === 0) setFree(true);
+                            setTrip(data.trip);
+                            setDeadlinePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.deadLineDate));
+                            setEnddatePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.endingDate));
+                            setUserApplied(data.isUserApplied);
+                            setUserOrganizer(data.isUserOrganizer);
+                            loadParticipants(data.trip);
                         }
                     } else {
                         console.log(data);
@@ -572,6 +582,15 @@ export default function TripDetails(props) {
                             setTimeout(function () {
                                 setApplyNoti(false);
                             }, 3000);
+                        }
+                        if (data.trip !== null) {
+                            if (data.trip.price === 0) setFree(true);
+                            setTrip(data.trip);
+                            setDeadlinePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.deadLineDate));
+                            setEnddatePassed(!moment(moment().format("YYYY-MM-DD")).isBefore(data.trip.endingDate));
+                            setUserApplied(data.isUserApplied);
+                            setUserOrganizer(data.isUserOrganizer);
+                            loadParticipants(data.trip);
                         }
                     } else {
                         console.log(data);

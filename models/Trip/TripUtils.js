@@ -75,7 +75,7 @@ var applyToTrip = function (req, res, next) {
                         if (err) {
                             next(err);
                         } else {
-                            res.status(200).send(trip);
+                            res.status(200).json({trip: trip, isUserApplied: true, isUserOrganizer: false});
                         }
                     });
                 } else {
@@ -97,13 +97,17 @@ var unsubscribeFromTrip = function (req, res, next) {
             } else {
                 let existingIds = trip.participantIds;
                 let index = existingIds.indexOf(req.user.id);
-                if (index) {
+                console.log(existingIds);
+                console.log(req.user.id);
+                console.log(index);
+                
+                if (index  !== -1) {
                     existingIds.splice(index, 1);
                     Trip.findOneAndUpdate({ id: req.body.tripId }, { $set: { participantIds: existingIds } }, { new: true }, function (err, trip) {
                         if (err) {
                             next(err);
                         } else {
-                            res.status(200).send(trip);
+                            res.status(200).json({trip: trip, isUserApplied: false, isUserOrganizer: false});
                         }
                     });
                 } else {
