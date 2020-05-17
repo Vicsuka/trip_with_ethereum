@@ -34,8 +34,11 @@ import WcIcon from '@material-ui/icons/Wc';
 // core components
 import CardIcon from "components/Card/CardIcon.js";
 
+import DoneOutline from "@material-ui/icons/DoneOutline";
+import Error from "@material-ui/icons/Error";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import Snackbar from "components/Snackbar/Snackbar";
 
 const secondaryStyles = {
     cardCategoryWhite: {
@@ -71,6 +74,21 @@ export default function TripDetails(props) {
     var tripId = props.match.params.tripId;
     const classes = useStyles();
     const secondaryClasses = useMoreStyles();
+
+    const [succApply, setApplyNoti] = useState(false);
+    const [errApply, setApplyErrNoti] = useState(false);
+    const [succUnsub, setUnsubSucc] = useState(false);
+    const [errUnsub, setUnsubErr] = useState(false);
+
+    const [succVote, setSuccVote] = useState(false);
+    const [errVote, setErrVote] = useState(false);
+    const [succTranCreate, setSuccTranCreate] = useState(false);
+    const [errTranCreate, setErrTranCreate] = useState(false);
+    const [succTranCancel, setSuccTranCancel] = useState(false);
+    const [errTranCancel, setErrTranCancel] = useState(false);
+    const [succEnd, setSuccEnd] = useState(false);
+    const [errEnd, setErrEnd] = useState(false);
+    
 
     const [isFree, setFree] = useState(false);
     const [tripEnded, setTripEnded] = useState(false);
@@ -308,9 +326,31 @@ export default function TripDetails(props) {
             .then(
                 (data) => {
                     setTransactionInProgress(false);
+                    if (!data.errors) {
+                        if (!succUnsub) {
+                            setUnsubSucc(true);
+                            setTimeout(function () {
+                                setUnsubSucc(false);
+                            }, 3000);
+                        }
+                    } else {
+                        console.log(data);
+                        if (!errUnsub) {
+                            setUnsubErr(true);
+                            setTimeout(function () {
+                                setUnsubErr(false);
+                            }, 3000);
+                        }
+                    }
                  },
                 (error) => {
                     setTransactionInProgress(false);
+                    if (!errUnsub) {
+                        setUnsubErr(true);
+                        setTimeout(function () {
+                            setUnsubErr(false);
+                        }, 3000);
+                    }
                     console.log(error);
                 }
             )
@@ -328,9 +368,21 @@ export default function TripDetails(props) {
                     .then(receipt => {
                         setTransactionInProgress(false);
                         console.log(receipt);
+                        if (!succEnd) {
+                            setSuccEnd(true);
+                            setTimeout(function () {
+                                setSuccEnd(false);
+                            }, 3000);
+                        }
                     })
                     .catch(err => {
                         setTransactionInProgress(false);
+                        if (!errEnd) {
+                            setErrEnd(true);
+                            setTimeout(function () {
+                                setErrEnd(false);
+                            }, 3000);
+                        }
                         console.log('Error', err);
                     })
             }
@@ -348,10 +400,22 @@ export default function TripDetails(props) {
                     })
                     .then(receipt => {
                         setTransactionInProgress(false);
+                        if (!succTranCancel) {
+                            setSuccTranCancel(true);
+                            setTimeout(function () {
+                                setSuccTranCancel(false);
+                            }, 3000);
+                        }
                         console.log(receipt);
                     })
                     .catch(err => {
                         setTransactionInProgress(false);
+                        if (!errTranCancel) {
+                            setErrTranCancel(true);
+                            setTimeout(function () {
+                                setErrTranCancel(false);
+                            }, 3000);
+                        }
                         console.log('Error', err)
                     })
             }
@@ -370,11 +434,23 @@ export default function TripDetails(props) {
                     .then(receipt => {
                         console.log(receipt);
                         close();
+                        if (!succTranCreate) {
+                            setSuccTranCreate(true);
+                            setTimeout(function () {
+                                setSuccTranCreate(false);
+                            }, 3000);
+                        }
                         setTransactionInProgress(false);
                     })
                     .catch(err => {
                         console.log('Error', err);
                         close();
+                        if (!errTranCreate) {
+                            setErrTranCreate(true);
+                            setTimeout(function () {
+                                setErrTranCreate(false);
+                            }, 3000);
+                        }
                         setTransactionInProgress(false);
                     })
             }
@@ -392,11 +468,23 @@ export default function TripDetails(props) {
                     })
                     .then(receipt => {
                         setTransactionInProgress(false);
+                        if (!succVote) {
+                            setSuccVote(true);
+                            setTimeout(function () {
+                                setSuccVote(false);
+                            }, 3000);
+                        }
                         console.log(receipt);
                     })
                     .catch(err => {
                         setTransactionInProgress(false);
-                        console.log('Error', err);
+                        if (!errVote) {
+                            setErrVote(true);
+                            setTimeout(function () {
+                                setErrVote(false);
+                            }, 3000);
+                        }
+                        console.log('Error', err)
                     })
             }
         });
@@ -416,6 +504,12 @@ export default function TripDetails(props) {
                     })
                     .catch(err => {
                         setTransactionInProgress(false);
+                        if (!errUnsub) {
+                            setUnsubErr(true);
+                            setTimeout(function () {
+                                setUnsubErr(false);
+                            }, 3000);
+                        }
                         console.log('Error', err)
                     })
             }
@@ -434,8 +528,14 @@ export default function TripDetails(props) {
                     .then(receipt => {
                         handleApply();
                     })
-                    .catch(err => {
+                    .catch(err => {                        
                         setTransactionInProgress(false);
+                        if (!errApply) {
+                            setApplyErrNoti(true);
+                            setTimeout(function () {
+                                setApplyErrNoti(false);
+                            }, 3000);
+                        }
                         console.log('Error', err);
                     })
             }
@@ -464,12 +564,34 @@ export default function TripDetails(props) {
         fetch('/api/trip/apply', requestOptions)
             .then(response => response.json())
             .then(
-                (data) => { 
+                (data) => {                    
                     setTransactionInProgress(false);
-                    if (data.errors) console.log("succes");
+                    if (!data.errors) {
+                        if (!succApply) {
+                            setApplyNoti(true);
+                            setTimeout(function () {
+                                setApplyNoti(false);
+                            }, 3000);
+                        }
+                    } else {
+                        console.log(data);
+                        if (!errApply) {
+                            setApplyErrNoti(true);
+                            setTimeout(function () {
+                                setApplyErrNoti(false);
+                            }, 3000);
+                        }
+                    }
+
                 },
                 (error) => {
                     setTransactionInProgress(false);
+                    if (!errApply) {
+                        setApplyErrNoti(true);
+                        setTimeout(function () {
+                            setApplyErrNoti(false);
+                        }, 3000);
+                    }
                     console.log(error);
                 }
             )
@@ -880,6 +1002,126 @@ export default function TripDetails(props) {
                 }
                 
             </Dialog>
+
+            <Snackbar
+                place="br"
+                color="success"
+                icon={DoneOutline}
+                message="Application successful!"
+                open={succApply}
+                closeNotification={() => setApplyNoti(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error with application!"
+                open={errApply}
+                closeNotification={() => setApplyErrNoti(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="success"
+                icon={DoneOutline}
+                message="Unsubscription successful!"
+                open={succUnsub}
+                closeNotification={() => setUnsubSucc(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error with unsubscription!"
+                open={errUnsub}
+                closeNotification={() => setUnsubErr(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="success"
+                icon={DoneOutline}
+                message="Vote successful!"
+                open={succVote}
+                closeNotification={() => setSuccVote(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error while voting!"
+                open={errVote}
+                closeNotification={() => setErrVote(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="success"
+                icon={DoneOutline}
+                message="New transaction creation successful!"
+                open={succTranCreate}
+                closeNotification={() => setSuccTranCreate(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error while creating new transaction!"
+                open={errTranCreate}
+                closeNotification={() => setErrTranCreate(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="success"
+                icon={DoneOutline}
+                message="Transaction cancel successful!"
+                open={succTranCancel}
+                closeNotification={() => setSuccTranCancel(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error while cancelling transaction!"
+                open={errTranCancel}
+                closeNotification={() => setErrTranCancel(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="success"
+                icon={DoneOutline}
+                message="Ending trip successful!"
+                open={succEnd}
+                closeNotification={() => setSuccEnd(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error while ending trip!"
+                open={errEnd}
+                closeNotification={() => setErrEnd(false)}
+                close
+            />
             
         </div>
     );
