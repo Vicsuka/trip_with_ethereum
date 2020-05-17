@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import Loader from 'react-loader-spinner';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import Checkbox from '@material-ui/core/Checkbox';
@@ -18,13 +19,15 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-
 import GlobalVariables from "variables/general.js";
-
 import Web3 from 'web3';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+import DoneOutline from "@material-ui/icons/DoneOutline";
+import Error from "@material-ui/icons/Error";
+import Snackbar from "components/Snackbar/Snackbar";
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -50,6 +53,9 @@ const styles = {
     },
     alignRightCenter: {
         textAlign: "right"
+    },
+    centerLoader: {
+        textAlign: "center"
     }
 };
 
@@ -66,6 +72,11 @@ export default function MyProfile(props) {
     const [particNumber, setParticN] = useState("");
     const [type, setType] = useState("");
 
+    const [succDBCreation, setSuccDBCreation] = useState(false);
+    const [errDBCreation, setErrDBCreation] = useState(false);
+    const [succETHCreation, setSuccETHCreation] = useState(false);
+    const [errETHCreation, setErrETHCreation] = useState(false);
+    const [transactionInProgress, setTransactionInProgress] = useState(false);
 
     const [deadline, setDeadline] = useState("");
     const [deadlineDate, setDeadlineDate] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
@@ -128,15 +139,25 @@ export default function MyProfile(props) {
                     })
                     .then(receipt => {
                         console.log('Mined', receipt);
-                        //TODO confirm creation
+                        setTransactionInProgress(false);
+                        if (!succETHCreation) {
+                            setSuccETHCreation(true);
+                            setTimeout(function () {
+                                setSuccETHCreation(false);
+                                window.location.replace("/admin/trips");
+                            }, 3000);
+                        }
                     })
                     .catch(err => {
-                        console.log('Trip creation failed', err);
+                        setTransactionInProgress(false);
+                        if (!errETHCreation) {
+                            setErrETHCreation(true);
+                            setTimeout(function () {
+                                setErrETHCreation(false);
+                            }, 3000);
+                        }
                         deleteTrip(tripId);
                     })
-                    .finally(() => {
-                        console.log('Extra Code After Everything')
-                    });
             } else {
                 deleteTrip(tripId);
             }
@@ -165,6 +186,7 @@ export default function MyProfile(props) {
     const handleSubmit = () => {
         var tripId = uuidv4();
         let tripData = {};
+        setTransactionInProgress(true);
 
         if (isFree) {
             tripData = {
@@ -204,9 +226,42 @@ export default function MyProfile(props) {
             .then(
                 (data) => {
                     console.log(data);
-                    if (!isFree && !data.errors) createTrip(tripId);                   
+                    if (!data.errors) {
+                        if (!isFree) {
+                            if (!succDBCreation) {
+                                setSuccDBCreation(true);
+                                setTimeout(function () {
+                                    setSuccDBCreation(false);
+                                }, 3000);
+                            }
+                            createTrip(tripId);
+                        } else {
+                            setTransactionInProgress(false);
+                            if (!succETHCreation) {
+                                setSuccETHCreation(true);
+                                setTimeout(function () {
+                                    setSuccETHCreation(false);
+                                }, 3000);
+                            }
+                        }
+                    } else {
+                        setTransactionInProgress(false);
+                        if (!errDBCreation) {
+                            setErrDBCreation(true);
+                            setTimeout(function () {
+                                setErrDBCreation(false);
+                            }, 3000);
+                        }
+                    }
                 },
                 (error) => {
+                    setTransactionInProgress(false);
+                    if (!errDBCreation) {
+                        setErrDBCreation(true);
+                        setTimeout(function () {
+                            setErrDBCreation(false);
+                        }, 3000);
+                    }
                     console.log(error);
                 }
             )
@@ -270,148 +325,195 @@ export default function MyProfile(props) {
     return (
         <div>
             <Button color="warning" size="lg" onClick={props.history.goBack}>Back</Button>
-                    <GridContainer>
-                        <GridItem xs={12} sm={12} md={12}>
-                            <Card>
-                                <CardHeader color="warning">
-                                    <h4 className={classes.cardTitleWhite}>Create your trip</h4>
-                                    <p className={classes.cardCategoryWhite}>Fill out the details</p>
-                                </CardHeader>
-                                <CardBody>
-                                    <GridContainer>
+            <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                    <Card>
+                        <CardHeader color="warning">
+                            <h4 className={classes.cardTitleWhite}>Create your trip</h4>
+                            <p className={classes.cardCategoryWhite}>Fill out the details</p>
+                        </CardHeader>
+                        <CardBody>
+                            <GridContainer>
 
-                                    </GridContainer>
-                                    <GridContainer>
-                                        <GridItem xs={12} sm={12} md={6}>
-                                            <CustomInput
-                                                labelText="Title (max. 30 char)"
-                                                id="trip-title"
-                                                formControlProps={{
-                                                    fullWidth: true,
-                                                    onChange: handleTitleChange
-                                                }}
-                                            />
+                            </GridContainer>
+                            <GridContainer>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CustomInput
+                                        labelText="Title (max. 30 char)"
+                                        id="trip-title"
+                                        formControlProps={{
+                                            fullWidth: true,
+                                            onChange: handleTitleChange
+                                        }}
+                                    />
 
-                                        </GridItem>
-                                        <GridItem xs={12} sm={12} md={2}>
-                                            <CustomInput
-                                                labelText="Max participants"
-                                                id="trip-participants"
-                                                formControlProps={{
-                                                    fullWidth: true,
-                                                    onChange: handleParticChange
-                                                }}
-                                            />
-                                        </GridItem>
-                                        <GridItem xs={12} sm={12} md={2}>
-                                            <FormControlLabel
-                                                label="Free trip"
-                                                control={
-                                                    <Checkbox checked={isFree} onChange={setFreeTrip} icon={<AttachMoneyIcon />} checkedIcon={<MoneyOffIcon />} />
-                                                }
-                                                labelPlacement="start"                                                        
-                                            />
-                                        </GridItem>
-                                        {
-                                            isFree
-                                                ?
-                                                ""
-                                                :
-                                                <GridItem xs={12} sm={12} md={2}>
-                                                    <GridContainer >
-                                                        <GridItem xs={4} sm={4} md={4}>
-                                                            <CustomInput
-                                                                labelText="Price"
-                                                                id="trip-price"
-                                                                formControlProps={{
-                                                                    fullWidth: true,
-                                                                    onChange: handlePriceChange
-                                                                }}
-                                                            />
-
-                                                        </GridItem>
-                                                        <GridItem xs={8} sm={8} md={8}>
-                                                            <CustomInput
-                                                                labelText="Trust factor"
-                                                                id="trip-trust"
-                                                                formControlProps={{
-                                                                    fullWidth: true,
-                                                                    onChange: handleTypeChange
-                                                                }}
-                                                            />
-                                                        </GridItem>
-                                                    </GridContainer>
-                                                </GridItem>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={2}>
+                                    <CustomInput
+                                        labelText="Max participants"
+                                        id="trip-participants"
+                                        formControlProps={{
+                                            fullWidth: true,
+                                            onChange: handleParticChange
+                                        }}
+                                    />
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={2}>
+                                    <FormControlLabel
+                                        label="Free trip"
+                                        control={
+                                            <Checkbox checked={isFree} onChange={setFreeTrip} icon={<AttachMoneyIcon />} checkedIcon={<MoneyOffIcon />} />
                                         }
+                                        labelPlacement="start"                                                        
+                                    />
+                                </GridItem>
+                                {
+                                    isFree
+                                        ?
+                                        ""
+                                        :
+                                        <GridItem xs={12} sm={12} md={2}>
+                                            <GridContainer >
+                                                <GridItem xs={4} sm={4} md={4}>
+                                                    <CustomInput
+                                                        labelText="Price"
+                                                        id="trip-price"
+                                                        formControlProps={{
+                                                            fullWidth: true,
+                                                            onChange: handlePriceChange
+                                                        }}
+                                                    />
 
-                                    </GridContainer>
-                                    <GridContainer>
-                                        <GridItem xs={12} sm={12} md={4}>
-                                            <CustomInput
-                                                labelText="Deadline date"
-                                                id="trip-deadline"
-                                                formControlProps={{
-                                                    fullWidth: true
-                                                }}
-                                                inputProps={{
-                                                    value: deadline
-                                                }}
-                                            />
-                                            <DatePicker onChange={handleDeadlineChange} showYearDropdown minDate={new Date(new Date().setDate(new Date().getDate() + 1))} inline />
+                                                </GridItem>
+                                                <GridItem xs={8} sm={8} md={8}>
+                                                    <CustomInput
+                                                        labelText="Trust factor"
+                                                        id="trip-trust"
+                                                        formControlProps={{
+                                                            fullWidth: true,
+                                                            onChange: handleTypeChange
+                                                        }}
+                                                    />
+                                                </GridItem>
+                                            </GridContainer>
+                                        </GridItem>
+                                }
 
-                                        </GridItem>
-                                        <GridItem xs={12} sm={12} md={4}>
-                                            <CustomInput
-                                                labelText="Starting date"
-                                                id="trip-starting"
-                                                formControlProps={{
-                                                    fullWidth: true
-                                                }}
-                                                inputProps={{
-                                                    value: starting
-                                                }}
-                                            />
-                                            <DatePicker onChange={handleStartingChange} showYearDropdown minDate={deadlineDate} inline />
-                                        </GridItem>
-                                        <GridItem xs={12} sm={12} md={4}>
-                                            <CustomInput
-                                                labelText="Ending date"
-                                                id="trip-ending"
-                                                formControlProps={{
-                                                    fullWidth: true
-                                                }}
-                                                inputProps={{
-                                                    value: ending
-                                                }}
-                                            />
-                                            <DatePicker onChange={handleEndingChange} showYearDropdown minDate={startingDate} inline />
-                                        </GridItem>
-                                    </GridContainer>
-                                    <GridContainer>
-                                        <GridItem xs={12} sm={12} md={12}>
-                                            <CustomInput
-                                                labelText="Trip description (min. 10 char)"
-                                                id="trip-description"
-                                                formControlProps={{
-                                                    fullWidth: true,
-                                                    onChange: handleDescChange
-                                                }}
-                                                inputProps={{
-                                                    multiline: true,
-                                                    rows: 10
-                                                }}
-                                            />
-                                        </GridItem>
-                                    </GridContainer>
+                            </GridContainer>
+                            <GridContainer>
+                                <GridItem xs={12} sm={12} md={4}>
+                                    <CustomInput
+                                        labelText="Deadline date"
+                                        id="trip-deadline"
+                                        formControlProps={{
+                                            fullWidth: true
+                                        }}
+                                        inputProps={{
+                                            value: deadline
+                                        }}
+                                    />
+                                    <DatePicker onChange={handleDeadlineChange} showYearDropdown minDate={new Date(new Date().setDate(new Date().getDate() + 1))} inline />
 
-                                </CardBody>
-                                <CardFooter>
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={4}>
+                                    <CustomInput
+                                        labelText="Starting date"
+                                        id="trip-starting"
+                                        formControlProps={{
+                                            fullWidth: true
+                                        }}
+                                        inputProps={{
+                                            value: starting
+                                        }}
+                                    />
+                                    <DatePicker onChange={handleStartingChange} showYearDropdown minDate={deadlineDate} inline />
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={4}>
+                                    <CustomInput
+                                        labelText="Ending date"
+                                        id="trip-ending"
+                                        formControlProps={{
+                                            fullWidth: true
+                                        }}
+                                        inputProps={{
+                                            value: ending
+                                        }}
+                                    />
+                                    <DatePicker onChange={handleEndingChange} showYearDropdown minDate={startingDate} inline />
+                                </GridItem>
+                            </GridContainer>
+                            <GridContainer>
+                                <GridItem xs={12} sm={12} md={12}>
+                                    <CustomInput
+                                        labelText="Trip description (min. 10 char)"
+                                        id="trip-description"
+                                        formControlProps={{
+                                            fullWidth: true,
+                                            onChange: handleDescChange
+                                        }}
+                                        inputProps={{
+                                            multiline: true,
+                                            rows: 10
+                                        }}
+                                    />
+                                </GridItem>
+                            </GridContainer>
+
+                        </CardBody>
+                        <CardFooter>
+                            {
+                                transactionInProgress
+                                    ?
+                                    <Loader type="Watch" color="#ff9800" height={45} width={45} />
+                                    :
                                     <Button size="lg" color="warning" onClick={handleSubmit}>Create trip</Button>
-                                </CardFooter>
-                            </Card>
-                        </GridItem>
+                            }
+                        </CardFooter>
+                    </Card>
+                </GridItem>
 
-                    </GridContainer>
+            </GridContainer>
+
+
+            <Snackbar
+                place="br"
+                color="info"
+                icon={DoneOutline}
+                message="Successful validation, sending request to blockchain..."
+                open={succDBCreation}
+                closeNotification={() => setSuccDBCreation(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error while validating trip, please check your data!"
+                open={errDBCreation}
+                closeNotification={() => setErrDBCreation(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="success"
+                icon={DoneOutline}
+                message="Trip created successfully!"
+                open={succETHCreation}
+                closeNotification={() => setSuccETHCreation(false)}
+                close
+            />
+
+            <Snackbar
+                place="br"
+                color="danger"
+                icon={Error}
+                message="Error while deploying trip on blockchain, please try again later or contact support!"
+                open={errETHCreation}
+                closeNotification={() => setErrETHCreation(false)}
+                close
+            />
         </div>
     );
 }
