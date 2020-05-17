@@ -722,7 +722,10 @@ export default function TripDetails(props) {
                                                     <Loader type="Watch" color="#ff9800" height={45} width={45} />
                                                 :
                                                 isUserApplied
-                                                    ? <Button color="danger" block size="lg" onClick={handleUnsubscription}>Unsubscribe from trip</Button>
+                                                    ?
+                                                    isUserOrganizer
+                                                        ? ""
+                                                        : <Button color="danger" block size="lg" onClick={handleUnsubscription}>Unsubscribe from trip</Button>
                                                     : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={handleApply}>Apply to trip</Button>
                                         :
                                         isEthEnabled
@@ -747,8 +750,11 @@ export default function TripDetails(props) {
                                                             <Loader type="Watch" color="#ff9800" height={45} width={45} />
                                                         : 
                                                             isUserApplied
-                                                                ? <Button color="danger" block size="lg" onClick={unsubscribeFromTrip}>Unsubscribe from trip</Button>
-                                                                : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={applyToTrip}>Apply to trip</Button>
+                                                                ? 
+                                                                isUserOrganizer
+                                                                    ? ""
+                                                                    : <Button color="danger" block size="lg" onClick={handleUnsubscription}>Unsubscribe from trip</Button>
+                                                                : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={handleApply}>Apply to trip</Button>
                                                 :
                                                 <SnackbarContent
                                                     message={
