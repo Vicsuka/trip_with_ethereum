@@ -753,8 +753,8 @@ export default function TripDetails(props) {
                                                                 ? 
                                                                 isUserOrganizer
                                                                     ? ""
-                                                                    : <Button color="danger" block size="lg" onClick={handleUnsubscription}>Unsubscribe from trip</Button>
-                                                                : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={handleApply}>Apply to trip</Button>
+                                                                    : <Button color="danger" block size="lg" onClick={unsubscribeFromTrip}>Unsubscribe from trip</Button>
+                                                                : <Button className={secondaryClasses.gradientButton} block size="lg" onClick={applyToTrip}>Apply to trip</Button>
                                                 :
                                                 <SnackbarContent
                                                     message={
