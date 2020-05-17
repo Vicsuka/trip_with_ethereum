@@ -30,6 +30,17 @@ import Error from "@material-ui/icons/Error";
 import Snackbar from "components/Snackbar/Snackbar";
 
 import { v4 as uuidv4 } from 'uuid';
+import { RadioGroup, Radio, FormLabel, FormControl, withStyles } from "@material-ui/core";
+
+const PrimaryRadio = withStyles({
+    root: {
+      color: '#ff9800',
+      '&$checked': {
+        color: '#ff9800',
+      },
+    },
+    checked: {},
+  })((props) => <Radio color="default" {...props} />);
 
 const styles = {
     cardCategoryWhite: {
@@ -56,7 +67,13 @@ const styles = {
     },
     centerLoader: {
         textAlign: "center"
-    }
+    },
+    primaryColored: {
+        color: '#ff9800',
+        '&$checked': {
+          color: '#ff9800'
+        }
+      },
 };
 
 const useStyles = makeStyles(styles);
@@ -362,7 +379,7 @@ export default function MyProfile(props) {
                                     <FormControlLabel
                                         label="Free trip"
                                         control={
-                                            <Checkbox checked={isFree} onChange={setFreeTrip} icon={<AttachMoneyIcon />} checkedIcon={<MoneyOffIcon />} />
+                                            <Checkbox className={classes.primaryColored} checked={isFree} onChange={setFreeTrip} icon={<AttachMoneyIcon />} checkedIcon={<MoneyOffIcon className={classes.primaryColored}/>} />
                                         }
                                         labelPlacement="start"                                                        
                                     />
@@ -386,15 +403,16 @@ export default function MyProfile(props) {
 
                                                 </GridItem>
                                                 <GridItem xs={8} sm={8} md={8}>
-                                                    <CustomInput
-                                                        labelText="Trust factor"
-                                                        id="trip-trust"
-                                                        formControlProps={{
-                                                            fullWidth: true,
-                                                            onChange: handleTypeChange
-                                                        }}
-                                                    />
+                                                <FormControl component="fieldset">
+                                                    <FormLabel component="legend">Trust factor</FormLabel>
+                                                    <RadioGroup aria-label="Trust factor" name="trip-trust" onChange={handleTypeChange}>
+                                                        <FormControlLabel value="1" control={<PrimaryRadio  />} label='Personal vote' />
+                                                        <FormControlLabel value="2" control={<PrimaryRadio />} label='Majority vote' />
+                                                        <FormControlLabel value="3" control={<PrimaryRadio />} label='Full trust' />
+                                                    </RadioGroup>
+                                                </FormControl>
                                                 </GridItem>
+                                                
                                             </GridContainer>
                                         </GridItem>
                                 }
