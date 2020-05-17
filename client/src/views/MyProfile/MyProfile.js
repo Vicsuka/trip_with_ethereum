@@ -481,6 +481,12 @@ export default function MyProfile() {
                   </GridContainer>
                 </CardBody>
                 <CardFooter>
+                  <SnackbarContent
+                    message={
+                      'This information will be visible to everyone using this site!'
+                    }
+                    color="info"
+                  />
                   <Button color="warning" onClick={handleUpdateProfile}>Update Your Profile</Button>
                 </CardFooter>
               </Card>
