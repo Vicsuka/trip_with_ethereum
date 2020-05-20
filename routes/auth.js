@@ -9,7 +9,6 @@ const router = express.Router();
 const passport = require("passport");
 const util = require("util");
 const querystring = require("querystring");
-const axios = require('axios')
 
 var userUtils = require('../models/User/UserUtils');
 
