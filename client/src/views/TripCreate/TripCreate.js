@@ -392,7 +392,7 @@ export default function MyProfile(props) {
                                     />
 
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={2}>
+                                <GridItem xs={12} sm={12} md={5} lg={3}>
                                     <CustomInput
                                         labelText="Max participants (2-30)"
                                         id="trip-participants"
@@ -422,9 +422,9 @@ export default function MyProfile(props) {
                                         ?
                                         ""
                                         :
-                                        <GridItem xs={12} sm={12} md={6}>
+                                        <GridItem xs={12} sm={12} md={8} lg={6}>
                                             <GridContainer >
-                                                <GridItem xs={4} sm={4} md={4}>
+                                                <GridItem xs={6} sm={6} md={6} lg={5}>
                                                     <CustomInput
                                                         labelText="Price (0.00001 - 100 ether)"
                                                         id="trip-price"
@@ -438,7 +438,7 @@ export default function MyProfile(props) {
                                                     />
 
                                                 </GridItem>
-                                                <GridItem xs={8} sm={8} md={8}>
+                                                <GridItem xs={6} sm={6} md={6} lg={7}>
                                                     <FormControl component="fieldset" required>
                                                         <FormLabel component="legend">Trust factor</FormLabel>
                                                         <RadioGroup aria-label="Trust factor" name="trip-trust" onChange={handleTypeChange}>
