@@ -184,7 +184,7 @@ export default function TripDetails(props) {
                         { type: 'uint256', name: 'endingDate' },
                     ], log.data);
                     setTripEnded(true);
-                    setEvents(events => [...events, ["TripEnd", convertUinxToDateString(TripEndevent.endingDate), <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
+                    setEvents(events => [...events, ["TripEnd", convertUinxToDateString(TripEndevent.endingDate), "Trip has ended, remaining balances has been sent back!", <a rel="noopener noreferrer" target="_blank" href={"https://ropsten.etherscan.io/tx/" + log.transactionHash}>Transacion</a>]]);
                     break;
                 case (GlobalVariables.ContractEvents.NewApplication):
                     var NewApplicationevent = window.web3.eth.abi.decodeParameters([
